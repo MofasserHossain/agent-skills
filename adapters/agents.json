@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "agents": {
+    "manual": {
+      "label": "Any interactive agent",
+      "command": null,
+      "notes": "Print the portable context and use it in your chosen agent."
+    },
+    "claude": {
+      "label": "Claude Code CLI",
+      "command": [
+        "claude",
+        "-p"
+      ],
+      "notes": "Uses existing native authentication and permission configuration. No automatic model or effort flags."
+    },
+    "codex": {
+      "label": "Codex CLI",
+      "command": [
+        "codex",
+        "exec",
+        "--sandbox",
+        "workspace-write",
+        "-"
+      ],
+      "notes": "Workspace-write mode, prompt on stdin. Native model settings are inherited."
+    }
+  }
+}
