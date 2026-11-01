@@ -4,6 +4,8 @@ The standard Skills CLI installs selected canonical folders from this repo's ski
 
 Each selected skill includes its own required references/templates. Other skill names are optional installed collaborators, not mandatory dependencies or paths to the authoring checkout. Kit research, tests, validation tools and the optional execution runner stay in the source kit. Installed skills can be used without Python.
 
+With the usual symlink method, shared project storage is .agents/skills and Claude discovers entries through .claude/skills links, including a Claude-only installation with --agent claude-code. The links share files, not an agent process or a background synchronization service. Updating this source checkout does not automatically update installed project copies. Native discovery supplies skill metadata; do not paste skill catalogs, bodies or references into CLAUDE.md or AGENTS.md during setup.
+
 Run setup-project if installed, or follow existing project conventions to configure actual commands, tracker and documentation. Preserve AGENTS/CLAUDE symlinks. Installation does not initialize commands, configure accounts, run an LLM or authorize publication.
 
 For a local source, rerun skills add with the intended --skill names after reviewing source changes. Review project-local customizations before reinstalling: the standard installer can replace files and does not provide the legacy installer's local-edit protection. skills-lock.json records the local source path for maintenance; skill execution does not require that path. No global registration is required.

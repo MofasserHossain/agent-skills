@@ -29,6 +29,10 @@ Route by both phase and task, with exact repository-relative paths and condition
 
 Adapt these triggers to actual project obligations; they are not a mandatory list of new guides. Keep task procedures in selected skills instead of duplicating them into project guides. Keep command selection in project configuration and implementations in existing scripts/wrappers; preserve exact focused, final, bundle/native and device conditions where present. Preserve AGENTS/CLAUDE single-source arrangements, including symlinks.
 
+Use native skill discovery instead of embedding a skill catalog, skill bodies, or reference contents in root instructions. Where AGENTS.md owns shared project rules and a separate CLAUDE.md is needed, keep CLAUDE.md to a pointer to those rules plus essential Claude-specific exceptions; do not duplicate AGENTS.md. A pointer does not reduce context if it requires reading the same large document on every task. Keep shared root rules focused too, and route conditional detail by task. Do not create an extra root file when the existing arrangement already works.
+
+Keep skill descriptions short and specific enough for selection. Load the selected skill body when used and its supporting files only for applicable conditions; do not instruct the agent to preload every skill or reference. Preserve automatic discovery by default. Explicit-only invocation is a host-local preference when requested, not a mandatory policy added to portable skills.
+
 ## Audit and report
 
 Keep a temporary original snapshot during editing, not a second long-term authoritative copy. Account for every substantive rule and its final destination, including embedded requirements. Consolidate only equivalent duplicates; retain the distinction between examples, descriptions and mandatory rules. Repair relative links and references such as “this file” after relocation. Check destination documents for contradictions before consolidating.
