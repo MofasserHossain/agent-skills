@@ -2,6 +2,10 @@
 
 The design adapts concepts; it does not copy Matt Pocock's full prompts or require his runtime.
 
+The later [workshop comparison](workshop-comparison.md) identifies the exact source shown in the user's screenshots and distinguishes it from the original two-repository audit.
+
+The [execution plan](../execution-plan.md) adds a source-checked Sandcastle comparison and the proposed architecture/parallel-work lifecycle. The workshop comparison also records the user-supplied final-segment transcript and its limits; continuous QA and role-context guidance adapt that recap.
+
 - [Matt's skills snapshot](https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d): routing, grilling, domain modeling, vertical tasks, TDD, review, context boundaries and retrospective.
 - [Course Video Manager snapshot](https://github.com/mattpocock/course-video-manager/tree/b47b1ec54cc7742326ca2682e49f09803cdac303): backlog Docker runner, Sandcastle orchestration and GitHub AFK platform. See matt-pocock-audit.md for source findings and conflicts.
 - [Cucumber example mapping](https://cucumber.io/docs/bdd/example-mapping/): rules, concrete examples and unanswered questions.

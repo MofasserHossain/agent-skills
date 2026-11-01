@@ -2,9 +2,9 @@
   "schema_version": 1,
   "agents": {
     "manual": {
-      "label": "Any interactive agent",
+      "label": "Context only (no CLI selected)",
       "command": null,
-      "notes": "Print the portable context and use it in your chosen agent."
+      "notes": "Print portable context for the current Claude Code or Codex session; this is not an additional agent."
     },
     "claude": {
       "label": "Claude Code CLI",

@@ -9,10 +9,30 @@ Choose the shortest useful route:
 - Small, clear change: implement, verify and review proportionately.
 - Incoming notes/messages/tickets: intake first, then clarify only consequential gaps.
 - Uncertain feature: grill; research factual uncertainties or prototype a specific behavior/UI question.
+- UI/frontend uncertainty: use ui-design to connect research, flows and optional prototypes to buildable decisions. Skip it for backend-only work.
 - Multi-session build: write a spec, then vertical tasks with blockers.
 - Existing work: read its authoritative record and latest evidence; resume the unfinished stage.
+- Architecture friction: assess a focused area, then take the selected improvement through the same planning/delivery route.
 
-Use the named skill's SKILL.md only when that stage is needed. These are readable procedures, not a dependency on a proprietary Skill tool. Read [task contract](../../references/task-contract.md) when creating/executing tasks, [trackers](../../references/trackers.md) when selecting storage, and [context policy](../../references/context-policy.md) when transitioning sessions/tools.
+Use the relevant procedure by reading its file, or through the host's skill tool when available. These are portable instructions, not a dependency on a proprietary Skill tool.
+
+| Stage | Procedure |
+|---|---|
+| Project setup | [setup-project](../setup-project/SKILL.md) |
+| Incoming material | [intake](../intake/SKILL.md) |
+| Architecture assessment | [improve-codebase-architecture](../improve-codebase-architecture/SKILL.md) |
+| Resolve decisions | [grill](../grill/SKILL.md) |
+| Investigate facts | [research](../research/SKILL.md) |
+| Test a design question | [prototype](../prototype/SKILL.md) |
+| Plan interface behavior and appearance | [ui-design](../ui-design/SKILL.md) |
+| Write the PRD | [write-spec](../write-spec/SKILL.md) |
+| PRD to issues | [plan-tasks](../plan-tasks/SKILL.md) |
+| Build one task | [implement](../implement/SKILL.md) |
+| Review the change | [review](../review/SKILL.md) |
+| Check actual behavior | [qa](../qa/SKILL.md) |
+| Improve the environment | [retro](../retro/SKILL.md) |
+
+Read [task contract](../../references/task-contract.md) when creating/executing tasks, [trackers](../../references/trackers.md) when selecting storage, and [context policy](../../references/context-policy.md) when transitioning sessions/tools. Read only the selected procedure and applicable references, not the whole table's targets.
 
 HITL decisions require the human's answer. AFK work can proceed only within settled scope. An executor can change between stages; task/spec/evidence remain the portable record.
 

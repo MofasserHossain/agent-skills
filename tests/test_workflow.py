@@ -48,10 +48,10 @@ class WorkflowTests(unittest.TestCase):
         return path
 
     def registry(self, command):
-        path = self.root / "custom-agents.json"
+        path = self.root / "executor-overrides.json"
         path.write_text(json.dumps({
             "schema_version": 1,
-            "agents": {"custom": {"label": "Local fake executor", "command": command}}
+            "agents": {"codex": {"label": "Local fake executor", "command": command}}
         }))
         return path
 
@@ -73,13 +73,13 @@ class WorkflowTests(unittest.TestCase):
     def test_preview_does_not_start_executor(self):
         marker = self.root / "should-not-exist"
         registry = self.registry([sys.executable, "-c", f"open({str(marker)!r}, 'w').write('ran')"])
-        code, out, _ = self.call(*self.run_args("--agent", "custom", "--registry", str(registry)))
+        code, out, _ = self.call(*self.run_args("--agent", "codex", "--registry", str(registry)))
         self.assertEqual(code, 0)
         self.assertFalse(json.loads(out)["executed"])
         self.assertFalse(marker.exists())
         self.assertFalse((self.project / ".workflow-runs").exists())
 
-    def test_custom_executor_receives_prompt_and_project_without_accepting_task(self):
+    def test_executor_override_receives_prompt_and_project_without_accepting_task(self):
         registry = self.registry([
             sys.executable, "-c",
             "import json,sys,pathlib; text=sys.stdin.read(); "
@@ -88,7 +88,7 @@ class WorkflowTests(unittest.TestCase):
         ])
         before = self.task.read_bytes()
         code, _, err = self.call(*self.run_args(
-            "--agent", "custom", "--registry", str(registry), "--execute"))
+            "--agent", "codex", "--registry", str(registry), "--execute"))
         self.assertEqual((code, err), (0, ""))
         output = next((self.project / ".workflow-runs").iterdir())
         response = json.loads((output / "stdout.txt").read_text())
@@ -103,7 +103,7 @@ class WorkflowTests(unittest.TestCase):
 
     def test_failed_executor_keeps_failure_evidence(self):
         registry = self.registry([sys.executable, "-c", "import sys; print('failure details',file=sys.stderr); sys.exit(7)"])
-        code, _, _ = self.call(*self.run_args("--agent", "custom", "--registry", str(registry), "--execute"))
+        code, _, _ = self.call(*self.run_args("--agent", "codex", "--registry", str(registry), "--execute"))
         self.assertEqual(code, 7)
         output = next((self.project / ".workflow-runs").iterdir())
         result = json.loads((output / "result.json").read_text())
@@ -200,7 +200,7 @@ class WorkflowTests(unittest.TestCase):
         outside = self.root / "outside-logs"
         outside.mkdir()
         (self.project / ".workflow-runs").symlink_to(outside, target_is_directory=True)
-        code, _, _ = self.call(*self.run_args("--agent", "custom", "--registry", str(registry), "--execute"))
+        code, _, _ = self.call(*self.run_args("--agent", "codex", "--registry", str(registry), "--execute"))
         self.assertEqual(code, 2)
         self.assertEqual(list(outside.iterdir()), [])
 
@@ -216,10 +216,79 @@ class WorkflowTests(unittest.TestCase):
     def test_missing_executor_fails_without_changing_task(self):
         registry = self.registry(["not-a-real-agent-workflow-executor"])
         before = self.task.read_bytes()
-        code, _, err = self.call(*self.run_args("--agent", "custom", "--registry", str(registry), "--execute"))
+        code, _, err = self.call(*self.run_args("--agent", "codex", "--registry", str(registry), "--execute"))
         self.assertEqual(code, 2)
         self.assertIn("not installed", err)
         self.assertEqual(self.task.read_bytes(), before)
+
+    def test_registry_and_project_reject_other_agents(self):
+        registry = self.root / "unsupported-agent.json"
+        registry.write_text(json.dumps({"schema_version": 1, "agents": {
+            "other-agent": {"label": "Unsupported", "command": ["unused"]}
+        }}))
+        self.assertEqual(self.call("agents", "--registry", str(registry))[0], 2)
+        config = self.project / workflow.CONFIG
+        data = json.loads(config.read_text())
+        data["default_agent"] = "other-agent"
+        config.write_text(json.dumps(data))
+        self.assertEqual(self.call(*self.run_args())[0], 2)
+        self.assertFalse((self.project / ".workflow-runs").exists())
+
+    def test_manual_is_context_only_and_agent_listing_has_two_targets(self):
+        code, output, err = self.call("agents")
+        self.assertEqual((code, err), (0, ""))
+        self.assertEqual({line.split(":", 1)[0] for line in output.splitlines()},
+                         {"claude", "codex"})
+        code, output, err = self.call(*self.run_args("--execute"))
+        self.assertEqual((code, err), (0, ""))
+        self.assertIn("Portable implementation request", output)
+        self.assertFalse((self.project / ".workflow-runs").exists())
+        registry = self.registry(None)
+        self.assertEqual(self.call("agents", "--registry", str(registry))[0], 2)
+        registry.write_text(json.dumps({"schema_version": 1, "agents": {
+            "manual": {"command": ["unused"]}
+        }}))
+        self.assertEqual(self.call("agents", "--registry", str(registry))[0], 2)
+
+    def test_named_checks_reject_malformed_commands_and_names(self):
+        config = self.project / workflow.CONFIG
+        original = json.loads(config.read_text())
+        for checks in ([], None, {"test": "npm test"}, {"test": []},
+                       {"test": ["", "test"]}, {"test": ["runner", 3]},
+                       {"test suite": ["runner"]}, {"Test": ["runner"]}):
+            with self.subTest(checks=checks):
+                config.write_text(json.dumps({**original, "checks": checks}))
+                code, _, err = self.call("prompt", str(self.task), "--project", str(self.project))
+                self.assertEqual(code, 2)
+                self.assertIn("checks must map", err)
+        self.assertFalse((self.project / ".workflow-runs").exists())
+
+    def test_changed_project_commands_reach_next_prompt_without_running_checks(self):
+        config = self.project / workflow.CONFIG
+        original = json.loads(config.read_text())
+        # A check with an observable side effect must only be passed as context.
+        marker = self.root / "check-was-run"
+        first = {"test-unit": [sys.executable, "-c",
+                              f"open({str(marker)!r}, 'w').write('ran')"]}
+        second = {"test-unit": ["different-runner", "tests with spaces", "--once"],
+                  "types": ["project-types"]}
+        for checks in (first, second):
+            config.write_text(json.dumps({**original, "checks": checks}))
+            code, prompt, err = self.call("prompt", str(self.task), "--project", str(self.project))
+            self.assertEqual((code, err), (0, ""))
+            supplied = prompt.split("## Project configuration\n", 1)[1].split("\n\n## Active procedure", 1)[0]
+            self.assertEqual(json.loads(supplied)["checks"], checks)
+            self.assertFalse(marker.exists())
+        self.assertNotIn(str(marker), prompt)
+        self.assertFalse((self.project / ".workflow-runs").exists())
+
+    def test_legacy_config_without_named_checks_remains_supported(self):
+        config = self.project / workflow.CONFIG
+        original = json.loads(config.read_text())
+        original.pop("checks", None)
+        config.write_text(json.dumps(original))
+        code, _, err = self.call("prompt", str(self.task), "--project", str(self.project))
+        self.assertEqual((code, err), (0, ""))
 
 
 if __name__ == "__main__":

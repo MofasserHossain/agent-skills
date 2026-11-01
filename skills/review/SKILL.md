@@ -3,7 +3,7 @@ name: review
 description: "Review a bounded change against its originating requirements and project standards, with actionable evidence."
 ---
 
-Pin a revision/diff boundary and identify the originating spec/task. Read applicable project standards.
+Pin a revision/diff boundary and identify the originating spec/task. Read applicable project standards. When preparing a review handoff, include the concise applicable coding standards, requirement references and verification evidence explicitly; retain links to their authoritative sources. Reviewers still inspect the actual code and may pull supporting context.
 
 Evaluate two separate questions:
 - Spec: missing/incorrect behavior, scope drift and unsupported acceptance claims.

@@ -9,6 +9,8 @@ Create narrow vertical slices: each delivers a demonstrable or independently ver
 
 Use [task contract](../../references/task-contract.md) and [task template](../../templates/task.md). Each task names behavior, acceptance criteria, scope, verification, execution/review mode and true blockers. Dependency means required work is complete/integrated, not just that it appears earlier in a list.
 
+In **Requirements covered**, link to the parent PRD's requirement labels or sections. Check the resulting coverage against the whole spec; gaps and overlaps should be deliberate. Preserve the parent's wording by reference instead of copying every requirement into every issue.
+
 Check that the tasks cover the spec without adding features. Mark unresolved decision work HITL or blocked. Review consequential granularity choices with the user; do not re-approve a breakdown already authorized.
 
 Use [tracker conventions](../../references/trackers.md). Store status once. Do not create an implementation ticket for every internal function or repeat the complete PRD in every task.

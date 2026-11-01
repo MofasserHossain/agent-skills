@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 
 KIT = Path(__file__).resolve().parents[1]
 CONFIG = ".agent-workflow.json"
+SUPPORTED_AGENTS = {"claude", "codex"}
 STATUSES = {"draft", "ready", "in-progress", "blocked", "review", "done"}
 ID_PATTERN = re.compile(r"[a-z0-9][a-z0-9-]{0,79}\Z")
 
@@ -58,8 +59,17 @@ def load_config(project):
         for cmd in commands
     ):
         raise WorkflowError("verification must contain command argument arrays.")
-    if not isinstance(config.get("default_agent", "manual"), str):
-        raise WorkflowError("default_agent must be a registry name.")
+    checks = config.get("checks", {})
+    if not isinstance(checks, dict) or any(
+        not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", name)
+        or not isinstance(cmd, list) or not cmd
+        or any(not isinstance(arg, str) for arg in cmd) or not cmd[0]
+        for name, cmd in checks.items()
+    ):
+        raise WorkflowError("checks must map lowercase check names to command argument arrays.")
+    default_agent = config.get("default_agent", "manual")
+    if not isinstance(default_agent, str) or default_agent not in {*SUPPORTED_AGENTS, "manual"}:
+        raise WorkflowError("default_agent must be claude, codex or manual (no CLI selected).")
     return config, work
 
 
@@ -75,7 +85,13 @@ def load_registry(path=None):
             raise WorkflowError("Invalid executor entry.")
         if "command" not in entry:
             raise WorkflowError(f"Executor {name} is missing command.")
+        if name not in {*SUPPORTED_AGENTS, "manual"}:
+            raise WorkflowError(f"Unsupported executor: {name}; supported agents are claude and codex.")
         command = entry["command"]
+        if name == "manual" and command is not None:
+            raise WorkflowError("manual is context-only and cannot run a command.")
+        if name in SUPPORTED_AGENTS and command is None:
+            raise WorkflowError(f"Executor {name} needs a command argument array.")
         if command is not None and (
             not isinstance(command, list) or not command
             or any(not isinstance(arg, str) for arg in command) or not command[0]
@@ -194,6 +210,7 @@ def init_project(project):
         "work_dir": "docs/work",
         "tracker": "local",
         "default_agent": "manual",
+        "checks": {},
         "verification": [],
     }
     try:
@@ -283,7 +300,7 @@ def main(argv=None):
         cmd.add_argument("task", type=Path)
         cmd.add_argument("--project", type=Path, required=True)
         if action == "run":
-            cmd.add_argument("--agent")
+            cmd.add_argument("--agent", choices=sorted(SUPPORTED_AGENTS))
             cmd.add_argument("--registry", type=Path)
             cmd.add_argument("--execute", action="store_true")
             cmd.add_argument("--timeout", type=float, default=1800)
@@ -297,6 +314,8 @@ def main(argv=None):
             return 0
         if args.action == "agents":
             for name, entry in load_registry(args.registry).items():
+                if name == "manual":
+                    continue
                 command = entry["command"]
                 available = command is None or shutil.which(command[0]) is not None
                 print(f"{name}: {entry.get('label', name)}; "

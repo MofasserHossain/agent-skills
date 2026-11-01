@@ -13,6 +13,9 @@
 ## Context
 Link the source, spec and relevant decisions.
 
+## Requirements covered
+Link to the parent PRD's requirement labels or sections. For standalone work, reference the original request.
+
 ## Expected behavior
 Describe the end-to-end result.
 
@@ -20,7 +23,7 @@ Describe the end-to-end result.
 - [ ] Replace with a concrete observable criterion before marking ready.
 
 ## Verification
-Name meaningful automated checks and any human checks.
+Reference the project check catalog and final verification. Record the exact focused test/target command, required setup and any task-specific runtime/human checks; avoid copying the whole root check list.
 
 ## Scope
 Explicit boundaries.

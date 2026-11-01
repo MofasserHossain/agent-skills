@@ -18,13 +18,13 @@ The agent's proprietary session history is optional context, never the only reco
 
 | Edge | Contract | Initial support |
 |---|---|---|
-| Executor | Read a portable prompt in project context; return output and exit status | Manual, Claude Code CLI, Codex CLI, custom command arrays |
+| Executor | Read a portable prompt in project context; return output and exit status | Claude Code CLI and Codex CLI; manual prints context only |
 | Model/effort | Native configuration within an executor | Advisory policy; no automatic flag translation |
 | Tracker | Stable tasks, dependencies, evidence and one authoritative status | Local helper; GitHub through available agent tools |
 | Runtime | Workspace and tools with explicit resource boundaries | Host dispatch; Docker adapter planned |
 | Intake source | Read supplied material with provenance | Text/file inputs; connected tools when available |
 
-A custom executor needs no change to the core: add a registry entry with a command array that accepts the full prompt on stdin. SDK or HTTP agents can implement a small wrapper exposing that interface. Model and effort can be selected in that wrapper or native configuration.
+Only Claude Code and Codex are supported now. Registry overrides customize their CLI argument arrays; other executor names are rejected. The core interface remains portable so additional adapters can be introduced later when requested. Model and effort remain in native configuration.
 
 Do not assume equivalent effort labels or capabilities across providers. Capability and permission limitations must be surfaced before dependent work.
 
@@ -36,6 +36,8 @@ Before scheduling is added, orchestration must own claims, status transitions, p
 
 ## Installation versus execution
 
-The kit checkout is shared. Each project owns its configuration and work records. A sandbox must receive a readable kit installation or the selected instructions and references explicitly; host symlinks outside the mounted workspace are not assumed to work.
+The kit is authored separately. New projects install selected self-contained skill packages through the standard Skills CLI from dist/skills. A maintainer build rewrites local resource links and converts optional cross-skill references to names. No build/runner code is copied into standard installed skills. Legacy .agent-workflow snapshots and source-linked development mode remain supported for existing users. Each project owns its configuration and work records. A sandbox must receive a readable kit installation or the selected instructions and references explicitly; host symlinks outside the mounted workspace are not assumed to work.
+
+Standard installation registers each selected skill with its own concise discovery metadata. Its body/resources load as needed; no whole-kit router is mandatory. Legacy snapshot registration uses one thin router entry instead. Discovery directories are host-specific adapter data; the procedures and work records remain neutral. Registration is an explicit operation separate from project setup and executor dispatch.
 
 Keep the runtime independent of agent choice: moving from Claude to Codex should not require changing task records or rewriting Docker policy.
