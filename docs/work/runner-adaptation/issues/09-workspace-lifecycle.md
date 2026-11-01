@@ -37,4 +37,4 @@ Use disposable paths and fake runtimes for every acceptance case in the lifecycl
 Implement the lifecycle against the runtime and claims contracts. No automatic remote branch deletion, publication, merge or new UI platform.
 
 ## Evidence
-Not implemented.
+Local-checkout foundation implemented in tools/workspaces.py with disposable Git tests for independent creation, verified clean Git archives, scoped purge/restore, locks and refusal cases. Docker resources, hooks, worker supervision, dirty-work exports and automatic retention remain unimplemented. This task is not complete.

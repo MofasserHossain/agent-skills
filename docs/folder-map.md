@@ -5,12 +5,13 @@ This repository is the shared toolbox. Actual feature records belong to the proj
 | Path | Responsibility | Read when |
 |---|---|---|
 | skills/ | Portable stage instructions | The corresponding stage runs |
-| dist/skills/ | Generated self-contained packages; ignored in Git | Building or installing selected skills |
+| packages/skills/ | Generated, Git-tracked, self-contained installation folders; never hand-edit | Installing from GitHub or reviewing a rebuilt distribution |
+| dist/skills/ | Optional generated preview; ignored in Git | Previewing a maintainer build |
 | references/ | Task/result contracts and shared policies | A stage points to them |
 | templates/ | Starting shapes for feature artifacts | Creating an artifact |
 | adapters/ | Executor commands and native discovery paths | Selecting or registering a host |
 | tools/ | Maintainer packaging, validation and optional execution/legacy helpers | Building packages, checking the kit or explicit dispatch/legacy maintenance |
-| scripts/ | Standard project-local Skills CLI installation wrapper | Installing selected prepared packages |
+| scripts/ | Standard project-local Skills CLI installation wrapper | Installing selected tracked packages |
 | tests/ | Helper behavior tests using fake executors/directories | Maintaining the kit |
 | checks/ | Realistic behavioral pilot inputs | Evaluating the workflow |
 | examples/ | Illustrative brief, PRD and issues | Learning how artifacts connect |
@@ -19,6 +20,8 @@ This repository is the shared toolbox. Actual feature records belong to the proj
 | docs/conversation-summaries/ | Historical discussion summaries | Recovering background; current work records hold subsequent decisions |
 
 ## Files that drive ordinary work
+
+Edit `skills/`, `references/` and `templates/` as the canonical sources. The builder produces independent `packages/skills/` folders for installation; bundled copies of shared references are build output, not competing sources of truth. Rebuild with `python3 tools/package_skills.py --output packages/skills` and validate with the same command plus `--check`. Target projects need only the selected package folders. `dist/skills/` is an ignored preview of the same build, not another maintained catalog.
 
 - [skills/workflow/SKILL.md](../skills/workflow/SKILL.md): routing and stage pointers.
 - The selected stage's SKILL.md and any relevant references.
@@ -37,7 +40,7 @@ The agent does not read every folder at session start. [Project routes](project-
 
 ## Native use versus automation
 
-For new projects, `scripts/install-skills.sh` uses the standard Skills CLI against generated `dist/skills/`. `tools/package_skills.py` prepares those packages from canonical sources. Selected packages are copied into project-local skill folders with their own resources; the standard symlink method adds host links within that project. See [installation](installation.md) for the resulting paths and copy option. The optional router exports as `agent-workflow`; each selected skill is independently discoverable.
+For new projects, `scripts/install-skills.sh` uses the standard Skills CLI against tracked `packages/skills/`. `tools/package_skills.py` prepares those packages from canonical sources. Selected packages are copied into project-local skill folders with their own resources; the standard symlink method adds host links within that project. See [installation](installation.md) for the resulting paths and copy option. The optional router exports as `agent-workflow`; each selected skill is independently discoverable.
 
 While maintaining this kit, an agent can read `skills/<name>/SKILL.md` directly without installing it. Installed projects read their own selected copies. Python is used to build packages here; ordinary installed-skill use does not require a Python launcher.
 

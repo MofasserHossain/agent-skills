@@ -1,6 +1,6 @@
 # Reliable once and bounded-loop adaptation
 
-Status: proposed execution design. Only R1's local preflight is implemented in this change. Source findings and rationale are in the [assessment](assessment.md). Existing task/status contracts remain authoritative until a versioned migration is implemented and tested.
+Status: proposed execution design. R1 local preflight is implemented. A local-checkout subset of R9 is now implemented; Docker/worker lifecycle and the remaining runner requirements are still proposed. Source findings and rationale are in the [assessment](assessment.md). Existing task/status contracts remain authoritative until a versioned migration is implemented and tested.
 
 ## Outcome and scope
 

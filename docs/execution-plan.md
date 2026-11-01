@@ -6,7 +6,7 @@ This is the operating design and rollout plan. It does not activate an automatic
 
 See the [source assessment](work/runner-adaptation/assessment.md), [proposed once/loop specification](work/runner-adaptation/spec.md) and [first task](work/runner-adaptation/issues/01-preflight.md). The read-only `next` helper now validates the whole local task graph and reports eligible work and waiting reasons; it is not a claim or scheduler. Managed execution, acceptance, recovery and runtimes remain future work. The initial loop design preserves done-only dependencies rather than introducing unimplemented verified-integration semantics.
 
-The proposed [workspace lifecycle](work/runner-adaptation/workspaces.md) organizes projects under a configurable central root and distinguishes stopping, verified archival and purging disposable storage. Retention policies, disk usage reporting and cleanup previews remain planned; no cleanup is performed by the current helper.
+The proposed [workspace lifecycle](work/runner-adaptation/workspaces.md) organizes projects under a configurable central root and distinguishes stopping, verified archival and purging disposable storage. The separate tools/workspaces.py helper now supports independent local clones, logical size listing, verified clean-checkout archival, explicit purge and restore. Docker resources, worker/process supervision, hooks, pins and automatic retention remain planned. See the [workspace commands](workspaces.md) for the implemented boundary.
 
 ## When each capability runs
 

@@ -1,6 +1,6 @@
 # Project installation
 
-The standard Skills CLI installs selected self-contained packages from the source kit's prepared dist/skills directory. Run npx skills@1.7.4 add /path/to/agent-workflow/dist/skills --agent claude-code codex from the target project. Choose only needed skills, project scope, and the usual symlink method. The canonical skill files are copied into the project; host links point within it. --copy creates separate host copies. Do not use a source-link mode when the project must work independently.
+The standard Skills CLI installs selected self-contained packages from the source kit's tracked packages/skills directory. Run npx skills@1.7.4 add /path/to/agent-workflow/packages/skills --agent claude-code codex from the target project. Choose only needed skills, project scope, and the usual symlink method. The canonical skill files are copied into the project; host links point within it. --copy creates separate host copies. Do not use a source-link mode when the project must work independently.
 
 Each selected skill includes its own required references/templates. Other skill names are optional installed collaborators, not mandatory dependencies or paths to the authoring checkout. Kit research, tests, build tools and the optional execution runner stay in the source kit. Installed skills can be used without Python.
 
