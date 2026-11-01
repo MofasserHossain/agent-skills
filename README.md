@@ -80,7 +80,7 @@ After editing, run the checks below and inspect the relocated-skill tests. Reins
 - Local-file/GitHub conventions with one authoritative tracker and portable requirement/task/result records.
 - Adaptive project context setup: reviewed move maps for existing instructions, essential root constraints, conditional phase/task reading routes, and preservation audits. Project-owned docs stay separate from skill installation and updates.
 - Project-specific verification commands and focused TDD guidance. Frontend, full-stack and backend projects use the same core flow with conditional checks.
-- The `pull-request` procedure handles PR preparation/updates, status checks and post-merge sync using project-owned delivery policy; it does not automate merging or authorize publication.
+- The `pull-request` procedure uses project-specific checks and delivery rules, a concise title/body format, and a commits/diff review checkpoint before opening a new PR. It also handles status and post-merge sync; it does not automate merging.
 - QA sends reproducible defects back to the backlog; review checks requirements and project standards.
 - All fifteen procedures define scoped decisions and useful completion signals: routing/resumption, setup evidence, source-linked intake, bounded research, prototype verdicts, design readiness, architecture tradeoffs, planning coverage, implementation evidence, review, QA, PR recovery and evidence-based retrospective. Human usage examples live in the skill guide; behavioral superiority remains a pilot question.
 
