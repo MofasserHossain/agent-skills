@@ -2,6 +2,21 @@
 
 Reusable engineering skills for turning ideas, documents, messages and tickets into verified changes. Maintain one source kit, then install only the skills each project needs. Portable skills can be installed for any agent supported by the Skills CLI, or read directly by an agent with file access. The optional execution helper supports Claude Code and Codex.
 
+## Install from GitHub
+
+Install the self-contained packages from the dedicated `packages/skills` path:
+
+```sh
+DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add https://github.com/MofasserHossain/agent-workflow/tree/main/packages/skills --list
+DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add https://github.com/MofasserHossain/agent-workflow/tree/main/packages/skills --skill grill implement research --agent claude-code codex --yes
+```
+
+Choose explicit skill names for your project. Codex reads canonical project-local
+`.agents/skills` folders; Claude Code gets relative links to those folders.
+The router and Python helper are optional; the helper is not in these packages.
+Use the full distribution path: bare repository shorthand can discover authoring
+skills under `skills/`, whose shared resources are outside the individual folders.
+
 ## Install from this local repo
 
 You need Python 3 to build the packages, Node 22.20+ for the pinned Skills CLI, and a Skills-compatible agent in the target project. Installed Markdown skills do not require Python. Clone this repository with your GitHub account's access, then prepare the ignored distribution:
@@ -83,7 +98,7 @@ python3 tools/package_skills.py
 python3 tools/package_skills.py --check
 ```
 
-Python is a maintainer/build tool here, not an installed-skill runtime requirement. Generated packages stay under the ignored `dist/skills/`; they contain no symlinks or references back to this checkout. Build before installing from a fresh clone. The same self-contained skill format can be used in a future Git/plugin/npm distribution; nothing is published by this build.
+Python is a maintainer/build tool here, not an installed-skill runtime requirement. Local preview packages stay under the ignored `dist/skills/`; the reviewed GitHub distribution is tracked separately under `packages/skills/`. they contain no symlinks or references back to this checkout. Build before installing from a fresh clone. The same self-contained skill format can be used in a future Git/plugin/npm distribution; nothing is published by this build.
 
 ## Available capabilities
 
@@ -118,3 +133,17 @@ bash -n scripts/install-skills.sh
 ```
 
 Tests use local fake executors. Real provider authentication, model output quality and Docker behavior require a separate pilot. No publishing, global installation or paid model call is needed for these checks.
+
+## Refresh the GitHub distribution
+
+After changing canonical skills or linked resources, rebuild and review the tracked
+packages in the same pull request:
+
+```sh
+python3 tools/package_skills.py --output packages/skills
+python3 tools/package_skills.py --output packages/skills --check
+```
+
+Do not hand-edit generated packages. The builder and its ownership manifest make
+stale output detectable. This writes files locally; pushing and merging remain
+separate authorized delivery actions. No automatic publication is configured.

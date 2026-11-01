@@ -77,7 +77,7 @@ Which default effort is cost-effective for each task class; provider CLI compati
 
 New projects use the standard Skills CLI against prepared dist/skills folders, with the user selecting skills. A source-only build creates self-contained packages, preserving required references/templates inside each skill and applicable legal files. Cross-skill references become optional installed skill names; missing siblings cannot create broken filesystem links. The router exports as agent-workflow and does not require installing the full catalog. A Bash wrapper targets project-local Skills CLI agents (Claude Code/Codex by default), disables telemetry, and uses the tested CLI version. No Python runtime, custom execution helper or authoring research is installed with these skills.
 
-The root kit keeps canonical sources and its development tooling. Distribution output is generated and validated before installation. Legacy snapshots remain supported and are not migrated automatically. Future publication can use the same independent skill folders; no package/plugin is published by this implementation.
+The root kit keeps canonical sources and its development tooling. Distribution output is generated and validated before installation. Legacy snapshots remain supported and are not migrated automatically. A dedicated tracked `packages/skills` path exposes the same self-contained folders to the standard Skills CLI through an explicit GitHub tree URL. Maintainers rebuild and validate that output in the same PR as source edits. Bare repository shorthand is not the installation contract because it can discover authored skills. Plugin/npm publication and automatic publishing remain outside scope.
 
 ## Procedure quality across the catalog
 

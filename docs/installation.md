@@ -1,3 +1,23 @@
+# GitHub distribution
+
+Use the self-contained `packages/skills` tree for GitHub installation:
+
+```sh
+DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add https://github.com/MofasserHossain/agent-workflow/tree/main/packages/skills --list
+DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add https://github.com/MofasserHossain/agent-workflow/tree/main/packages/skills --skill grill implement research --agent claude-code codex --yes
+```
+
+Select only the desired skills. The full path avoids authored `skills/` folders,
+which depend on shared source resources. Tracked packages bundle those resources
+and rewrite their links; the router is exported as `agent-workflow`.
+
+Maintainers rebuild with `python3 tools/package_skills.py --output packages/skills`
+and validate with the same command plus `--check`. Include generated changes in
+the source change's PR. Keep the build manifest; never edit package output by hand.
+The default ignored `dist/skills` remains available for local previews below.
+GitHub availability follows the reviewed commit/merge; preparing packages does
+not publish them. No automation or optional Python runner is installed.
+
 # Install selected skills from the local kit
 
 Use the standard Skills CLI against the prepared `dist/skills` directory. This is the primary route for new projects; any agent supported by the pinned Skills CLI can be targeted. The optional execution helper remains Claude Code/Codex only.
@@ -68,7 +88,7 @@ Invoke a selected skill through the host's supported discovery/invocation mechan
 
 After source edits, rebuild dist/skills. Then rerun skills add for the intended --skill names. Local source paths in skills-lock.json support maintenance; they are not needed to execute already-copied skills. Review project-local skill edits before reinstalling: standard installation can overwrite them and does not provide our legacy local-edit guard. Do not assume local sources have the same update behavior as Git-hosted sources; rerunning add is the verified local refresh route.
 
-The generated distribution is ignored in Git. Maintainers rebuild it from canonical sources; hand edits to generated output are rejected by the builder. The build preserves applicable license/notice files. It does not publish, install globally, or run an agent. Future Git/plugin/npm packaging can reuse these independent skill folders, but no publishing integration is activated now.
+The generated distribution is ignored in Git. Maintainers rebuild it from canonical sources; hand edits to generated output are rejected by the builder. The build preserves applicable license/notice files. It does not publish, install globally, or run an agent. The tracked GitHub path reuses these independent skill folders. Plugin/npm publication remains outside this installation.
 
 ## Existing legacy installations
 
