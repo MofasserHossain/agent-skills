@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Standard project-scoped Skills CLI installation; reviewed packages are tracked in the root kit.
+# Standard project-scoped Skills CLI installation; canonical skill folders are installed directly.
 set -euo pipefail
 
 if [[ $# -lt 1 || "$1" == "--help" || "$1" == "-h" ]]; then
@@ -11,13 +11,13 @@ fi
 project="$1"
 shift
 kit_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-package_dir="$kit_root/packages/skills"
+skill_dir="$kit_root/skills"
 if [[ ! -d "$project" ]]; then
   echo "Project directory does not exist: $project" >&2
   exit 2
 fi
-if [[ ! -f "$package_dir/.workflow-install.json" ]]; then
-  echo 'Prepare the distribution first: python3 tools/package_skills.py --output packages/skills' >&2
+if [[ ! -f "$skill_dir/agent-workflow/SKILL.md" ]]; then
+  echo 'Canonical skills are missing from this checkout.' >&2
   exit 2
 fi
 
@@ -67,4 +67,4 @@ fi
 export DISABLE_TELEMETRY=1
 export DO_NOT_TRACK=1
 cd -- "$project"
-exec npx --yes skills@1.7.4 add "$package_dir" --agent "${agents[@]}" "${cli_arguments[@]}"
+exec npx --yes skills@1.7.4 add "$skill_dir" --agent "${agents[@]}" "${cli_arguments[@]}"

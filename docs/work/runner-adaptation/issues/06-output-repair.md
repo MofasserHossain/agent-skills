@@ -29,7 +29,7 @@ A malformed report can be corrected in a resumable adapter without repeating the
 ## Verification
 Use fake adapter sessions with invalid then valid output, exhausted repair and unavailable resume. No provider calls.
 
-Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; validate packages if resources change.
+Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; verify relocated skills if resources change.
 
 ## Scope
 Only this outcome and the parent contract. Later integrations and external actions require their own authorization.

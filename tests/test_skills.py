@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -8,87 +9,75 @@ import sys
 import tempfile
 import unittest
 
-TOOLS = Path(__file__).resolve().parents[1] / "tools"
-sys.path.insert(0, str(TOOLS))
-import package_skills as package
-from install_project import InstallError, LINK
+KIT = Path(__file__).resolve().parents[1]
+SPEC = importlib.util.spec_from_file_location("skill_workflow", KIT / "tools/workflow.py")
+workflow = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(workflow)
+LINK = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
 
-class PackagingTests(unittest.TestCase):
+class SkillInstallationTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name).resolve()
         self.source = self.root / "source with spaces"
-        shutil.copytree(package.KIT, self.source, ignore=shutil.ignore_patterns(".git", "__pycache__", "dist"))
-        self.output = self.root / "packages"
+        shutil.copytree(KIT, self.source, ignore=shutil.ignore_patterns(".git", "__pycache__", "dist"))
 
-    def test_tracked_distribution_matches_canonical_sources(self):
-        result = package.build(package.KIT, package.KIT / "packages/skills", check=True)
-        self.assertEqual(result["action"], "unchanged")
-
-    def test_each_package_is_self_contained_after_source_removal(self):
-        package.build(self.source, self.output)
+    def test_canonical_skills_are_directly_installable_after_source_removal(self):
+        self.assertEqual(workflow.check_skills(self.source), 15)
+        project = self.root / "target project"
+        installed = project / ".agents/skills"
+        for skill in (self.source / "skills").iterdir():
+            if not (skill / "SKILL.md").is_file():
+                continue
+            shutil.copytree(skill, installed / skill.name)
+            host = project / ".claude/skills" / skill.name
+            host.parent.mkdir(parents=True, exist_ok=True)
+            host.symlink_to(Path(os.path.relpath(installed / skill.name, host.parent)), target_is_directory=True)
         self.source.rename(self.root / "source unavailable")
-        skills = [path for path in self.output.iterdir() if path.is_dir()]
-        self.assertEqual(len(skills), 15)
-        for skill in skills:
+        project.rename(self.root / "relocated project")
+        project = self.root / "relocated project"
+        for skill in (project / ".agents/skills").iterdir():
             with self.subTest(skill=skill.name):
-                body = (skill / "SKILL.md").read_text()
-                self.assertIn(f"name: {skill.name}\n", body)
-                self.assertNotIn(str(self.source), body)
-                for path in skill.rglob("*.md"):
-                    for _, target in LINK.findall(path.read_text()):
+                self.assertEqual((project / ".claude/skills" / skill.name).resolve(), skill.resolve())
+                for resource in skill.rglob("*.md"):
+                    for _, target in LINK.findall(resource.read_text()):
                         if "://" in target or target.startswith("#"):
                             continue
-                        resolved = (path.parent / target.split("#")[0]).resolve()
-                        self.assertTrue(resolved.is_relative_to(skill))
-                        self.assertTrue(resolved.is_file(), f"Broken reference: {path}: {target}")
-                self.assertFalse(any(path.suffix == ".py" for path in skill.rglob("*")))
-                self.assertFalse((skill / "docs/research").exists())
-        self.assertTrue((self.output / "write-spec/templates/spec.md").is_file())
-        self.assertFalse((self.output / "write-spec/references/execution-policy.md").exists())
-        router = (self.output / "agent-workflow/SKILL.md").read_text()
-        self.assertIn("not this project's installed set", router)
-        self.assertNotIn("](../", router)
+                        resolved = (resource.parent / target.split("#")[0]).resolve()
+                        self.assertTrue(resolved.is_relative_to(skill.resolve()))
+                        self.assertTrue(resolved.is_file(), f"Broken reference: {resource}: {target}")
+                self.assertFalse(any(p.suffix == ".py" for p in skill.rglob("*")))
+        self.assertTrue((project / ".agents/skills/write-spec/templates/spec.md").is_file())
 
-    def test_build_is_idempotent_detects_stale_packages_and_protects_local_edits(self):
-        self.assertEqual(package.build(self.source, self.output)["action"], "create")
-        self.assertEqual(package.build(self.source, self.output, check=True)["action"], "unchanged")
-        changed = self.source / "templates/spec.md"
-        changed.write_text(changed.read_text() + "\nUpdated requirements.\n")
-        with self.assertRaises(InstallError):
-            package.build(self.source, self.output, check=True)
-        self.assertEqual(package.build(self.source, self.output)["action"], "update")
-        (self.output / "grill/SKILL.md").write_text("Local edited distribution")
-        with self.assertRaises(InstallError):
-            package.build(self.source, self.output)
-        self.assertEqual((self.output / "grill/SKILL.md").read_text(), "Local edited distribution")
+    def test_one_selected_skill_has_only_its_own_resources(self):
+        selected = self.root / "only-write-spec"
+        shutil.copytree(self.source / "skills/write-spec", selected)
+        self.source.rename(self.root / "source unavailable")
+        self.assertTrue((selected / "templates/spec.md").is_file())
+        self.assertFalse((selected / "references/execution-policy.md").exists())
+        for resource in selected.rglob("*.md"):
+            for _, target in LINK.findall(resource.read_text()):
+                if "://" not in target and not target.startswith("#"):
+                    self.assertTrue((resource.parent / target.split("#")[0]).resolve().is_relative_to(selected))
+                    self.assertTrue((resource.parent / target.split("#")[0]).is_file())
 
-    def test_missing_external_and_symlinked_resources_are_rejected(self):
-        resource = self.source / "templates/spec.md"
-        original = resource.read_bytes()
-        resource.unlink()
-        with self.assertRaises(InstallError):
-            package.packages(self.source)
-        resource.symlink_to(self.root / "outside.md")
-        with self.assertRaises(InstallError):
-            package.packages(self.source)
-        resource.unlink()
-        resource.write_text("[outside](../../outside.md)")
-        with self.assertRaises(InstallError):
-            package.packages(self.source)
-        resource.write_bytes(original)
-        self.output.symlink_to(self.root / "elsewhere", target_is_directory=True)
-        with self.assertRaises(InstallError):
-            package.build(self.source, self.output)
-
-    def test_legal_notices_are_preserved_and_authoring_files_are_excluded(self):
-        (self.source / "LICENSE").write_text("Required terms")
-        files = package.packages(self.source)
-        for name in ("grill", "write-spec", "agent-workflow"):
-            self.assertEqual(files[f"{name}/LICENSE"], b"Required terms")
-        self.assertFalse(any("/tests/" in path or "/research/" in path or path.endswith("/AGENTS.md") for path in files))
+    def test_validation_rejects_missing_escaping_absolute_and_symlinked_resources(self):
+        template = self.source / "skills/write-spec/templates/spec.md"
+        template.unlink()
+        with self.assertRaises(workflow.WorkflowError):
+            workflow.check_skills(self.source)
+        for content in ("[outside](../../../../outside.md)", "[absolute](/tmp/outside.md)"):
+            template.write_text(content)
+            with self.assertRaises(workflow.WorkflowError):
+                workflow.check_skills(self.source)
+        template.unlink()
+        outside = self.root / "outside.md"
+        outside.write_text("external")
+        template.symlink_to(outside)
+        with self.assertRaises(workflow.WorkflowError):
+            workflow.check_skills(self.source)
 
     def fake_npx(self):
         executable_dir = self.root / "bin"
@@ -99,7 +88,6 @@ class PackagingTests(unittest.TestCase):
         return {**os.environ, "PATH": str(executable_dir) + os.pathsep + os.environ["PATH"]}
 
     def test_bash_wrapper_passes_only_selected_project_skills_to_two_agents(self):
-        package.build(self.source, self.source / "packages/skills")
         project = self.root / "project with spaces"
         project.mkdir()
         result = subprocess.run(["bash", str(self.source / "scripts/install-skills.sh"),
@@ -108,13 +96,12 @@ class PackagingTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         execution = json.loads(result.stdout)
         self.assertEqual(Path(execution["cwd"]).resolve(), project)
-        self.assertEqual(execution["args"], ["--yes", "skills@1.7.4", "add", str(self.source / "packages/skills"),
+        self.assertEqual(execution["args"], ["--yes", "skills@1.7.4", "add", str(self.source / "skills"),
                                              "--agent", "claude-code", "codex", "--skill", "write-spec", "--yes"])
         self.assertEqual(execution["telemetry"], "1")
         self.assertEqual(list(project.iterdir()), [])
 
     def test_wrapper_forwards_agent_selection_and_rejects_missing_values(self):
-        package.build(self.source, self.source / "packages/skills")
         project = self.root / "project"
         project.mkdir()
         environment = self.fake_npx()
@@ -145,7 +132,6 @@ class PackagingTests(unittest.TestCase):
 
     @unittest.skipUnless(os.name == "posix", "PTY behavior")
     def test_agent_terminal_cannot_silently_select_all(self):
-        package.build(self.source, self.source / "packages/skills")
         project = self.root / "project"
         project.mkdir()
         master, slave = os.openpty()
@@ -161,7 +147,6 @@ class PackagingTests(unittest.TestCase):
         self.assertEqual(list(project.iterdir()), [])
 
     def test_bash_wrapper_requires_selection_for_unattended_calls(self):
-        package.build(self.source, self.source / "packages/skills")
         project = self.root / "project"
         project.mkdir()
         for flags in ([], ["--yes"], ["--global"], ["--all"], ["--agent", "other"]):

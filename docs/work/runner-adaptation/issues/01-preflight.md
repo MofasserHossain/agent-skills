@@ -27,7 +27,7 @@ A user can inspect an explicit issues scope without launching an agent or changi
 ## Verification
 Implemented through workflow.py next and shared inventory validation. Review the selection tests and verify the full kit checks before acceptance.
 
-Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; validate packages if resources change.
+Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; verify relocated skills if resources change.
 
 ## Scope
 Only this outcome and the parent contract. Later integrations and external actions require their own authorization.

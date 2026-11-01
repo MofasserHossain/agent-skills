@@ -13,11 +13,24 @@ Identify the intended repository and PR from the request, current branch, or exi
 
 ## Prepare, create, or update
 
-1. Inspect branch, worktree, staged/unstaged changes, target base, existing PRs, and the relevant diff. Preserve unrelated changes and existing staged content; do not blanket-stage or discard work. Respect project limits on simultaneous PRs and branch naming. Do not switch/reset a dirty checkout blindly.
-2. Read the task/spec and existing verification evidence needed to describe the actual change. Run project-required final checks and conditional checks before committing/delivery; do not invent check exemptions or count stale evidence as current verification. Resolve failures within scope and report remaining human checks.
-3. Prepare the required commit(s), title and body according to project policy. Lead with the concrete problem and resulting behavior; include useful validation and limitations. Prefer a structured tool argument or a temporary body file for multiline text. Keep secrets and private run logs out of commits/descriptions.
-4. Perform only actions already authorized by the user or approved plan. Preparation does not itself authorize pushing, publishing, force-pushing, or merging. When authorization is required, finish the concrete reviewable preparation before asking; do not ask again for an already-authorized action. Rewrite commit history only as permitted by project policy, protecting unrelated work; use lease protection if a force-push is authorized.
-5. Use available connected repository tools or the project's authenticated CLI to create/update the intended PR against the verified base. Refresh its title/body when scope changes. Report the PR link, verification outcome and remaining human checks; follow the project's post-opening wait rule. Do not merge unless separately authorized and project rules permit it.
+1. Inspect branch, worktree, staged/unstaged changes, target base and existing PRs. For creation, require a user request and stop on the target base branch (main by default when the project specifies no other base). Reuse an existing PR for this work instead of creating another; respect the project's concurrency limits. Preserve unrelated/staged changes and branch names; do not switch/reset a dirty checkout blindly.
+2. Read the task/spec and discover verification commands from this repository's applicable instructions, .agent-workflow.json, scripts and CI. Run required final and conditional checks in the project's order; there is no universal check/build command. Stop delivery on the first failed required check and show its command/output. Fix only within scope, rerun affected checks and report remaining human checks; never count stale evidence as current verification.
+3. Review the full diff against the refreshed remote base, including any intended uncommitted work. Prepare the commit(s) and a concrete title/body using the format below, subject to project policy. Keep secrets/private logs out of both code and description.
+4. Before a new PR, show the commits, diff statistics and proposed title/body, then wait for the user's go-ahead. Existing approval of that exact result satisfies this gate; initial permission to prepare a PR does not replace diff review. Material scope changes require an updated review. Prepare all reversible work before this checkpoint.
+5. After approval, push the intended branch with an upstream and create the PR against the verified base using available connected repository tools or the project's authenticated CLI. Use structured text or a body file for multiline descriptions. Rewrite history only if authorized by project policy; protect authorized force-pushes with a lease. Report the PR URL and verification outcome, following the project's post-opening wait rule. A PR request does not authorize merge or deployment.
+
+## Title and description
+
+Use the user's supplied title when present; otherwise follow project conventions. When the project has no title convention, use a Conventional Commit title, `<type>(<scope>): <summary>`, under 70 characters, suitable as the squash-merge entry.
+
+Keep the body to about 25 lines unless a project template requires more. Describe the final change rather than repeating commit messages:
+
+- `## Summary`: one or two sentences explaining the concrete change and why.
+- `## Changes`: short bullets grouped by area, with user-visible fixes first.
+- `## Verification`: one line per check actually performed; identify checks not run and why.
+- `## Notes`: only when needed for a material risk, follow-up or manual step, in one or two lines.
+
+Use no tables or long explanations in the default body. Preserve required repository templates instead of overriding them with this format.
 
 ## Sync after merge
 

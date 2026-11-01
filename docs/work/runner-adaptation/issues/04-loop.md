@@ -30,7 +30,7 @@ A user can run eligible tasks sequentially within explicit count and time limits
 ## Verification
 Use fake workers and an injectable clock or short disposable processes to verify bounds, graph changes and all stop reasons.
 
-Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; validate packages if resources change.
+Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; verify relocated skills if resources change.
 
 ## Scope
 Only this outcome and the parent contract. Later integrations and external actions require their own authorization.

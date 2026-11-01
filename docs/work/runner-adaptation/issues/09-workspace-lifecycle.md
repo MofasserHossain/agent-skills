@@ -31,7 +31,7 @@ Multiple projects can retain independent workspaces under a configurable root an
 - [ ] Original repositories and other workspaces remain untouched.
 
 ## Verification
-Use disposable paths and fake runtimes for every acceptance case in the lifecycle document. Run the full unit suite, workflow check and both package checks. No machine-wide prune, live deletion, account configuration or external worker call.
+Use disposable paths and fake runtimes for every acceptance case in the lifecycle document. Run the full unit suite, workflow check and skill relocation tests. No machine-wide prune, live deletion, account configuration or external worker call.
 
 ## Scope
 Implement the lifecycle against the runtime and claims contracts. No automatic remote branch deletion, publication, merge or new UI platform.

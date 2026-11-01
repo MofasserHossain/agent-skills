@@ -234,7 +234,7 @@ def make_prompt(project, config, task_path, task_text):
     instructions = instruction_path.read_text(encoding="utf-8")
     instructions = re.sub(r"\A---\n.*?\n---\n", "", instructions, count=1, flags=re.S)
     instructions = absolute_links(instructions, instruction_path)
-    result = (KIT / "references/result-contract.md").read_text(encoding="utf-8")
+    result = (KIT / "skills/implement/references/result-contract.md").read_text(encoding="utf-8")
     return (
         "# Portable implementation request\n\n"
         f"Project: {project}\nTask source: {task_path}\n"
@@ -314,13 +314,40 @@ def dispatch(command, prompt, project, output, timeout):
     return returncode
 
 
-def check_kit():
-    skills = sorted((KIT / "skills").glob("*/SKILL.md"))
+def check_skills(kit):
+    """Validate directly installable folders without generating or rewriting files."""
+    skills = sorted((Path(kit) / "skills").glob("*/SKILL.md"))
     errors = []
+    if not skills:
+        errors.append("No canonical skills found.")
     for skill in skills:
+        if skill.parent.is_symlink():
+            errors.append(f"Symlinked skill folder: {skill.parent}")
+            continue
         content = skill.read_text(encoding="utf-8")
         if f"name: {skill.parent.name}\n" not in content or "description:" not in content:
             errors.append(f"Invalid skill metadata: {skill}")
+        for resource in skill.parent.rglob("*"):
+            if resource.is_symlink():
+                errors.append(f"Symlinked skill resource: {resource}")
+                continue
+            if resource.is_file() and resource.suffix == ".md":
+                for target in re.findall(r"\]\(([^)]+)\)", resource.read_text(encoding="utf-8")):
+                    if "://" in target or target.startswith("#"):
+                        continue
+                    local = (resource.parent / target.split("#")[0]).resolve()
+                    if target.startswith("/") or not local.is_relative_to(skill.parent.resolve()):
+                        errors.append(f"Skill link leaves its installed folder: {resource}: {target}")
+                    elif not local.is_file():
+                        errors.append(f"Missing skill resource: {resource}: {target}")
+    if errors:
+        raise WorkflowError("\n".join(errors))
+    return len(skills)
+
+
+def check_kit():
+    count = check_skills(KIT)
+    errors = []
     for path in KIT.rglob("*.md"):
         if ".git" in path.parts:
             continue
@@ -331,10 +358,10 @@ def check_kit():
             if not local.exists():
                 errors.append(f"Broken link in {path.relative_to(KIT)}: {target}")
     load_registry()
-    read_task(KIT / "templates/task.md")
+    read_task(KIT / "skills/plan-tasks/templates/task.md")
     if errors:
         raise WorkflowError("\n".join(errors))
-    print(f"Validated {len(skills)} skills, local Markdown links, registry and task template.")
+    print(f"Validated {count} directly installable skills, local Markdown links, registry and task template.")
 
 
 def main(argv=None):

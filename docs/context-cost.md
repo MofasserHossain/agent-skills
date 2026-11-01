@@ -32,4 +32,4 @@ Filesystem byte/word counts are useful for finding large instructions, but are n
 
 Keep discovery descriptions concise and avoid duplicate linked/global/project registrations. Keep root project rules focused; put long architecture/reference material behind clear task-specific pointers when that can preserve the project's obligations. Do not delete essential constraints for a smaller number.
 
-Pass the selected task and relevant requirement references rather than every issue and all history. Keep useful reasoning during a planning session; hand off durable records when switching tasks or executors. Use [context policy](../references/context-policy.md) and [model policy](../references/model-policy.md).
+Pass the selected task and relevant requirement references rather than every issue and all history. Keep useful reasoning during a planning session; hand off durable records when switching tasks or executors. Use [context policy](../skills/agent-workflow/references/context-policy.md) and [model policy](../skills/agent-workflow/references/model-policy.md).

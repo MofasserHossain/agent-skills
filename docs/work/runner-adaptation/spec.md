@@ -6,7 +6,7 @@ Status: proposed execution design. R1 local preflight is implemented. A local-ch
 
 Run one eligible implementation task, or a bounded series, with the same portable records across Claude Code/Codex and host/isolated environments. Preserve interactive skill use and standard skill installation independently of runner tooling. Keep the Python core standard-library only. Sandcastle may become an optional backend if a concrete capability warrants it; its prompts, runtime and GitHub policies are not mandatory dependencies.
 
-No automatic merge, unrestricted publishing, new executor names, global installation or provider/account configuration is implied. A runtime pilot and paid/live worker execution need task authorization. GitHub skill distribution is a separate capability, now implemented through the tracked packages/skills path by merged PR #2; this design does not replace it.
+No automatic merge, unrestricted publishing, new executor names, global installation or provider/account configuration is implied. A runtime pilot and paid/live worker execution need task authorization. GitHub skill distribution is a separate capability, now implemented through directly installable canonical skills (replacing PR #2’s generated distribution); this design does not replace it.
 
 ## Requirements
 

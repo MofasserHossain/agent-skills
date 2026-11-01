@@ -1,5 +1,8 @@
 # Repository structure assessment
 
+Historical assessment: the package-builder coupling described below was resolved by the direct-install skill migration. Canonical skill folders now contain their resources; no package builder or generated installation tree remains. The original findings and verification below describe the earlier revision.
+
+
 Date: 2026-11-01
 
 Scope: skill packaging, legacy installation boundaries, documentation, and using this repository's own skills to maintain it. This is an assessment, not authorization for the proposed refactors. No implementation backlog or tracker migration is introduced here.

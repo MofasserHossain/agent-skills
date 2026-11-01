@@ -64,7 +64,7 @@ A worker report, completion marker, exit code or commit count is not a sufficien
 
 QA can inspect a stable integrated increment while workers build other increments. It records the tested revision/environment and returns reproducible findings to the authoritative backlog using the [QA procedure](../skills/qa/SKILL.md). Triage new work before scheduling it; preserve active claims and completed evidence, and stop only affected dependent work when a blocker is found. Final acceptance still checks the combined feature. Shared devices remain sequential.
 
-Prepare implementation context around the selected issue and required project rules, with additional docs pulled as needed. Prepare review context with explicit applicable coding standards, requirement references, the bounded diff and verification evidence. Neither stage needs the whole instruction library. See [review](../skills/review/SKILL.md) and [model policy](../references/model-policy.md) for role-specific context and capacity choices.
+Prepare implementation context around the selected issue and required project rules, with additional docs pulled as needed. Prepare review context with explicit applicable coding standards, requirement references, the bounded diff and verification evidence. Neither stage needs the whole instruction library. See [review](../skills/review/SKILL.md) and [model policy](../skills/agent-workflow/references/model-policy.md) for role-specific context and capacity choices.
 
 These procedures can be followed by a supervised agent now. Automatic QA issue ingestion, batch revalidation and role-specific prompt assembly remain runner work.
 

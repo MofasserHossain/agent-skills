@@ -7,7 +7,7 @@ The core stays the same: intake and clarification, optional research/prototype, 
 | Work | Useful planning focus | Verification emphasis |
 |---|---|---|
 | UI research/design only | Audience/task, evidence, flow/state options, selected direction | Prototype observations, unresolved decisions and usable implementation handoff; no claim that production is implemented |
-| Frontend | Optional `ui-design`, existing components/tokens, real or explicitly mocked data contract | User interactions, relevant states, layout, accessibility and actual data behavior |
+| Frontend | Optional [ui-design](../SKILL.md), existing components/tokens, real or explicitly mocked data contract | User interactions, relevant states, layout, accessibility and actual data behavior |
 | Full stack | UI flow plus service/data contract, failure behavior and migration/rollout where relevant | Thin end-to-end slices, contract/integration checks and runtime UI QA |
 | Backend/API/service | Consumer-visible contract, invariants, failures, authorization and data/concurrency behavior as relevant | Public-boundary tests, integration/contract checks and applicable operational evidence; skip UI design |
 | Small clear fix | Existing issue and focused diagnosis | Reproduction and proportionate regression/review checks; no mandatory PRD or design record |

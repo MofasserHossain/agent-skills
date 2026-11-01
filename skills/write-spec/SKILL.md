@@ -5,7 +5,7 @@ description: "Record settled decisions as a buildable specification for multi-se
 
 Read the brief, decisions and relevant research/prototype verdicts. Synthesize rather than repeating the interview. Flag missing implementation-changing decisions instead of inventing them.
 
-Use [spec template](../../templates/spec.md). Explain user behavior with concrete examples and explicit scope. Include constraints, consequential decisions and measurable acceptance criteria.
+Use [spec template](templates/spec.md). Explain user behavior with concrete examples and explicit scope. Include constraints, consequential decisions and measurable acceptance criteria.
 
 Give distinct requirements stable labels such as R1 and R2 when the work spans several issues. Preserve those labels through revisions so tasks and QA can point to the agreed behavior. A standalone small task does not need an invented PRD.
 
