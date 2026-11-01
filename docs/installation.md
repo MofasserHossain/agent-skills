@@ -14,20 +14,20 @@ and rewrite their links; the router is exported as `agent-workflow`.
 Maintainers rebuild with `python3 tools/package_skills.py --output packages/skills`
 and validate with the same command plus `--check`. Include generated changes in
 the source change's PR. Keep the build manifest; never edit package output by hand.
-The default ignored `dist/skills` remains available for local previews below.
+The default ignored `dist/skills` remains available for optional maintainer previews.
 GitHub availability follows the reviewed commit/merge; preparing packages does
 not publish them. No automation or optional Python runner is installed.
 
 # Install selected skills from the local kit
 
-Use the standard Skills CLI against the prepared `dist/skills` directory. This is the primary route for new projects; any agent supported by the pinned Skills CLI can be targeted. The optional execution helper remains Claude Code/Codex only.
+Use the standard Skills CLI against the tracked `packages/skills` directory. This is the primary route for new projects; any agent supported by the pinned Skills CLI can be targeted. The optional execution helper remains Claude Code/Codex only.
 
 ## Local installation
 
-A fresh source checkout first needs its distributions prepared by the maintainer:
+A fresh checkout already contains reviewed packages. Maintainers rebuild after editing canonical sources:
 
 ```sh
-python3 tools/package_skills.py
+python3 tools/package_skills.py --output packages/skills
 ```
 
 Then, from this root repo:
@@ -59,17 +59,16 @@ The standard CLI shows its installation summary and confirmation. `--yes` skips 
 Alternatively, run directly from the target project:
 
 ```sh
-DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/dist/skills --agent claude-code codex
+DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/packages/skills --agent claude-code codex
 ```
 
 These are real installation commands, not the legacy helper's preview/--apply protocol. Use --list to inspect first and the normal interactive confirmation when installing.
 
 ## Start Claude Code or Codex and use an installed skill
 
-Prepare packages once in this source checkout, then install a chosen starter set into the target codebase:
+From this source checkout, install a chosen starter set into the target codebase using its tracked packages:
 
 ```sh
-python3 tools/package_skills.py
 bash scripts/install-skills.sh /path/to/project --agent claude-code codex --skill setup-project agent-workflow
 ```
 
@@ -155,7 +154,7 @@ Research about Matt, tests, examples, build scripts and the optional execution r
 
 Invoke a selected skill through the host's supported discovery/invocation mechanism. A session may need a refresh. Run setup-project if installed to inspect real project scripts, tracker and documentation conventions; preserve existing instructions and AGENTS/CLAUDE symlinks. It can write project configuration directly without the Python helper. See [project checks](../references/verification-policy.md).
 
-After source edits, rebuild dist/skills. Then rerun skills add for the intended --skill names. Local source paths in skills-lock.json support maintenance; they are not needed to execute already-copied skills. Review project-local skill edits before reinstalling: standard installation can overwrite them and does not provide our legacy local-edit guard. Do not assume local sources have the same update behavior as Git-hosted sources; rerunning add is the verified local refresh route.
+After source edits, rebuild and validate packages/skills; regenerate dist/skills only when using an optional local preview. Then rerun skills add for the intended --skill names. Local source paths in skills-lock.json support maintenance; they are not needed to execute already-copied skills. Review project-local skill edits before reinstalling: standard installation can overwrite them and does not provide our legacy local-edit guard. Do not assume local sources have the same update behavior as Git-hosted sources; rerunning add is the verified local refresh route.
 
 The local preview distribution under dist/skills is ignored in Git; packages/skills is the tracked GitHub distribution. Maintainers rebuild both from canonical sources; hand edits to generated output are rejected by the builder. The build preserves applicable license/notice files. It does not publish, install globally, or run an agent. The tracked GitHub path reuses these independent skill folders. Plugin/npm publication remains outside this installation.
 

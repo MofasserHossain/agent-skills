@@ -1,6 +1,6 @@
 # Workspace organization and archival
 
-Proposed lifecycle, not implemented commands. The workspace root requested for this user is `~/mofasser-workspace`; make it configurable. One manager supports many registered projects and many workspaces per project, while ordinary execution in an existing checkout remains available.
+The full lifecycle below is the target design. Its standalone local-checkout foundation is implemented in tools/workspaces.py; see [commands and current limits](../../workspaces.md). Docker, worker/process supervision, hooks and retention are not implemented. The workspace root requested for this user is `~/mofasser-workspace`; make it configurable. One manager supports many registered projects and many workspaces per project, while ordinary execution in an existing checkout remains available.
 
 ## Layout and ownership
 

@@ -19,16 +19,14 @@ skills under `skills/`, whose shared resources are outside the individual folder
 
 ## Install from this local repo
 
-You need Python 3 to build the packages, Node 22.20+ for the pinned Skills CLI, and a Skills-compatible agent in the target project. Installed Markdown skills do not require Python. Clone this repository with your GitHub account's access, then prepare the ignored distribution:
+You need Node 22.20+ for the pinned Skills CLI and a Skills-compatible agent in the target project. Python is required only for maintainer builds/checks. Clone this repository with your GitHub account's access; reviewed packages are already included:
 
 ```sh
 git clone https://github.com/MofasserHossain/agent-workflow.git
 cd agent-workflow
-python3 tools/package_skills.py
-python3 tools/package_skills.py --check
 ```
 
-The prepared `dist/skills` folders work with the standard [Skills CLI](https://github.com/vercel-labs/skills/blob/main/docs/commands.md#skills-add). From this checkout, list or choose skills for an existing project:
+The tracked `packages/skills` folders work with the standard [Skills CLI](https://github.com/vercel-labs/skills/blob/main/docs/commands.md#skills-add). From this checkout, list or choose skills for an existing project:
 
 ```sh
 bash scripts/install-skills.sh /path/to/project --list
@@ -61,7 +59,7 @@ The CLI validates agent names and installs into their discovery directories. Ins
 Or use the standard CLI directly from the target project:
 
 ```sh
-DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/dist/skills --agent claude-code codex
+DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/packages/skills --agent claude-code codex
 ```
 
 Each selected skill includes its own needed references/templates. The standard symlink method copies canonical skill folders into the target project and creates host links within that project. It does not require the authoring checkout during agent use. Other named skills are optional collaborators; they are not installed automatically.
@@ -85,6 +83,16 @@ Start `claude` or `codex` from the target project. Inside Claude Code, invoke `/
 
 Use only skills you selected; add another when needed. The optional `agent-workflow` router helps select a route. Decisions and results stay in the target project's work records so another session or agent can continue.
 
+## Source versus installation files
+
+| Folder | Role | Edit directly? |
+|---|---|---|
+| `skills/`, `references/`, `templates/` | Canonical instructions and shared resources | Yes |
+| `packages/skills/` | Generated, self-contained GitHub/local installation packages | No; rebuild from source |
+| `dist/skills/` | Ignored optional maintainer preview | No; disposable build output |
+
+Both local and GitHub installation use `packages/skills`. Target projects receive only selected skill folders, not this source repository. The unit suite checks that the tracked distribution matches its sources.
+
 ## Maintain the root kit
 
 To work on this repository, open the agent here and reference the canonical skill directly. No self-installation is needed for an agent that can read this checkout. For example:
@@ -100,7 +108,7 @@ python3 tools/package_skills.py
 python3 tools/package_skills.py --check
 ```
 
-Python is a maintainer/build tool here, not an installed-skill runtime requirement. Local preview packages stay under the ignored `dist/skills/`; the reviewed GitHub distribution is tracked separately under `packages/skills/`. They contain no symlinks or references back to this checkout. Build before installing from a fresh clone. The tracked packages support GitHub installation; plugin/npm distribution remains separate. Building updates local files without pushing or publishing them.
+Python is a maintainer/build tool here, not an installed-skill runtime requirement. Local preview packages stay under the ignored `dist/skills/`; the reviewed GitHub distribution is tracked separately under `packages/skills/`. They contain no symlinks or references back to this checkout. Fresh clones already include the reviewed installation packages; rebuild only after editing their canonical sources. The tracked packages support GitHub installation; plugin/npm distribution remains separate. Building updates local files without pushing or publishing them.
 
 ## Available capabilities
 
@@ -131,7 +139,7 @@ python3 tools/workflow.py next /path/to/project/docs/work/feature/issues --proje
 
 It does not launch, claim or accept tasks. Filename order is the default; `complete` means all existing records say done, not that this command reverified them. Invalid graphs fail before dispatch. The [Matt runner assessment and adaptation specification](docs/work/runner-adaptation/assessment.md) separates inspected source behavior, implemented preflight and proposed once/loop/runtime work.
 
-Central multi-project workspace management, verified archival, disk-usage previews and policy-based cleanup are also [planned](docs/work/runner-adaptation/workspaces.md). Stopping a workspace does not reclaim its disk, and recovery archives need separate retention.
+The separate [workspace helper](docs/workspaces.md) creates independent local clones, lists logical disk usage, verifies clean committed archives and supports explicit purge/restore under ~/mofasser-workspace (configurable). It does not launch Docker or agents. Worker supervision, project hooks and automatic retention remain planned.
 
 Automated scheduling/loops, GitHub API integration, Docker provisioning, Sandcastle orchestration and provider-specific model-effort translation remain planned. The [execution plan](docs/execution-plan.md) describes those future capabilities. Legacy snapshot/pointer installers remain available for existing installations, but are not the default installation route.
 

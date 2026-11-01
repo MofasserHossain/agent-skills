@@ -36,8 +36,10 @@ Before scheduling is added, orchestration must own claims, status transitions, p
 
 ## Installation versus execution
 
-The kit is authored separately. New projects install selected self-contained skill packages through the standard Skills CLI from dist/skills. A maintainer build rewrites local resource links and converts optional cross-skill references to names. No build/runner code is copied into standard installed skills. Legacy .agent-workflow snapshots and source-linked development mode remain supported for existing users. Each project owns its configuration and work records. A sandbox must receive a readable kit installation or the selected instructions and references explicitly; host symlinks outside the mounted workspace are not assumed to work.
+The kit is authored separately. New projects install selected self-contained skill packages through the standard Skills CLI from tracked packages/skills; dist/skills is an optional ignored preview. A maintainer build rewrites local resource links and converts optional cross-skill references to names. No build/runner code is copied into standard installed skills. Legacy .agent-workflow snapshots and source-linked development mode remain supported for existing users. Each project owns its configuration and work records. A sandbox must receive a readable kit installation or the selected instructions and references explicitly; host symlinks outside the mounted workspace are not assumed to work.
 
 Standard installation registers each selected skill with its own concise discovery metadata. Its body/resources load as needed; no whole-kit router is mandatory. Legacy snapshot registration uses one thin router entry instead. Discovery directories are host-specific adapter data; the procedures and work records remain neutral. Registration is an explicit operation separate from project setup and executor dispatch.
 
 Keep the runtime independent of agent choice: moving from Claude to Codex should not require changing task records or rewriting Docker policy.
+
+The standalone tools/workspaces.py helper owns independent local checkout records and verified Git archive generations outside disposable checkout directories. It is not a runtime/agent supervisor and is not bundled with skills. See [workspace commands and limits](workspaces.md).

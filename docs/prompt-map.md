@@ -4,7 +4,7 @@ For entry-point selection and example requests, see the [skill guide](skill-guid
 
 ## Standard local installation
 
-Use the Skills CLI against prepared dist/skills folders for new projects. Each selected stage is independently discoverable and bundles only its local supporting resources. The source packager converts sibling-skill links to optional skill names so choosing one stage does not require installing every stage. The router exports as agent-workflow and is optional. Read the project's installed copy; no authoring path or Python helper is needed for ordinary agent use. The helper and direct-path examples below remain optional source/legacy workflows. See [installation](installation.md).
+Use the Skills CLI against tracked packages/skills folders for new projects; dist/skills is an optional ignored build preview. Each selected stage is independently discoverable and bundles only its local supporting resources. The source packager converts sibling-skill links to optional skill names so choosing one stage does not require installing every stage. The router exports as agent-workflow and is optional. Read the project's installed copy; no authoring path or Python helper is needed for ordinary agent use. The helper and direct-path examples below remain optional source/legacy workflows. See [installation](installation.md).
 
 ## Separate instructions already available
 

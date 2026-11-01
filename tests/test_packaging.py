@@ -23,6 +23,10 @@ class PackagingTests(unittest.TestCase):
         shutil.copytree(package.KIT, self.source, ignore=shutil.ignore_patterns(".git", "__pycache__", "dist"))
         self.output = self.root / "packages"
 
+    def test_tracked_distribution_matches_canonical_sources(self):
+        result = package.build(package.KIT, package.KIT / "packages/skills", check=True)
+        self.assertEqual(result["action"], "unchanged")
+
     def test_each_package_is_self_contained_after_source_removal(self):
         package.build(self.source, self.output)
         self.source.rename(self.root / "source unavailable")
@@ -95,7 +99,7 @@ class PackagingTests(unittest.TestCase):
         return {**os.environ, "PATH": str(executable_dir) + os.pathsep + os.environ["PATH"]}
 
     def test_bash_wrapper_passes_only_selected_project_skills_to_two_agents(self):
-        package.build(self.source, self.source / "dist/skills")
+        package.build(self.source, self.source / "packages/skills")
         project = self.root / "project with spaces"
         project.mkdir()
         result = subprocess.run(["bash", str(self.source / "scripts/install-skills.sh"),
@@ -104,13 +108,13 @@ class PackagingTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         execution = json.loads(result.stdout)
         self.assertEqual(Path(execution["cwd"]).resolve(), project)
-        self.assertEqual(execution["args"], ["--yes", "skills@1.7.4", "add", str(self.source / "dist/skills"),
+        self.assertEqual(execution["args"], ["--yes", "skills@1.7.4", "add", str(self.source / "packages/skills"),
                                              "--agent", "claude-code", "codex", "--skill", "write-spec", "--yes"])
         self.assertEqual(execution["telemetry"], "1")
         self.assertEqual(list(project.iterdir()), [])
 
     def test_wrapper_forwards_agent_selection_and_rejects_missing_values(self):
-        package.build(self.source, self.source / "dist/skills")
+        package.build(self.source, self.source / "packages/skills")
         project = self.root / "project"
         project.mkdir()
         environment = self.fake_npx()
@@ -141,7 +145,7 @@ class PackagingTests(unittest.TestCase):
 
     @unittest.skipUnless(os.name == "posix", "PTY behavior")
     def test_agent_terminal_cannot_silently_select_all(self):
-        package.build(self.source, self.source / "dist/skills")
+        package.build(self.source, self.source / "packages/skills")
         project = self.root / "project"
         project.mkdir()
         master, slave = os.openpty()
@@ -157,7 +161,7 @@ class PackagingTests(unittest.TestCase):
         self.assertEqual(list(project.iterdir()), [])
 
     def test_bash_wrapper_requires_selection_for_unattended_calls(self):
-        package.build(self.source, self.source / "dist/skills")
+        package.build(self.source, self.source / "packages/skills")
         project = self.root / "project"
         project.mkdir()
         for flags in ([], ["--yes"], ["--global"], ["--all"], ["--agent", "other"]):
