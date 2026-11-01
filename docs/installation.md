@@ -67,7 +67,7 @@ Earlier projects may contain .agent-workflow plus a thin agent-workflow entry. T
 
 Migrate after choosing the intended skill set. Preserve the project's AGENTS/CLAUDE instructions, .agent-workflow.json and work records. Review/back up local changes to the managed bundle and its native entries. Remove only the owned legacy installation and update project pointers before installing the chosen standard skills; the agent-workflow name can otherwise conflict with the old entry. Do not remove unrelated skills. An existing project is not migrated merely by preparing this distribution.
 
-We have left Shikhi Kheli's installed selection unchanged because the user wants to choose it. Its current guide describes that existing snapshot. Use the source wrapper with --list to inspect choices without changing it.
+Existing project selections remain unchanged until deliberately migrated. Use the source wrapper with --list to inspect available skills without changing an installation.
 
 Validated locally with Skills CLI 1.7.4: a three-skill selection using project-internal symlinks, and a separate one-skill UI selection using --copy. Both retained working local references after the source distribution was hidden; the first also survived moving the project. These are filesystem/installation checks, not claims about model output quality.
 

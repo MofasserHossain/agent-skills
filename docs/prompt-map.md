@@ -45,7 +45,9 @@ For the next stage:
 
 > In the same project, read /absolute/path/to/agent-workflow/skills/plan-tasks/SKILL.md and docs/work/feature/spec.md. Prepare vertical issues with requirement coverage, blockers and verification under docs/work/feature/issues/.
 
-These are usage examples, not another set of stage instructions. Replace the paths; creating issues follows the existing authorization and agreed decisions. If the shared native entry point has been registered, invoke it with the stage and source reference instead. The stage names are not automatically individual slash commands.
+These are usage examples, not another set of stage instructions. Replace the paths; creating issues follows the existing authorization and agreed decisions. In this kit's own checkout, use relative canonical paths such as `skills/implement/SKILL.md` and keep actual work records under `docs/work/<feature>/`. Templates provide artifact shapes, examples are fictional, and conversation summaries provide historical background.
+
+Standard installed skills are individually discoverable through the host's supported invocation mechanism. Merely having the source files in `skills/` does not register them with a host. Legacy/source-linked registration exposes one thin router entry; invoke that entry with the stage and source reference, or read the procedure directly.
 
 The helper can be invoked by absolute path from elsewhere because --project selects the target:
 
@@ -56,7 +58,7 @@ python3 /absolute/path/to/agent-workflow/tools/workflow.py run /absolute/path/to
 
 The run command previews unless --execute is added. Actual dispatch sets the subprocess working directory to the project; supplying a project path does not itself grant filesystem permission or provision a remote workspace. A native interactive agent needs its own workspace/access configuration.
 
-Prefer tools/install_project.py for independent project snapshots. Optional source-linked personal/project pointers remain useful while authoring the kit. Choose one discovery mode/scope per agent/project to avoid duplicate entries. Each project keeps its own rules, configuration and work records. [Installation](installation.md) explains registration; it does not happen merely by adding .agent-workflow.json. Containers and remote machines need the kit provisioned at a path they can read.
+For new independent project installations, use the standard Skills CLI route described above. `tools/install_project.py` maintains legacy `.agent-workflow` snapshots; it is not the default for new projects. Optional source-linked pointers remain available for deliberate development use. Choose one discovery mode/scope per agent/project to avoid duplicate entries. Each project keeps its own rules, configuration and work records. [Installation](installation.md) explains installation and legacy migration; adding .agent-workflow.json alone does not register skills. Containers and remote machines need the selected resources provisioned at a path they can read.
 
 ## What Matt's sources establish
 

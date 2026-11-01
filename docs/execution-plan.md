@@ -93,16 +93,16 @@ If adopted, keep the optional dependency under a shared backend such as runners/
 
 These are requirements for the future runner, not capabilities implied by the present configuration.
 
-## Rollout for Shikhi Kheli
+## Rollout in a project
 
 1. Pilot the existing procedures on a real feature using supervised one-task execution.
 2. Add task-state/integration tracking, claims and bounded sequential execution.
-3. Validate one isolated worker with Node 24, the app's dependencies and its actual required checks.
+3. Validate one isolated worker with the project's runtime versions, dependencies and actual required checks.
 4. Evaluate a Sandcastle backend against the same task/result contract. Start with at most two independent workers when it earns a latency benefit.
-5. Integrate and verify on one feature branch, then follow the existing single-commit PR guide. The user merges.
-6. Keep device installs and UI QA sequential; preserve Conductor's nonconcurrent mode. Containers do not create independent Android devices. Respect an emulator the user is using.
+5. Integrate and verify on one feature branch, then follow the project's PR and human approval conventions.
+6. For mobile projects, keep shared-device installs and UI QA sequential. Preserve project-specific concurrency restrictions. Containers do not create independent devices. Respect an emulator the user is using.
 
-TypeScript/helper work and isolated tests may parallelize when resources and dependency boundaries permit. Do not run competing Metro/device sessions. Full combined verification and device/audio review still happen at the feature level.
+Helper work and isolated tests may parallelize when resources and dependency boundaries permit. Do not run competing development-server/device sessions against shared resources. Full combined verification and applicable device/audio review still happen at the feature level.
 
 Parallelism can reduce elapsed time while increasing token/context overhead. Measure accepted outcomes, rework, human review effort, latency and usage before expanding concurrency.
 

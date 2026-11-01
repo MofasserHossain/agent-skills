@@ -1,18 +1,22 @@
 # What belongs where
 
-This repository is the shared toolbox. Actual feature records belong to the project being changed.
+This repository is the shared toolbox. Actual feature records belong to the project being changed; improvements to this kit use this repository's `docs/work/<feature>/`.
 
 | Path | Responsibility | Read when |
 |---|---|---|
 | skills/ | Portable stage instructions | The corresponding stage runs |
+| dist/skills/ | Generated self-contained packages; ignored in Git | Building or installing selected skills |
 | references/ | Task/result contracts and shared policies | A stage points to them |
 | templates/ | Starting shapes for feature artifacts | Creating an artifact |
 | adapters/ | Executor commands and native discovery paths | Selecting or registering a host |
-| tools/ | Optional deterministic helpers | Setup, validation or explicit dispatch |
+| tools/ | Maintainer packaging, validation and optional execution/legacy helpers | Building packages, checking the kit or explicit dispatch/legacy maintenance |
+| scripts/ | Standard project-local Skills CLI installation wrapper | Installing selected prepared packages |
 | tests/ | Helper behavior tests using fake executors/directories | Maintaining the kit |
 | checks/ | Realistic behavioral pilot inputs | Evaluating the workflow |
 | examples/ | Illustrative brief, PRD and issues | Learning how artifacts connect |
 | docs/ | Kit design, installation, walkthrough and research | Learning or maintaining the kit |
+| docs/work/ | Actual kit-improvement decisions, tasks when needed, and evidence | Maintaining or resuming work on this kit |
+| docs/conversation-summaries/ | Historical discussion summaries | Recovering background; current work records hold subsequent decisions |
 
 ## Files that drive ordinary work
 
@@ -33,10 +37,10 @@ The agent does not read every folder at session start. [Project routes](project-
 
 ## Native use versus automation
 
-The native entry point is one short pointer to the workflow procedure: relative to the project snapshot in installed mode, or absolute to the source checkout in linked mode. The Python tools are optional; reading Markdown does not require running a launcher.
+For new projects, `scripts/install-skills.sh` uses the standard Skills CLI against generated `dist/skills/`. `tools/package_skills.py` prepares those packages from canonical sources. Selected packages are copied into project-local skill folders with their own resources; the standard symlink method adds host links within that project. See [installation](installation.md) for the resulting paths and copy option. The optional router exports as `agent-workflow`; each selected skill is independently discoverable.
 
-Registering a local skill does not install an agent, authenticate an account, provision Docker, schedule tasks, publish issues or mark work accepted.
+While maintaining this kit, an agent can read `skills/<name>/SKILL.md` directly without installing it. Installed projects read their own selected copies. Python is used to build packages here; ordinary installed-skill use does not require a Python launcher.
 
-Project installations contain selected skills and their linked runtime dependencies, not this entire authoring layout. Use --skills to choose procedures and --with-runner for optional execution tooling; the selection manifest records the result. Research, kit tests, examples and authoring instructions stay here.
+Standard installations contain selected skill folders/resources and installer lock metadata. Research, kit tests, examples, authoring docs and execution tooling stay in the source repo. Installing skills does not authenticate an agent, provision Docker, schedule tasks, publish issues or mark work accepted.
 
-For new projects, scripts/install-skills.sh uses the standard Skills CLI against generated dist/skills. tools/package_skills.py prepares self-contained packages from canonical sources. Standard project installs contain only selected skill folders/resources and the CLI lock; the legacy .agent-workflow layout above is no longer the default.
+Legacy installations use a `.agent-workflow` snapshot and one thin router entry. Only the legacy `tools/install_project.py` uses `--skills`, `--with-runner` and a selection manifest. Optional source-linked registration points a thin entry at this checkout and requires it to remain readable. These modes remain supported for existing installations and deliberate development use; they are not the default for new projects. Migrate only after selecting skills and preserving local edits, as described in [installation](installation.md).

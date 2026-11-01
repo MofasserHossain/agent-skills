@@ -1,10 +1,19 @@
 # Agent Workflow
 
-Reusable engineering skills for turning ideas, documents, messages and tickets into verified changes. Maintain them in this private local repo, then install only the skills each project needs. Current target agents are Claude Code and Codex.
+Reusable engineering skills for turning ideas, documents, messages and tickets into verified changes. Maintain one source kit, then install only the skills each project needs. Current target agents are Claude Code and Codex.
 
 ## Install from this local repo
 
-The prepared `dist/skills` folders work with the standard [Skills CLI](https://github.com/vercel-labs/skills/blob/main/docs/commands.md#skills-add). The root repo provides a Bash convenience command:
+You need Python 3 to build the packages, Node 22.20+ for the pinned Skills CLI, and Claude Code or Codex in the target project. Installed Markdown skills do not require Python. Clone this repository with your GitHub account's access, then prepare the ignored distribution:
+
+```sh
+git clone https://github.com/MofasserHossain/agent-workflow.git
+cd agent-workflow
+python3 tools/package_skills.py
+python3 tools/package_skills.py --check
+```
+
+The prepared `dist/skills` folders work with the standard [Skills CLI](https://github.com/vercel-labs/skills/blob/main/docs/commands.md#skills-add). From this checkout, list or choose skills for an existing project:
 
 ```sh
 bash scripts/install-skills.sh /path/to/project --list
@@ -33,7 +42,24 @@ Run `setup-project` if you selected it, or follow existing project conventions. 
 
 See [installation and migration](docs/installation.md). In particular, standard reinstallation can replace edited skill files; review local customizations before updating. Existing legacy snapshots remain untouched until a deliberate migration.
 
+## Start work in a project
+
+Open Claude Code or Codex in the target project and invoke a selected installed skill through its supported skill interface. Start with `setup-project` if selected to record the project's commands and conventions. Then choose the shortest route:
+
+- Clear fix: `implement` → verification → `review`.
+- Unclear request: `intake` or `grill`, then implementation when scope is settled.
+- Larger change: `write-spec` → `plan-tasks` → `implement` → `review` and `qa`.
+- Interface uncertainty: add `ui-design`; mobile projects keep build/device checks in their own configuration and work records.
+
+Use only skills you selected; add another when needed. The optional `agent-workflow` router helps select a route. Decisions and results stay in the target project's work records so another session or agent can continue.
+
 ## Maintain the root kit
+
+To work on this repository, open the agent here and reference the canonical skill directly. No self-installation is needed for an agent that can read this checkout. For example:
+
+> Read skills/improve-codebase-architecture/SKILL.md and assess packaging boundaries. Record evidence and recommendations under docs/work/packaging-boundaries/. Recommend one bounded improvement before changing code.
+
+For a small, agreed change, ask the agent to use `skills/implement/SKILL.md`, run the required checks below, and use `skills/review/SKILL.md` to review the result. Use planning stages only when the work needs them. Actual kit-improvement records belong under `docs/work/<feature>/`; examples are illustrative and conversation summaries are historical context. See the [folder map](docs/folder-map.md) for resource boundaries.
 
 Canonical instructions remain under `skills/`, with shared authoring references and templates. Prepare or refresh independent distribution folders after editing them:
 
