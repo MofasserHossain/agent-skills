@@ -9,7 +9,7 @@ Extract the problem, intended outcome, explicit requirements, suggestions, decis
 
 Check relevant project behavior and previous decisions before asking the user. Do not ask them to repeat facts already available.
 
-Use [brief template](../../templates/brief.md) as a starting shape, omitting empty sections. The result names material questions and recommends a route. A sufficiently clear small task can proceed directly; a new brief is unnecessary when the existing ticket already supplies the same contract.
+Use [brief template](templates/brief.md) as a starting shape, omitting empty sections. The result names material questions and recommends a route. A sufficiently clear small task can proceed directly; a new brief is unnecessary when the existing ticket already supplies the same contract.
 
 External ticket updates, messages and publication require task authorization. Preserving a source URL does not authorize writing to it.
 

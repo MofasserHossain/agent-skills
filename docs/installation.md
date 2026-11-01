@@ -1,36 +1,26 @@
-# GitHub distribution
+# Install and use canonical skills
 
-Use the self-contained `packages/skills` tree for GitHub installation:
+The same `skills/<name>/` folders are edited, reviewed and installed. Every filesystem resource is inside its owning skill; other procedures are referred to by installed name. No generated package tree or build step is required.
+
+## GitHub installation
+
+Run from your target codebase:
 
 ```sh
-DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add https://github.com/MofasserHossain/agent-workflow/tree/main/packages/skills --list
-DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add https://github.com/MofasserHossain/agent-workflow/tree/main/packages/skills --skill grill implement research --agent claude-code codex --yes
+npx skills@latest add MofasserHossain/agent-workflow
 ```
 
-Select only the desired skills. The full path avoids authored `skills/` folders,
-which depend on shared source resources. Tracked packages bundle those resources
-and rewrite their links; the router is exported as `agent-workflow`.
+Choose the required skills, agents and project scope. The private repository requires existing Git access. For the pinned CLI and an explicit selection:
 
-Maintainers rebuild with `python3 tools/package_skills.py --output packages/skills`
-and validate with the same command plus `--check`. Include generated changes in
-the source change's PR. Keep the build manifest; never edit package output by hand.
-The default ignored `dist/skills` remains available for optional maintainer previews.
-GitHub availability follows the reviewed commit/merge; preparing packages does
-not publish them. No automation or optional Python runner is installed.
+```sh
+DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add MofasserHossain/agent-workflow --skill grill implement research --agent claude-code codex
+```
 
-# Install selected skills from the local kit
-
-Use the standard Skills CLI against the tracked `packages/skills` directory. This is the primary route for new projects; any agent supported by the pinned Skills CLI can be targeted. The optional execution helper remains Claude Code/Codex only.
+The CLI discovers canonical `skills/` folders directly. This layout takes effect on GitHub when the migration is merged; local testing can use this checkout's skills directory beforehand. Do not use the removed generated-distribution path.
 
 ## Local installation
 
-A fresh checkout already contains reviewed packages. Maintainers rebuild after editing canonical sources:
-
-```sh
-python3 tools/package_skills.py --output packages/skills
-```
-
-Then, from this root repo:
+A fresh checkout is ready to install; no Python build is needed. From this root repo:
 
 ```sh
 bash scripts/install-skills.sh /path/to/project --list
@@ -59,20 +49,20 @@ The standard CLI shows its installation summary and confirmation. `--yes` skips 
 Alternatively, run directly from the target project:
 
 ```sh
-DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/packages/skills --agent claude-code codex
+DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/skills --agent claude-code codex
 ```
 
 These are real installation commands, not the legacy helper's preview/--apply protocol. Use --list to inspect first and the normal interactive confirmation when installing.
 
 ## Start Claude Code or Codex and use an installed skill
 
-From this source checkout, install a chosen starter set into the target codebase using its tracked packages:
+From this source checkout, install a chosen starter set into the target codebase using the canonical skill folders:
 
 ```sh
 bash scripts/install-skills.sh /path/to/project --agent claude-code codex --skill setup-project agent-workflow
 ```
 
-The source router `workflow` exports as `agent-workflow`; invoke and install it by that exported name. Select the standard symlink method to share each installed copy between the two hosts. Add `implement`, `review` or planning skills when needed; the router does not install its collaborators. To select every skill deliberately, use `--skill '*'` instead. Do not use `--copy` when shared references are wanted.
+The router is named `agent-workflow` in source and installation. Select the standard symlink method to share each installed copy between the two hosts. Add `implement`, `review` or planning skills when needed; the router does not install its collaborators. To select every skill deliberately, use `--skill '*'` instead. Do not use `--copy` when shared references are wanted.
 
 Start the chosen agent from the target codebase, not the kit checkout:
 
@@ -134,7 +124,7 @@ python3 /path/to/agent-workflow/tools/workflow.py run /path/to/project/docs/work
 
 ## Files in the project
 
-The standard symlink method creates a project-local canonical folder per selected skill. Codex discovers that canonical `.agents/skills` location; when Claude Code is selected, its `.claude/skills` entry links there. Selecting only Codex does not request a Claude installation:
+With Claude Code and Codex both selected in symlink mode, the CLI creates one canonical folder per skill under `.agents/skills`, which Codex reads, and relative `.claude/skills` links for Claude. A single-agent unattended installation can use a direct copy instead: `.claude/skills` for Claude or `.agents/skills` for Codex. Selecting only Codex does not request a Claude installation:
 
 ```text
 .agents/skills/<selected-skill>/SKILL.md
@@ -146,32 +136,40 @@ skills-lock.json                            Installer maintenance metadata
 
 Use --copy for separate host copies when preferred. Do not choose source-link development mode when the project must remain independent. Verify the installer version's resulting paths; symlink fallback can produce copies.
 
-Each package is self-contained: local supporting links stay inside its folder. Cross-skill references name optional skills, with no paths to uninstalled siblings or the author's checkout. The agent-workflow router describes the catalog and checks availability; installing it does not install the entire workflow.
+Each skill keeps its own resources: local supporting links stay inside its folder. Cross-skill references name optional skills, with no paths to uninstalled siblings or the author's checkout. The agent-workflow router describes the catalog and checks availability; installing it does not install the entire workflow.
 
-Research about Matt, tests, examples, build scripts and the optional execution runner stay in the root repo. Each project keeps its actual requirements/research/specs/issues, product rules and commands. The source kit's visibility does not protect copied content if that content is committed publicly.
+Research about Matt, tests, examples, source-only tools and the optional execution runner stay in the root repo. Each project keeps its actual requirements/research/specs/issues, product rules and commands. The source kit's visibility does not protect copied content if that content is committed publicly.
 
 ## Project configuration and updates
 
-Invoke a selected skill through the host's supported discovery/invocation mechanism. A session may need a refresh. Run setup-project if installed to inspect real project scripts, tracker and documentation conventions; preserve existing instructions and AGENTS/CLAUDE symlinks. It can write project configuration directly without the Python helper. See [project checks](../references/verification-policy.md).
+Invoke a selected skill through the host's supported discovery/invocation mechanism. A session may need a refresh. Run setup-project if installed to inspect real project scripts, tracker and documentation conventions; preserve existing instructions and AGENTS/CLAUDE symlinks. It can write project configuration directly without the Python helper. See [project checks](../skills/implement/references/verification-policy.md).
 
-After source edits, rebuild and validate packages/skills; regenerate dist/skills only when using an optional local preview. Then rerun skills add for the intended --skill names. Local source paths in skills-lock.json support maintenance; they are not needed to execute already-copied skills. Review project-local skill edits before reinstalling: standard installation can overwrite them and does not provide our legacy local-edit guard. Do not assume local sources have the same update behavior as Git-hosted sources; rerunning add is the verified local refresh route.
+After source edits, run the source checks and rerun skills add for the intended --skill names. Local source paths in skills-lock.json support maintenance; they are not needed to execute already-copied skills. Review project-local skill edits before reinstalling: standard installation can overwrite them and does not provide our legacy local-edit guard. Do not assume local sources have the same update behavior as Git-hosted sources; rerunning add is the verified local refresh route.
 
-The local preview distribution under dist/skills is ignored in Git; packages/skills is the tracked GitHub distribution. Maintainers rebuild both from canonical sources; hand edits to generated output are rejected by the builder. The build preserves applicable license/notice files. It does not publish, install globally, or run an agent. The tracked GitHub path reuses these independent skill folders. Plugin/npm publication remains outside this installation.
+There is one editable/installable tree under skills. Supporting files stay with their owner; collaborator names do not create filesystem dependencies on absent siblings. Installation copies only the selected folders and does not publish source changes or install the optional runner.
+
+## Earlier generated-package installations
+
+If skills-lock.json points to the old generated-distribution path, the installed files continue to work. To update, preserve local edits and deliberately rerun skills add from this repo or its skills directory for the same chosen names and agents. Check the installation summary and refreshed lock; do not assume the old source entry will update itself. There is no second package tree to rebuild. The source router now lives at skills/agent-workflow with the same installed name as before.
+
+Local validation of the direct layout used the cached Skills CLI 1.7.4: all 15 canonical skills were listed and installed into a disposable project for Claude Code/Codex. After hiding the source and moving the project, all 15 relative Claude links and 17 supporting-resource links resolved. No agent invocation or account setup was performed.
 
 ## Existing legacy installations
 
 Earlier projects may contain .agent-workflow plus a thin agent-workflow entry. Those remain supported by tools/install_project.py and tools/register_skills.py; their ownership markers protect local edits. Their --select/--skills, --update and --apply behavior is separate from the standard CLI.
 
-Migrate after choosing the intended skill set. Preserve the project's AGENTS/CLAUDE instructions, .agent-workflow.json and work records. Review/back up local changes to the managed bundle and its native entries. Remove only the owned legacy installation and update project pointers before installing the chosen standard skills; the agent-workflow name can otherwise conflict with the old entry. Do not remove unrelated skills. An existing project is not migrated merely by preparing this distribution.
+Migrate after choosing the intended skill set. Preserve the project's AGENTS/CLAUDE instructions, .agent-workflow.json and work records. Review/back up local changes to the managed bundle and its native entries. Remove only the owned legacy installation and update project pointers before installing the chosen standard skills; the agent-workflow name can otherwise conflict with the old entry. Do not remove unrelated skills. An existing project is not migrated merely by changing the source layout.
 
 Existing project selections remain unchanged until deliberately migrated. Use the source wrapper with --list to inspect available skills without changing an installation.
 
-Validated locally with Skills CLI 1.7.4: a three-skill selection using project-internal symlinks, and a separate one-skill UI selection using --copy. Both retained working local references after the source distribution was hidden; the first also survived moving the project. These are filesystem/installation checks, not claims about model output quality.
+Historical generated-layout validation used Skills CLI 1.7.4: a three-skill selection using project-internal symlinks, and a separate one-skill UI selection using --copy. Both retained working local references after the source distribution was hidden; the first also survived moving the project. The current suite separately validates canonical skill copies and project-internal links after source removal and project relocation; it does not establish live model behavior.
 
 Checked 2026-11-01 against the [Skills CLI reference](https://github.com/vercel-labs/skills/blob/main/docs/commands.md#skills-add) and [installer source](https://github.com/vercel-labs/skills/blob/main/src/installer.ts). Matt's [editable-file installation](https://github.com/mattpocock/skills#installation-30-second-setup) uses the same CLI pattern.
 
 ## Other agents
 
-Pass a target supported by the pinned Skills CLI, for example `--agent cursor` or `--agent opencode`, together with the desired `--skill` names. These use the same self-contained packages, not new executor adapters. Unknown names are rejected by the CLI; this wrapper does not claim universal native-agent compatibility. To list the package catalog without installing, use `--list`.
+Pass a target supported by the pinned Skills CLI, for example `--agent cursor` or `--agent opencode`, together with the desired `--skill` names. These use the same canonical skill folders, not new executor adapters. Unknown names are rejected by the CLI; this wrapper does not claim universal native-agent compatibility. To list the skill catalog without installing, use `--list`.
 
-For a host without Skills CLI integration, supply the prepared skill folder and ask it to read `SKILL.md`, following its local resource links. Keep the whole folder together. This provides the procedure without promising automatic discovery, slash commands or process dispatch. Existing project rules and task authorization still apply.
+For a host without Skills CLI integration, supply the canonical skill folder and ask it to read `SKILL.md`, following its local resource links. Keep the whole folder together. This provides the procedure without promising automatic discovery, slash commands or process dispatch. Existing project rules and task authorization still apply.
+
+Source-linked development registrations that still point to the old skills/workflow path must be reviewed and refreshed to skills/agent-workflow. Preserve edited entries; the registration tool refuses replacements rather than silently overwriting them. Existing copied standard skill installations do not depend on the moved source path.

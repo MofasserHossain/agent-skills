@@ -37,8 +37,8 @@ class RegistrationTests(unittest.TestCase):
         self.assertEqual(sorted(p.name for p in self.destination.iterdir()),
                          [register.MARKER, "SKILL.md"])
         source = Path(json.loads((self.destination / register.MARKER).read_text())["source_root"])
-        self.assertTrue((source / "skills/workflow/SKILL.md").is_file())
-        self.assertIn(str(source / "skills/workflow/SKILL.md"), body)
+        self.assertTrue((source / "skills/agent-workflow/SKILL.md").is_file())
+        self.assertIn(str(source / "skills/agent-workflow/SKILL.md"), body)
         self.assertNotIn("name: implement", body)
 
     def test_reregistration_preserves_existing_file(self):

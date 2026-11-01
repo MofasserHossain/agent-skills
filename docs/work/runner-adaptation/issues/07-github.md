@@ -30,7 +30,7 @@ A chosen GitHub task can use the same runner contracts with native blockers and 
 ## Verification
 Use a fake tracker for pagination, races, duplicate operations and failures. Do not create real labels, workflows, secrets or issues to validate.
 
-Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; validate packages if resources change.
+Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; verify relocated skills if resources change.
 
 ## Scope
 Only this outcome and the parent contract. Later integrations and external actions require their own authorization.

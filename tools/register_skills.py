@@ -18,7 +18,7 @@ class RegistrationError(Exception):
 
 
 def entrypoint(kit):
-    source = (kit / "skills/workflow/SKILL.md").resolve()
+    source = (kit / "skills/agent-workflow/SKILL.md").resolve()
     if not source.is_file():
         raise RegistrationError(f"Missing shared entry point: {source}")
     # A local registration uses an absolute file pointer so references are read

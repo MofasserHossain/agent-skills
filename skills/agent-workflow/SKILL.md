@@ -1,5 +1,5 @@
 ---
-name: workflow
+name: agent-workflow
 description: "Route supplied work through appropriate planning, implementation and verification stages, or resume an existing workflow."
 ---
 
@@ -19,22 +19,22 @@ Use the relevant procedure by reading its file, or through the host's skill tool
 
 | Stage | Procedure |
 |---|---|
-| Project setup | [setup-project](../setup-project/SKILL.md) |
-| Incoming material | [intake](../intake/SKILL.md) |
-| Architecture assessment | [improve-codebase-architecture](../improve-codebase-architecture/SKILL.md) |
-| Resolve decisions | [grill](../grill/SKILL.md) |
-| Investigate facts | [research](../research/SKILL.md) |
-| Test a design question | [prototype](../prototype/SKILL.md) |
-| Plan interface behavior and appearance | [ui-design](../ui-design/SKILL.md) |
-| Write the PRD | [write-spec](../write-spec/SKILL.md) |
-| PRD to issues | [plan-tasks](../plan-tasks/SKILL.md) |
-| Build one task | [implement](../implement/SKILL.md) |
-| Review the change | [review](../review/SKILL.md) |
-| Check actual behavior | [qa](../qa/SKILL.md) |
-| PR delivery, status, or post-merge sync | [pull-request](../pull-request/SKILL.md) |
-| Improve the environment | [retro](../retro/SKILL.md) |
+| Project setup | `setup-project` |
+| Incoming material | `intake` |
+| Architecture assessment | `improve-codebase-architecture` |
+| Resolve decisions | `grill` |
+| Investigate facts | `research` |
+| Test a design question | `prototype` |
+| Plan interface behavior and appearance | `ui-design` |
+| Write the PRD | `write-spec` |
+| PRD to issues | `plan-tasks` |
+| Build one task | `implement` |
+| Review the change | `review` |
+| Check actual behavior | `qa` |
+| PR delivery, status, or post-merge sync | `pull-request` |
+| Improve the environment | `retro` |
 
-Read [task contract](../../references/task-contract.md) when creating/executing tasks, [trackers](../../references/trackers.md) when selecting storage, and [context policy](../../references/context-policy.md) when transitioning sessions/tools. Read only the selected procedure and applicable references, not the whole table's targets.
+The table is the catalog, not this project's installed set. Use only available procedures. Task-record and tracker conventions belong to `plan-tasks`; consult them when creating records or choosing storage. Read [context policy](references/context-policy.md) when transitioning sessions/tools. Load only the selected procedure and relevant references. If a collaborator is absent, continue where the current procedure is sufficient or identify the missing guidance; never claim it ran.
 
 HITL decisions require the human's answer. AFK work can proceed only within settled scope. An executor can change between stages; task/spec/evidence remain the portable record.
 

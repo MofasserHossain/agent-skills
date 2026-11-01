@@ -46,10 +46,11 @@ def payload(kit, skills=None, with_runner=False):
     """Collect selected procedures and their local linked dependencies, not the source repo."""
     kit = Path(kit).resolve()
     available = {p.parent.name for p in (kit / "skills").glob("*/SKILL.md")}
-    requested = sorted(set(skills if skills is not None else available - {"workflow"}))
+    requested = sorted({"agent-workflow" if name == "workflow" else name
+                        for name in (skills if skills is not None else available - {"agent-workflow"})})
     if not requested or any(name not in available for name in requested):
         raise InstallError("Select existing skill names from the source kit.")
-    selected = set(requested) | {"workflow"}
+    selected = set(requested) | {"agent-workflow"}
     if with_runner:
         selected.add("implement")
     files = {}
@@ -74,17 +75,16 @@ def payload(kit, skills=None, with_runner=False):
             result.append(Path(os.path.normpath(Path(relative).parent / target.split("#")[0])).as_posix())
         return result
 
-    pending = [f"skills/{name}/SKILL.md" for name in sorted(selected) if name != "workflow"]
+    pending = [f"skills/{name}/SKILL.md" for name in sorted(selected) if name != "agent-workflow"]
     # The router's stage links are a menu, not dependencies on every optional capability.
-    router = read("skills/workflow/SKILL.md").decode()
-    pending.extend(name for name in dependencies(router, "skills/workflow/SKILL.md")
-                   if not name.startswith("skills/"))
+    router = read("skills/agent-workflow/SKILL.md").decode()
+    pending.extend(dependencies(router, "skills/agent-workflow/SKILL.md"))
     if with_runner:
-        pending.extend(("tools/workflow.py", "adapters/agents.json", "templates/task.md", "references/result-contract.md"))
+        pending.extend(("tools/workflow.py", "adapters/agents.json", "skills/plan-tasks/templates/task.md", "skills/implement/references/result-contract.md"))
     pending.extend(name for name in LEGAL_FILES if (kit / name).exists())
     while pending:
         relative = pending.pop()
-        if relative in files or relative == "skills/workflow/SKILL.md":
+        if relative in files or relative == "skills/agent-workflow/SKILL.md":
             continue
         content = read(relative)
         files[relative] = content
@@ -95,17 +95,17 @@ def payload(kit, skills=None, with_runner=False):
             pending.extend(dependencies(content.decode(), relative))
     lines = []
     for line in router.splitlines():
-        stage = re.search(r"\]\(\.\./([^/]+)/SKILL.md\)", line)
+        stage = re.search(r"^\|[^|]+\| `([^`]+)` \|$", line)
         if stage and stage[1] not in selected:
             continue
         lines.append(line)
     router = "\n".join(lines) + "\n\nOnly the stages listed above are installed. If a needed procedure is absent, report it; do not read the authoring checkout or claim the procedure ran. Add capabilities through the source installer.\n"
-    files["skills/workflow/SKILL.md"] = router.encode()
+    files["skills/agent-workflow/SKILL.md"] = router.encode()
     files[SELECTION] = (json.dumps({"schema_version": 1, "requested_skills": requested,
                                   "included_skills": sorted(selected), "with_runner": with_runner}, indent=2) + "\n").encode()
     files["README.md"] = (
         "# Installed agent workflow\n\n"
-        "Use the agent-workflow entry in Claude Code or Codex, or read skills/workflow/SKILL.md. "
+        "Use the agent-workflow entry in Claude Code or Codex, or read skills/agent-workflow/SKILL.md. "
         "Project rules, .agent-workflow.json and work records belong to the project. "
         "Load only the selected stage and relevant references.\n\n"
         "Installed procedures: " + ", ".join(sorted(selected)) + ".\n\n"
@@ -126,7 +126,7 @@ def metadata(files, kind):
 
 
 def entry_files(destination, bundle):
-    target = os.path.relpath(bundle / "skills/workflow/SKILL.md", destination)
+    target = os.path.relpath(bundle / "skills/agent-workflow/SKILL.md", destination)
     body = (
         "---\nname: agent-workflow\n"
         'description: "Plan, implement, review and verify work using this project’s workflow."\n'
@@ -236,7 +236,7 @@ def apply(items):
 def choose_skills(kit):
     if not sys.stdin.isatty():
         raise InstallError("The chooser requires an interactive terminal; use --skills NAME ... or --all-skills.")
-    paths = sorted(path for path in (kit / "skills").glob("*/SKILL.md") if path.parent.name != "workflow")
+    paths = sorted(path for path in (kit / "skills").glob("*/SKILL.md") if path.parent.name != "agent-workflow")
     print("Choose this project's skills. Nothing is preselected; required dependencies are added automatically.")
     for number, path in enumerate(paths, 1):
         description = re.search(r'^description: (.+)$', path.read_text(), re.M)
@@ -280,7 +280,7 @@ def main(argv=None):
             raise InstallError(f"Project directory does not exist: {project}")
         skills = args.skills
         if args.all_skills:
-            skills = sorted(path.parent.name for path in (KIT / "skills").glob("*/SKILL.md") if path.parent.name != "workflow")
+            skills = sorted(path.parent.name for path in (KIT / "skills").glob("*/SKILL.md") if path.parent.name != "agent-workflow")
         elif args.select or (skills is None and not (project / BUNDLE).exists()):
             skills = choose_skills(KIT)
         items = plan(project, args.agent, KIT, args.update, skills, args.with_runner)

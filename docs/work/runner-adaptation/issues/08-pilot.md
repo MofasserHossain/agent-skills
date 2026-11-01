@@ -33,7 +33,7 @@ A human can judge whether real execution meets the contracts and improves accept
 ## Verification
 Requires explicit live-run and runtime/account authorization where applicable. Do not infer it from this draft task. GitHub live validation is separate if task 07 is adopted.
 
-Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; validate packages if resources change.
+Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; verify relocated skills if resources change.
 
 ## Scope
 Only this outcome and the parent contract. Later integrations and external actions require their own authorization.

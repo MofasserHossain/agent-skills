@@ -30,7 +30,7 @@ A selected local task runs once and returns a durable evaluated result without e
 ## Verification
 Use fake workers and check commands for success, invalid output, timeout, changed revision and human-review cases. Keep the portable result schema versioned.
 
-Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; validate packages if resources change.
+Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; verify relocated skills if resources change.
 
 ## Scope
 Only this outcome and the parent contract. Later integrations and external actions require their own authorization.

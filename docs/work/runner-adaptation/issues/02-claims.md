@@ -29,7 +29,7 @@ Two dispatches cannot unintentionally edit one workspace; interrupted ownership 
 ## Verification
 Use fake processes for contention and changed-task races, and interruption fixtures for recovery. Do not start a live agent.
 
-Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; validate packages if resources change.
+Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; verify relocated skills if resources change.
 
 ## Scope
 Only this outcome and the parent contract. Later integrations and external actions require their own authorization.

@@ -4,71 +4,41 @@ Reusable engineering skills for turning ideas, documents, messages and tickets i
 
 ## Install from GitHub
 
-Install the self-contained packages from the dedicated `packages/skills` path:
+The editable `skills/` folders are also the installable skills. No package tree, build or Python runtime is needed for installation. From the target codebase:
 
 ```sh
-DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add https://github.com/MofasserHossain/agent-workflow/tree/main/packages/skills --list
-DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add https://github.com/MofasserHossain/agent-workflow/tree/main/packages/skills --skill grill implement research --agent claude-code codex --yes
+npx skills@latest add MofasserHossain/agent-workflow
 ```
 
-Choose explicit skill names for your project. Codex reads canonical project-local
-`.agents/skills` folders; Claude Code gets relative links to those folders.
-The router and Python helper are optional; the helper is not in these packages.
-Use the full distribution path: bare repository shorthand can discover authoring
-skills under `skills/`, whose shared resources are outside the individual folders.
-
-## Install from this local repo
-
-You need Node 22.20+ for the pinned Skills CLI and a Skills-compatible agent in the target project. Python is required only for maintainer builds/checks. Clone this repository with your GitHub account's access; reviewed packages are already included:
+Choose the skills and agents you want. For a pinned CLI and explicit project-local selection:
 
 ```sh
-git clone https://github.com/MofasserHossain/agent-workflow.git
-cd agent-workflow
+DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add MofasserHossain/agent-workflow --skill grill implement research --agent claude-code codex
 ```
 
-The tracked `packages/skills` folders work with the standard [Skills CLI](https://github.com/vercel-labs/skills/blob/main/docs/commands.md#skills-add). From this checkout, list or choose skills for an existing project:
+The repository is private, so Git access is required. Skills CLI 1.7.4 is the pinned wrapper version; using `@latest` selects whatever version is current when you install. Do not also install old generated package paths into the same project.
+
+## Install from a local checkout
+
+You need Node 22.20+ for the pinned CLI and a Skills-compatible agent in the target project. From this kit checkout:
 
 ```sh
 bash scripts/install-skills.sh /path/to/project --list
 bash scripts/install-skills.sh /path/to/project
+bash scripts/install-skills.sh /path/to/project --skill grill research write-spec
 ```
 
-In a normal terminal outside an agent, the second command opens the standard skill selector. Inside Claude/Codex automation, pass explicit --skill names; the CLI auto-disables prompts there. Select the skills you want and use project scope. The wrapper defaults to Claude Code and Codex; use --agent for other Skills CLI targets. It disables CLI telemetry and uses the tested Skills CLI version 1.7.4, which requires Node 22.20+.
+In a normal terminal the selector lets you choose skills; unattended/agent calls must provide explicit `--skill` names. The wrapper defaults to project-local Claude Code and Codex. Use `--agent claude-code`, `--agent codex`, or other Skills CLI targets. It disables telemetry and uses `skills@1.7.4`.
 
-You can name a selection explicitly:
+Or run the standard CLI directly from the target project:
 
 ```sh
-bash scripts/install-skills.sh /path/to/project --skill grill research write-spec plan-tasks
+DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/skills --agent claude-code codex
 ```
 
-The wrapper defaults to Claude Code and Codex. Target only the agent used in a project with either command:
+The standard symlink installation creates one project-local copy of each selected skill under `.agents/skills`, with Claude Code links pointing there. Both agents read the same files. Each skill keeps its own supporting files; collaborator skills are named and are not automatically installed. A missing collaborator is reported where its guidance is needed.
 
-```sh
-bash scripts/install-skills.sh /path/to/project --agent claude-code --skill grill research
-bash scripts/install-skills.sh /path/to/project --agent codex --skill grill research
-```
-
-Pass `--agent claude-code codex` to select both explicitly, or another Skills CLI target:
-
-```sh
-bash scripts/install-skills.sh /path/to/project --agent cursor --skill grill research
-```
-
-The CLI validates agent names and installs into their discovery directories. Installation stays project-local. Agents without Skills CLI support can read an exported `SKILL.md` and its bundled resources directly; native discovery and invocation depend on that host.
-
-Or use the standard CLI directly from the target project:
-
-```sh
-DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/packages/skills --agent claude-code codex
-```
-
-Each selected skill includes its own needed references/templates. The standard symlink method copies canonical skill folders into the target project and creates host links within that project. It does not require the authoring checkout during agent use. Other named skills are optional collaborators; they are not installed automatically.
-
-No `.agent-workflow` bundle, Python helper, source research, kit tests, examples or development docs are needed for this installation. The optional `agent-workflow` skill routes among the skills actually installed; it is not a requirement to install the whole catalog.
-
-Run `setup-project` if you selected it, or follow existing project conventions. Each project owns its instructions, `.agent-workflow.json` command catalog and actual briefs/specs/issues. Installing skills does not run an agent or configure provider accounts.
-
-See [installation and migration](docs/installation.md). In particular, standard reinstallation can replace edited skill files; review local customizations before updating. Existing legacy snapshots remain untouched until a deliberate migration.
+See [installation, invocation and migration](docs/installation.md) for copy mode, isolated environments and existing installations. Standard installation does not include Python helpers, authenticate providers or run an agent.
 
 ## Start work in a project
 
@@ -83,32 +53,26 @@ Start `claude` or `codex` from the target project. Inside Claude Code, invoke `/
 
 Use only skills you selected; add another when needed. The optional `agent-workflow` router helps select a route. Decisions and results stay in the target project's work records so another session or agent can continue.
 
-## Source versus installation files
+## Maintain the skills
 
-| Folder | Role | Edit directly? |
-|---|---|---|
-| `skills/`, `references/`, `templates/` | Canonical instructions and shared resources | Yes |
-| `packages/skills/` | Generated, self-contained GitHub/local installation packages | No; rebuild from source |
-| `dist/skills/` | Ignored optional maintainer preview | No; disposable build output |
+Edit the skill you want to improve directly:
 
-Both local and GitHub installation use `packages/skills`. Target projects receive only selected skill folders, not this source repository. The unit suite checks that the tracked distribution matches its sources.
-
-## Maintain the root kit
-
-To work on this repository, open the agent here and reference the canonical skill directly. No self-installation is needed for an agent that can read this checkout. For example:
-
-> Read skills/improve-codebase-architecture/SKILL.md and assess packaging boundaries. Record evidence and recommendations under docs/work/packaging-boundaries/. Recommend one bounded improvement before changing code.
-
-For a small, agreed change, ask the agent to use `skills/implement/SKILL.md`, run the required checks below, and use `skills/review/SKILL.md` to review the result. Use planning stages only when the work needs them. Actual kit-improvement records belong under `docs/work/<feature>/`; examples are illustrative and conversation summaries are historical context. See the [folder map](docs/folder-map.md) for resource boundaries.
-
-Canonical instructions remain under `skills/`, with shared authoring references and templates. Prepare or refresh independent distribution folders after editing them:
-
-```sh
-python3 tools/package_skills.py
-python3 tools/package_skills.py --check
+```text
+skills/
+  agent-workflow/SKILL.md
+  implement/
+    SKILL.md
+    references/
+  write-spec/
+    SKILL.md
+    templates/spec.md
 ```
 
-Python is a maintainer/build tool here, not an installed-skill runtime requirement. Local preview packages stay under the ignored `dist/skills/`; the reviewed GitHub distribution is tracked separately under `packages/skills/`. They contain no symlinks or references back to this checkout. Fresh clones already include the reviewed installation packages; rebuild only after editing their canonical sources. The tracked packages support GitHub installation; plugin/npm distribution remains separate. Building updates local files without pushing or publishing them.
+Each resource has one owning skill. Local links stay inside that skill's folder; other procedures are referred to by installed skill name, with a fallback when absent. The optional router is named `agent-workflow` in both source and installation. There is no generated installation copy or resource-link rewriting step.
+
+For changes to this kit, read the relevant `skills/<name>/SKILL.md` directly; no self-installation is needed. Keep actual kit work under `docs/work/<feature>/`, project rules/commands in the target project, and historical research in the source repo. See the [folder map](docs/folder-map.md).
+
+After editing, run the checks below and inspect the relocated-skill tests. Reinstall selected skills to update a target project after reviewing its local customizations. Python is needed only for source validation and optional helpers, not installed skill use.
 
 ## Available capabilities
 
@@ -120,7 +84,7 @@ Python is a maintainer/build tool here, not an installed-skill runtime requireme
 - QA sends reproducible defects back to the backlog; review checks requirements and project standards.
 - All fifteen procedures define scoped decisions and useful completion signals: routing/resumption, setup evidence, source-linked intake, bounded research, prototype verdicts, design readiness, architecture tradeoffs, planning coverage, implementation evidence, review, QA, PR recovery and evidence-based retrospective. Human usage examples live in the skill guide; behavioral superiority remains a pilot question.
 
-Use only the stages the work needs. The [prompt map](docs/prompt-map.md) explains the procedures, [project routes](docs/project-routes.md) covers UI/frontend/backend work, and the [worked example](docs/walkthrough.md) shows brief → spec → issues. Authoring research and the [kit specification](docs/workflow-spec.md) stay in this repo.
+Use only the stages the work needs. The [prompt map](docs/prompt-map.md) explains the procedures, [project routes](skills/ui-design/references/project-routes.md) covers UI/frontend/backend work, and the [worked example](docs/walkthrough.md) shows brief → spec → issues. Authoring research and the [kit specification](docs/workflow-spec.md) stay in this repo.
 
 ## Optional execution tooling
 
@@ -148,22 +112,7 @@ Automated scheduling/loops, GitHub API integration, Docker provisioning, Sandcas
 ```sh
 python3 -m unittest discover -s tests -v
 python3 tools/workflow.py check
-python3 tools/package_skills.py --check
 bash -n scripts/install-skills.sh
 ```
 
 Tests use local fake executors. Real provider authentication, model output quality and Docker behavior require a separate pilot. No publishing, global installation or paid model call is needed for these checks.
-
-## Refresh the GitHub distribution
-
-After changing canonical skills or linked resources, rebuild and review the tracked
-packages in the same pull request:
-
-```sh
-python3 tools/package_skills.py --output packages/skills
-python3 tools/package_skills.py --output packages/skills --check
-```
-
-Do not hand-edit generated packages. The builder and its ownership manifest make
-stale output detectable. This writes files locally; pushing and merging remain
-separate authorized delivery actions. No automatic publication is configured.

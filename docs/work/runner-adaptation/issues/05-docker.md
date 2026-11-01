@@ -30,7 +30,7 @@ A configured isolated runtime can execute the same bounded task without changing
 ## Verification
 Use a fake runtime executable for lifecycle/argv/failure tests. Real sandbox compatibility needs a separately authorized pilot.
 
-Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; validate packages if resources change.
+Run `python3 -m unittest discover -s tests -v` and `python3 tools/workflow.py check` after implementation; verify relocated skills if resources change.
 
 ## Scope
 Only this outcome and the parent contract. Later integrations and external actions require their own authorization.
