@@ -1,4 +1,4 @@
-# Working on Agent Workflow
+# Working on Agent Skills
 
 The optional execution helper supports Claude Code and Codex only. Portable skills can be installed for any agent supported by the standard Skills CLI, or read directly by a file-capable agent. Keep manual as a context-only mode, not another agent. Additional agent adapters are deferred until requested.
 

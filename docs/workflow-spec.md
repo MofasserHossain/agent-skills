@@ -21,6 +21,8 @@ Use one version-controlled kit across projects and agent tools. A user supplies 
 
 ## Initial implementation
 
+The repository is named `agent-skills` (`MofasserHossain/agent-skills`). The optional router remains `agent-workflow`; existing `.agent-workflow.json` configuration and legacy `.agent-workflow` installations retain their names.
+
 The optional execution helper supports Claude Code and Codex only; portable skill installation accepts any supported Skills CLI target. Discovery adapters and CLI selection cover those two; manual is a context-only mode with no process launch. Additional agents are deferred. Registry overrides may customize supported CLI profiles but cannot introduce another executor name.
 
 Portable Markdown skills, shared references, templates, executor registry and an optional Python helper. The helper supports local initialization, task parsing/validation, narrow context generation, dependency checks, launch previews and explicit one-task CLI dispatch. Dispatch does not schedule work or mutate task status.

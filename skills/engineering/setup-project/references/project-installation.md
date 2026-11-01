@@ -1,6 +1,6 @@
 # Project installation
 
-The standard Skills CLI installs selected canonical folders from this repo's skills directory. Run npx skills@1.7.4 add /path/to/agent-workflow/skills --agent claude-code codex from the target project. Choose only needed skills, project scope, and the usual symlink method. The canonical skill files are copied into the project; host links point within it. --copy creates separate host copies. Do not use a source-link mode when the project must work independently.
+The standard Skills CLI installs selected canonical folders from this repo's skills directory. Run npx skills@1.7.4 add /path/to/agent-skills/skills --agent claude-code codex from the target project. Choose only needed skills, project scope, and the usual symlink method. The canonical skill files are copied into the project; host links point within it. --copy creates separate host copies. Do not use a source-link mode when the project must work independently.
 
 Each selected skill includes its own required references/templates. Other skill names are optional installed collaborators, not mandatory dependencies or paths to the authoring checkout. Kit research, tests, validation tools and the optional execution runner stay in the source kit. Installed skills can be used without Python.
 
@@ -12,4 +12,4 @@ Earlier .agent-workflow snapshots remain supported by the source kit's legacy in
 
 For another host, replace the --agent values with its Skills CLI target name; the installer owns native discovery paths and supported-name validation. Without a CLI integration, a file-capable agent can read the installed SKILL.md directly with its bundled resources. This does not add execution-helper adapters or guarantee host-specific invocation commands.
 
-GitHub installation can use MofasserHossain/agent-workflow directly once this source layout is merged. No generated copy or Python build is required. Each resource belongs to one skill; other procedures are named collaborators rather than relative filesystem links. Install missing collaborators deliberately when their guidance is needed.
+GitHub installation can use MofasserHossain/agent-skills directly once this source layout is merged. No generated copy or Python build is required. Each resource belongs to one skill; other procedures are named collaborators rather than relative filesystem links. Install missing collaborators deliberately when their guidance is needed.

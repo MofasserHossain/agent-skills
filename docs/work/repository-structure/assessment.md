@@ -9,7 +9,7 @@ Scope: skill packaging, legacy installation boundaries, documentation, and using
 
 ## Intent and settled decisions
 
-The user clarified that the pilot should improve this agent-workflow repository itself. Success means accepted changes with less clarification and rework. Preserve the provider-neutral core, Claude Code/Codex support, selected self-contained skill packages, standard project-local installation, and deliberately supported legacy installations.
+The user clarified that the pilot should improve this agent-skills repository itself. Success means accepted changes with less clarification and rework. Preserve the provider-neutral core, Claude Code/Codex support, selected self-contained skill packages, standard project-local installation, and deliberately supported legacy installations.
 
 ## Current structure
 
