@@ -1,6 +1,6 @@
 ---
 name: plan-tasks
-description: "Divide an agreed specification into small end-to-end tasks with explicit dependencies and verification."
+description: "Split agreed multi-session work into independently verifiable tasks with requirement coverage and true blockers."
 ---
 
 Read the agreed spec and existing implementation. Search for already-satisfied requirements before creating work.
@@ -14,3 +14,5 @@ In **Requirements covered**, link to the parent PRD's requirement labels or sect
 Check that the tasks cover the spec without adding features. Mark unresolved decision work HITL or blocked. Review consequential granularity choices with the user; do not re-approve a breakdown already authorized.
 
 Use [tracker conventions](../../references/trackers.md). Store status once. Do not create an implementation ticket for every internal function or repeat the complete PRD in every task.
+
+Before declaring the breakdown ready, walk each blocker chain: it must terminate in ready work or an explicit unresolved decision, with no cycles. Check every in-scope requirement has a task or evidence it is already satisfied. An internal layer alone is not a deliverable; a backend slice can be a complete observable API or job without a UI.

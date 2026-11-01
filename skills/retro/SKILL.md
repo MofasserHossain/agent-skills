@@ -10,3 +10,7 @@ Recommend the smallest supported correction. Mechanical recurring mistakes shoul
 Compare cost per accepted result, latency and review effort when data exists. Separate measured savings from hypotheses. Do not accumulate a universal rule for each isolated failure.
 
 Apply authorized improvements and preserve the example that demonstrated the issue. Use [pilot scenarios](../../checks/pilot-scenarios.md) to evaluate behavioral changes.
+
+Trace each proposed correction to an observed failure and the place that owns the behavior: project configuration, a shared procedure, a checker or a work record. A project-specific convention stays in that project; a shared skill changes only when the lesson applies across its intended uses. Inspect existing guidance before adding another rule.
+
+Finish with the observed problem, supported cause or explicit hypothesis, correction and an evaluation case that could show it failed. Remove or revise superseded guidance when applying a correction. If the records do not support a change, report the missing evidence and leave the procedure alone; producing more instructions is not a success criterion.

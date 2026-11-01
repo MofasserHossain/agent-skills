@@ -1,6 +1,6 @@
 ---
 name: write-spec
-description: "Synthesize settled requirements and decisions into a buildable specification with acceptance and verification criteria."
+description: "Record settled decisions as a buildable specification for multi-session work; use after discovery, not to restart it."
 ---
 
 Read the brief, decisions and relevant research/prototype verdicts. Synthesize rather than repeating the interview. Flag missing implementation-changing decisions instead of inventing them.
@@ -14,3 +14,5 @@ Identify existing public boundaries for meaningful tests. Record what automated 
 Keep requirements and decisions durable; implementation navigation pointers can be separate and refreshed later. Avoid long lists of repetitive user stories that add no distinct behavior.
 
 Publish to the chosen location/tracker only within authorization. The spec is ready when another executor can understand the outcome and how it will be judged.
+
+Before declaring the spec ready, trace each acceptance criterion to an agreed requirement and a feasible check. Remove invented requirements and identify criteria whose evidence cannot yet be obtained. A refactor may specify interfaces and invariants instead of forcing user stories.

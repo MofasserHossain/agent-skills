@@ -1,10 +1,10 @@
 # Agent Workflow
 
-Reusable engineering skills for turning ideas, documents, messages and tickets into verified changes. Maintain one source kit, then install only the skills each project needs. Current target agents are Claude Code and Codex.
+Reusable engineering skills for turning ideas, documents, messages and tickets into verified changes. Maintain one source kit, then install only the skills each project needs. Portable skills can be installed for any agent supported by the Skills CLI, or read directly by an agent with file access. The optional execution helper supports Claude Code and Codex.
 
 ## Install from this local repo
 
-You need Python 3 to build the packages, Node 22.20+ for the pinned Skills CLI, and Claude Code or Codex in the target project. Installed Markdown skills do not require Python. Clone this repository with your GitHub account's access, then prepare the ignored distribution:
+You need Python 3 to build the packages, Node 22.20+ for the pinned Skills CLI, and a Skills-compatible agent in the target project. Installed Markdown skills do not require Python. Clone this repository with your GitHub account's access, then prepare the ignored distribution:
 
 ```sh
 git clone https://github.com/MofasserHossain/agent-workflow.git
@@ -20,13 +20,28 @@ bash scripts/install-skills.sh /path/to/project --list
 bash scripts/install-skills.sh /path/to/project
 ```
 
-In a normal terminal outside an agent, the second command opens the standard skill selector. Inside Claude/Codex automation, pass explicit --skill names; the CLI auto-disables prompts there. Select the skills you want and use project scope. The wrapper targets Claude Code and Codex only. It disables CLI telemetry and uses the tested Skills CLI version 1.7.4, which requires Node 22.20+.
+In a normal terminal outside an agent, the second command opens the standard skill selector. Inside Claude/Codex automation, pass explicit --skill names; the CLI auto-disables prompts there. Select the skills you want and use project scope. The wrapper defaults to Claude Code and Codex; use --agent for other Skills CLI targets. It disables CLI telemetry and uses the tested Skills CLI version 1.7.4, which requires Node 22.20+.
 
 You can name a selection explicitly:
 
 ```sh
 bash scripts/install-skills.sh /path/to/project --skill grill research write-spec plan-tasks
 ```
+
+The wrapper defaults to Claude Code and Codex. Target only the agent used in a project with either command:
+
+```sh
+bash scripts/install-skills.sh /path/to/project --agent claude-code --skill grill research
+bash scripts/install-skills.sh /path/to/project --agent codex --skill grill research
+```
+
+Pass `--agent claude-code codex` to select both explicitly, or another Skills CLI target:
+
+```sh
+bash scripts/install-skills.sh /path/to/project --agent cursor --skill grill research
+```
+
+The CLI validates agent names and installs into their discovery directories. Installation stays project-local. Agents without Skills CLI support can read an exported `SKILL.md` and its bundled resources directly; native discovery and invocation depend on that host.
 
 Or use the standard CLI directly from the target project:
 
@@ -44,7 +59,7 @@ See [installation and migration](docs/installation.md). In particular, standard 
 
 ## Start work in a project
 
-Open Claude Code or Codex in the target project and invoke a selected installed skill through its supported skill interface. Start with `setup-project` if selected to record the project's commands and conventions. Then choose the shortest route:
+Open Claude Code or Codex in the target project and invoke a selected installed skill through its supported skill interface. Start with `setup-project` if selected to record the project's commands and conventions. Use the [skill guide](docs/skill-guide.md) for entry points, example requests and signs of a useful result. Then choose the shortest route:
 
 - Clear fix: `implement` → verification → `review`.
 - Unclear request: `intake` or `grill`, then implementation when scope is settled.
@@ -72,10 +87,13 @@ Python is a maintainer/build tool here, not an installed-skill runtime requireme
 
 ## Available capabilities
 
-- Fourteen procedures: optional routing/setup, intake, grilling, research, prototypes, UI design, PRD/spec writing, vertical tasks, implementation, architecture assessment, review, QA and retrospective.
+- Fifteen procedures: optional routing/setup, intake, grilling, research, prototypes, UI design, PRD/spec writing, vertical tasks, implementation, architecture assessment, review, QA, pull-request delivery/status/sync and retrospective.
 - Local-file/GitHub conventions with one authoritative tracker and portable requirement/task/result records.
+- Adaptive project context setup: reviewed move maps for existing instructions, essential root constraints, conditional phase/task reading routes, and preservation audits. Project-owned docs stay separate from skill installation and updates.
 - Project-specific verification commands and focused TDD guidance. Frontend, full-stack and backend projects use the same core flow with conditional checks.
+- The `pull-request` procedure handles PR preparation/updates, status checks and post-merge sync using project-owned delivery policy; it does not automate merging or authorize publication.
 - QA sends reproducible defects back to the backlog; review checks requirements and project standards.
+- All fifteen procedures define scoped decisions and useful completion signals: routing/resumption, setup evidence, source-linked intake, bounded research, prototype verdicts, design readiness, architecture tradeoffs, planning coverage, implementation evidence, review, QA, PR recovery and evidence-based retrospective. Human usage examples live in the skill guide; behavioral superiority remains a pilot question.
 
 Use only the stages the work needs. The [prompt map](docs/prompt-map.md) explains the procedures, [project routes](docs/project-routes.md) covers UI/frontend/backend work, and the [worked example](docs/walkthrough.md) shows brief → spec → issues. Authoring research and the [kit specification](docs/workflow-spec.md) stay in this repo.
 

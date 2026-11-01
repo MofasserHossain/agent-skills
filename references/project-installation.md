@@ -9,3 +9,5 @@ Run setup-project if installed, or follow existing project conventions to config
 For a local source, rerun skills add with the intended --skill names after rebuilding changed packages. Review project-local customizations before reinstalling: the standard installer can replace files and does not provide the legacy installer's local-edit protection. skills-lock.json records the local source path for maintenance; skill execution does not require that path. No global registration is required.
 
 Earlier .agent-workflow snapshots remain supported by the source kit's legacy installer. Do not mix native entries with the same skill name. Migrate deliberately after reviewing the selected set and preserving project configuration/work records.
+
+For another host, replace the --agent values with its Skills CLI target name; the installer owns native discovery paths and supported-name validation. Without a CLI integration, a file-capable agent can read the exported SKILL.md directly with its bundled resources. This does not add execution-helper adapters or guarantee host-specific invocation commands.

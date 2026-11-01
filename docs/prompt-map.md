@@ -1,5 +1,7 @@
 # Stage instructions, runner prompts and project context
 
+For entry-point selection and example requests, see the [skill guide](skill-guide.md). Canonical behavior stays in the procedures below; human examples do not form another prompt library.
+
 ## Standard local installation
 
 Use the Skills CLI against prepared dist/skills folders for new projects. Each selected stage is independently discoverable and bundles only its local supporting resources. The source packager converts sibling-skill links to optional skill names so choosing one stage does not require installing every stage. The router exports as agent-workflow and is optional. Read the project's installed copy; no authoring path or Python helper is needed for ordinary agent use. The helper and direct-path examples below remain optional source/legacy workflows. See [installation](installation.md).
@@ -15,6 +17,7 @@ A SKILL.md is a reusable prompt/procedure file with discovery metadata. Its file
 | Create the feature PRD | [write-spec](../skills/write-spec/SKILL.md) | [spec template](../templates/spec.md) | Current agent reads the settled brief/decisions |
 | PRD to implementation issues | [plan-tasks](../skills/plan-tasks/SKILL.md) | [task template](../templates/task.md) and [contract](../references/task-contract.md) | Current agent reads the agreed PRD and existing work |
 | Implement one issue | [implement](../skills/implement/SKILL.md) | [result contract](../references/result-contract.md) | Current agent, or the optional one-task helper |
+| PR preparation, updates, status and post-merge sync | [pull-request](../skills/pull-request/SKILL.md) | Project-owned delivery rules and verification evidence | Current agent, using available repository tools/CLI |
 | Review and QA | [review](../skills/review/SKILL.md), [qa](../skills/qa/SKILL.md) | [QA template](../templates/qa.md) | Current agent; required human judgments remain pending |
 
 Templates specify the shape of an output. Procedures specify how to produce or evaluate it. Project briefs/specs/issues are the actual inputs and outputs, not copies of the procedures.

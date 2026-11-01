@@ -18,3 +18,7 @@ Carry agreed behavior and verification into the spec/task by reference. Keep req
 Plan checks proportionate to the change: actual flow/state behavior, responsive layouts, keyboard/focus/semantics or native accessibility, text/contrast, relevant locales and motion. Use applicable platform guidance and the project's accessibility target. Automated checks supplement runtime and human evaluation; they do not establish conformance or user success by themselves.
 
 Return decisions, linked artifacts, evidence gaps and the next implementation/verification step. Feed defects found during actual use through [QA](../qa/SKILL.md). Read [project routes](../../docs/project-routes.md) when combining UI, frontend and backend work.
+
+Before handoff, walk the selected flow with representative content and relevant edge conditions: long text, missing data, constrained space or interrupted input when they can change the design. Account for how entered work survives navigation, errors or retries when the flow collects data. Inspect reuse of existing components before proposing new variants.
+
+The design is implementation-ready when consequential interaction choices are settled, relevant states have defined behavior, data assumptions are explicit and remaining checks have owners. If a human choice or real API contract is still missing, name the affected behavior instead of describing the whole design as approved.

@@ -3,8 +3,8 @@
 set -euo pipefail
 
 if [[ $# -lt 1 || "$1" == "--help" || "$1" == "-h" ]]; then
-  echo 'Usage: bash scripts/install-skills.sh PROJECT [--list | --skill NAME ...] [--copy] [--yes]'
-  echo 'Without --skill, choose skills interactively. Targets Claude Code and Codex in PROJECT.'
+  echo 'Usage: bash scripts/install-skills.sh PROJECT [--list | --skill NAME ...] [--agent NAME ...] [--copy] [--yes]'
+  echo 'Without --skill, choose skills interactively. Defaults to Claude Code and Codex; --agent selects Skills CLI agent targets.'
   exit 0
 fi
 
@@ -24,16 +24,40 @@ fi
 selected=false
 listing=false
 noninteractive=false
-for argument in "$@"; do
-  case "$argument" in
-    --skill|-s|--skill=*) selected=true ;;
-    --list|-l) listing=true ;;
-    --yes|-y) noninteractive=true ;;
-    --global|-g|--all|--agent|-a|--agent=*)
-      echo 'This wrapper targets project-local Claude Code and Codex only.' >&2
+agents=()
+cli_arguments=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --agent|-a)
+      shift
+      if [[ $# -eq 0 || "$1" == -* ]]; then
+        echo '--agent requires a Skills CLI agent name.' >&2
+        exit 2
+      fi
+      while [[ $# -gt 0 && "$1" != -* ]]; do
+        agents+=("$1")
+        shift
+      done
+      continue ;;
+    --agent=*)
+      if [[ -z "${1#--agent=}" || "${1#--agent=}" == -* ]]; then
+        echo '--agent requires a Skills CLI agent name.' >&2
+        exit 2
+      fi
+      agents+=("${1#--agent=}") ;;
+    --skill|-s|--skill=*) selected=true; cli_arguments+=("$1") ;;
+    --list|-l) listing=true; cli_arguments+=("$1") ;;
+    --yes|-y) noninteractive=true; cli_arguments+=("$1") ;;
+    --global|-g|--all)
+      echo 'This wrapper installs project-local skills; use --agent to select targets.' >&2
       exit 2 ;;
+    *) cli_arguments+=("$1") ;;
   esac
+  shift
 done
+if [[ ${#agents[@]} -eq 0 ]]; then
+  agents=(claude-code codex)
+fi
 agent_environment="${CODEX_SANDBOX:-}${CODEX_CI:-}${CODEX_THREAD_ID:-}${CLAUDECODE:-}${CLAUDE_CODE:-}${AI_AGENT:-}"
 if [[ "$selected" == false && "$listing" == false ]] && { [[ "$noninteractive" == true ]] || [[ ! -t 0 ]] || [[ -n "$agent_environment" ]]; }; then
   echo 'Choose skills in a normal terminal outside an agent, or pass --skill NAME ... explicitly; no skills installed.' >&2
@@ -43,4 +67,4 @@ fi
 export DISABLE_TELEMETRY=1
 export DO_NOT_TRACK=1
 cd -- "$project"
-exec npx --yes skills@1.7.4 add "$package_dir" --agent claude-code codex "$@"
+exec npx --yes skills@1.7.4 add "$package_dir" --agent "${agents[@]}" "${cli_arguments[@]}"

@@ -27,7 +27,7 @@ class PackagingTests(unittest.TestCase):
         package.build(self.source, self.output)
         self.source.rename(self.root / "source unavailable")
         skills = [path for path in self.output.iterdir() if path.is_dir()]
-        self.assertEqual(len(skills), 14)
+        self.assertEqual(len(skills), 15)
         for skill in skills:
             with self.subTest(skill=skill.name):
                 body = (skill / "SKILL.md").read_text()
@@ -107,6 +107,36 @@ class PackagingTests(unittest.TestCase):
         self.assertEqual(execution["args"], ["--yes", "skills@1.7.4", "add", str(self.source / "dist/skills"),
                                              "--agent", "claude-code", "codex", "--skill", "write-spec", "--yes"])
         self.assertEqual(execution["telemetry"], "1")
+        self.assertEqual(list(project.iterdir()), [])
+
+    def test_wrapper_forwards_agent_selection_and_rejects_missing_values(self):
+        package.build(self.source, self.source / "dist/skills")
+        project = self.root / "project"
+        project.mkdir()
+        environment = self.fake_npx()
+        wrapper = ["bash", str(self.source / "scripts/install-skills.sh"), str(project)]
+        for flags, expected in ((["--agent", "codex"], ["codex"]),
+                                (["--agent=claude-code"], ["claude-code"]),
+                                (["--agent", "cursor", "opencode"], ["cursor", "opencode"]),
+                                (["--agent=*"], ["*"]),
+                                (["-a", "codex", "claude-code"], ["codex", "claude-code"]),
+                                (["-a", "codex", "-a", "claude-code"], ["codex", "claude-code"])):
+            with self.subTest(flags=flags):
+                result = subprocess.run([*wrapper, *flags, "--skill", "grill", "--yes"],
+                                        env=environment, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                arguments = json.loads(result.stdout)["args"]
+                start = arguments.index("--agent") + 1
+                end = arguments.index("--skill")
+                self.assertEqual(arguments[start:end], expected)
+                self.assertEqual(arguments[end:], ["--skill", "grill", "--yes"])
+        for flags in (["--agent"], ["--agent="], ["--agent=-g"],
+                      ["--agent", "--list"]):
+            with self.subTest(invalid=flags):
+                result = subprocess.run([*wrapper, *flags], env=environment,
+                                        capture_output=True, text=True)
+                self.assertEqual(result.returncode, 2)
+                self.assertEqual(result.stdout, "")
         self.assertEqual(list(project.iterdir()), [])
 
     @unittest.skipUnless(os.name == "posix", "PTY behavior")
