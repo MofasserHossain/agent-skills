@@ -16,3 +16,7 @@ Recommend the strongest candidate; distinguish evidence from speculation. The de
 Take a selected candidate through [grill](../grill/SKILL.md) when decisions remain, then [write-spec](../write-spec/SKILL.md), [plan-tasks](../plan-tasks/SKILL.md) and [implement](../implement/SKILL.md) in proportion to its size. A small, clear change can proceed directly. Preserve behavior with meaningful tests and record consequential tradeoffs where future readers need them.
 
 Documentation drift can be fixed as a narrow documentation task. Update the authoritative document instead of making a second competing architecture manual. After delivery, use [retro](../retro/SKILL.md) for environment improvements grounded in what happened.
+
+Ground the recommendation in a representative change or failure path: show what must be understood or edited today and how the proposed boundary would reduce that burden. Compare with leaving the structure alone or making a smaller local correction. Avoid using an attractive abstraction as its own evidence of benefit.
+
+The assessment is ready when a reviewer can locate the evidence, understand the tradeoff and choose a bounded next step. If no candidate has sufficient support, say so. For a selected migration, identify compatibility obligations and how each intermediate state will be verified before removing the old path.

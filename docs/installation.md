@@ -1,6 +1,6 @@
 # Install selected skills from the local kit
 
-Use the standard Skills CLI against the prepared `dist/skills` directory. This is the primary route for new projects; only Claude Code and Codex are currently supported.
+Use the standard Skills CLI against the prepared `dist/skills` directory. This is the primary route for new projects; any agent supported by the pinned Skills CLI can be targeted. The optional execution helper remains Claude Code/Codex only.
 
 ## Local installation
 
@@ -17,7 +17,7 @@ bash scripts/install-skills.sh /path/to/project --list
 bash scripts/install-skills.sh /path/to/project
 ```
 
-The first lists the catalog without installing. The second opens the standard selector for project-local Claude Code/Codex skills in a normal terminal. Inside an agent environment, supply explicit --skill names: the CLI automatically skips prompts there, and the wrapper prevents a silent install-all. Select only what you need; the router and setup procedure are optional. The wrapper defaults to the tested `skills@1.7.4` and disables telemetry. That CLI requires Node 22.20+; installed Markdown skills need no Python.
+The first lists the catalog without installing. The second opens the standard selector for project-local skills (Claude Code/Codex by default) in a normal terminal. Inside an agent environment, supply explicit --skill names: the CLI automatically skips prompts there, and the wrapper prevents a silent install-all. Select only what you need; the router and setup procedure are optional. The wrapper defaults to the tested `skills@1.7.4` and disables telemetry. That CLI requires Node 22.20+; installed Markdown skills need no Python.
 
 For explicit selection:
 
@@ -25,7 +25,16 @@ For explicit selection:
 bash scripts/install-skills.sh /path/to/project --skill grill research write-spec
 ```
 
-The standard CLI shows its installation summary and confirmation. `--yes` skips confirmation only when an explicit --skill selection is supplied to the wrapper. `--skill '*'` explicitly selects every skill; the wrapper rejects the broader --all flag because it also selects all agents. Global installation and other agents are outside this wrapper's scope.
+Choose the intended host explicitly when a project uses only one:
+
+```sh
+bash scripts/install-skills.sh /path/to/project --agent claude-code --skill grill research
+bash scripts/install-skills.sh /path/to/project --agent codex --skill grill research
+```
+
+Omitting `--agent` retains the default of both Claude Code and Codex. `--agent claude-code codex` selects both explicitly; `-a` and `--agent=codex` are also supported. Other agent names are forwarded to the Skills CLI, which validates supported targets and owns their installation paths. Missing agent values are rejected before the CLI runs. Skill selection and agent selection are independent.
+
+The standard CLI shows its installation summary and confirmation. `--yes` skips confirmation only when an explicit --skill selection is supplied to the wrapper. `--skill '*'` explicitly selects every skill; the wrapper rejects the broader --all flag because it also selects all agents. Global installation is outside this wrapper's scope.
 
 Alternatively, run directly from the target project:
 
@@ -37,7 +46,7 @@ These are real installation commands, not the legacy helper's preview/--apply pr
 
 ## Files in the project
 
-The standard symlink method creates a project-local canonical folder per selected skill, plus host links:
+The standard symlink method creates a project-local canonical folder per selected skill. Codex discovers that canonical `.agents/skills` location; when Claude Code is selected, its `.claude/skills` entry links there. Selecting only Codex does not request a Claude installation:
 
 ```text
 .agents/skills/<selected-skill>/SKILL.md
@@ -72,3 +81,9 @@ Existing project selections remain unchanged until deliberately migrated. Use th
 Validated locally with Skills CLI 1.7.4: a three-skill selection using project-internal symlinks, and a separate one-skill UI selection using --copy. Both retained working local references after the source distribution was hidden; the first also survived moving the project. These are filesystem/installation checks, not claims about model output quality.
 
 Checked 2026-11-01 against the [Skills CLI reference](https://github.com/vercel-labs/skills/blob/main/docs/commands.md#skills-add) and [installer source](https://github.com/vercel-labs/skills/blob/main/src/installer.ts). Matt's [editable-file installation](https://github.com/mattpocock/skills#installation-30-second-setup) uses the same CLI pattern.
+
+## Other agents
+
+Pass a target supported by the pinned Skills CLI, for example `--agent cursor` or `--agent opencode`, together with the desired `--skill` names. These use the same self-contained packages, not new executor adapters. Unknown names are rejected by the CLI; this wrapper does not claim universal native-agent compatibility. To list the package catalog without installing, use `--list`.
+
+For a host without Skills CLI integration, supply the prepared skill folder and ask it to read `SKILL.md`, following its local resource links. Keep the whole folder together. This provides the procedure without promising automatic discovery, slash commands or process dispatch. Existing project rules and task authorization still apply.

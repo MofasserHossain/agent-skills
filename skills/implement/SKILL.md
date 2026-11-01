@@ -1,6 +1,6 @@
 ---
 name: implement
-description: "Implement one agreed task with focused context, meaningful tests and portable verification evidence."
+description: "Build or fix one scoped task whose intended behavior is settled, and return acceptance evidence and remaining checks."
 ---
 
 Read the selected task, applicable project instructions, relevant spec/decisions and dependency evidence. Confirm that required prior changes are available. Work only within its scope. Pull additional library documentation and architecture detail when the task needs them; keep always-required project rules explicit rather than treating them as optional lookup material.
@@ -14,3 +14,5 @@ Run targeted checks while iterating and the project's required final checks befo
 Read [execution policy](../../references/execution-policy.md). Stop dependent work on a missing product decision; record a precise blocker. Do not infer merge/publish permission from AFK mode.
 
 Return [the portable result](../../references/result-contract.md) with acceptance evidence. A commit, process exit or model claim is not acceptance. Follow project rules for commits and external actions.
+
+Before editing, check whether the requested behavior is already satisfied. If it is, return the supporting evidence without manufacturing a change. Before reporting completion, account for every acceptance criterion as demonstrated, failed or unverified; name blockers and manual checks explicitly.

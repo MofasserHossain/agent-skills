@@ -1,6 +1,6 @@
 ---
 name: grill
-description: "Resolve consequential requirement and design decisions through focused, evidence-informed questions."
+description: "Resolve scope or design choices when a request has implementation-changing uncertainty; resume from settled decisions."
 ---
 
 Read the brief, applicable project context and already settled decisions. Map which decisions depend on others.
@@ -14,3 +14,5 @@ Record decisions and reasons where the feature keeps them. Define overloaded dom
 For efforts too uncertain for one session, keep a low-resolution decision map with resolved questions, open questions and blockers. Work one ready decision at a time; this is planning, not an implementation backlog.
 
 Return the resolved scope and material unresolved decisions. Never supply the human's side of a HITL exchange.
+
+Before ending, check that examples and counterexamples agree with the recorded rules, and each material open decision has a named owner or next investigation. An unanswered question is not agreement. Continue authorized work once its prerequisites are settled.

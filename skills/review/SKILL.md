@@ -14,3 +14,5 @@ Inspect changed code and relevant surrounding behavior. Use targeted checks to s
 For small changes, one focused pass is enough. Independent review agents are optional when authorized and valuable; do not multiply reviewers by default.
 
 Report findings with location, consequence and evidence. Report no-spec/no-runtime-evidence limitations explicitly. Code review is not a substitute for runtime QA. Apply fixes or post external reviews only within the task's authorization.
+
+Make the verdict usable: distinguish blocking findings from optional suggestions, account for known acceptance gaps, and identify the reviewed revision. A clean verdict means no actionable defects were found within that scope; it does not turn unperformed checks into passes.

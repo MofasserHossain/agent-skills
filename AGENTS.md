@@ -1,6 +1,6 @@
 # Working on Agent Workflow
 
-Current supported agents are Claude Code and Codex only. Keep manual as a context-only mode, not another agent. Additional agent adapters are deferred until requested.
+The optional execution helper supports Claude Code and Codex only. Portable skills can be installed for any agent supported by the standard Skills CLI, or read directly by a file-capable agent. Keep manual as a context-only mode, not another agent. Additional agent adapters are deferred until requested.
 
 Keep the core provider-neutral. Tool-specific commands belong in adapters; project commands belong in project configuration. Task records and results must survive a change of agent or model.
 
@@ -14,4 +14,4 @@ Do not install globally, push, merge, create remote repositories, or call extern
 
 When adding a capability, update README's implemented/roadmap distinction and docs/workflow-spec.md.
 
-New projects use the standard Skills CLI against prepared dist/skills folders. Keep packaging/build tools in this source repo; each exported skill must survive relocation with only its own resources. Validate with python3 tools/package_skills.py --check after rebuilding. The Bash wrapper targets project-local Claude Code/Codex only. Legacy snapshots are migrated deliberately after user selection.
+New projects use the standard Skills CLI against prepared dist/skills folders. Keep packaging/build tools in this source repo; each exported skill must survive relocation with only its own resources. Validate with python3 tools/package_skills.py --check after rebuilding. The Bash wrapper supports project-local Skills CLI agent targets, defaulting to Claude Code/Codex; the CLI owns target validation and discovery paths. Legacy snapshots are migrated deliberately after user selection.
