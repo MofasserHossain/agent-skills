@@ -146,6 +146,67 @@ class WorkflowTests(unittest.TestCase):
         self.write_task("02-prerequisite", status="done")
         self.assertEqual(self.call(*self.run_args())[0], 0)
 
+    def next_result(self):
+        code, out, err = self.call("next", str(self.issues), "--project", str(self.project))
+        self.assertEqual((code, err), (0, ""))
+        return json.loads(out)
+
+    def test_next_selects_only_ready_afk_tasks_without_mutation(self):
+        self.write_task("01-example", execution="hitl")
+        self.write_task("02-review", status="review")
+        self.write_task("03-dependent", blocked_by=["02-review"])
+        candidate = self.write_task("04-independent")
+        before = {p: p.read_bytes() for p in self.issues.iterdir()}
+        result = self.next_result()
+        self.assertEqual(result["state"], "ready")
+        self.assertEqual(result["selected"], {"id": "04-independent", "path": str(candidate.resolve())})
+        self.assertEqual(len(result["eligible"]), 1)
+        reasons = {item["id"]: item["reasons"] for item in result["waiting"]}
+        self.assertIn("requires-human-input", reasons["01-example"])
+        self.assertIn("unfinished-blocker:02-review", reasons["03-dependent"])
+        self.assertEqual(before, {p: p.read_bytes() for p in self.issues.iterdir()})
+        self.assertFalse((self.project / ".workflow-runs").exists())
+
+    def test_next_distinguishes_waiting_complete_and_empty(self):
+        self.write_task("01-example", status="review")
+        self.assertEqual(self.next_result()["state"], "waiting")
+        self.assertIsNone(self.next_result()["selected"])
+        self.write_task("01-example", status="done")
+        self.assertEqual(self.next_result()["state"], "complete")
+        self.task.unlink()
+        self.assertEqual(self.next_result()["state"], "empty")
+
+    def test_next_revalidates_after_blocker_changes_and_orders_by_filename(self):
+        self.write_task("01-example", blocked_by=["02-base"])
+        self.write_task("02-base", status="review")
+        self.assertEqual(self.next_result()["state"], "waiting")
+        self.write_task("02-base", status="done")
+        self.write_task("03-independent")
+        self.assertEqual([item["id"] for item in self.next_result()["eligible"]],
+                         ["01-example", "03-independent"])
+        self.write_task("02-base", status="blocked")
+        self.assertEqual(self.next_result()["selected"]["id"], "03-independent")
+
+    def test_whole_graph_rejects_unknown_edges_cycles_and_duplicate_ids(self):
+        for changes in (dict(blocked_by=["missing"]), dict(blocked_by=["03-cycle"])):
+            self.write_task("02-invalid", **changes)
+            self.write_task("03-cycle", blocked_by=["02-invalid"])
+            for args in (("next", str(self.issues), "--project", str(self.project)), self.run_args()):
+                with self.subTest(changes=changes, action=args[0]):
+                    self.assertEqual(self.call(*args)[0], 2)
+            (self.issues / "02-invalid.md").unlink()
+            (self.issues / "03-cycle.md").unlink()
+        (self.issues / "duplicate.md").write_bytes(self.task.read_bytes())
+        self.assertEqual(self.call("next", str(self.issues), "--project", str(self.project))[0], 2)
+
+    def test_next_confines_scope_and_rejects_external_task_symlinks(self):
+        for directory in (self.project, self.issues / "missing"):
+            self.assertEqual(self.call("next", str(directory), "--project", str(self.project))[0], 2)
+        outside = self.root / "outside.md"
+        outside.write_bytes(self.task.read_bytes())
+        (self.issues / "external.md").symlink_to(outside)
+        self.assertEqual(self.call("next", str(self.issues), "--project", str(self.project))[0], 2)
+
     def test_unknown_or_duplicate_dependencies_are_refused(self):
         self.write_task("01-example", blocked_by=["missing"])
         self.assertEqual(self.call(*self.run_args())[0], 2)

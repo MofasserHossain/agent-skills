@@ -6,6 +6,8 @@ An AFK implementation task is eligible only when it is ready, dependencies are d
 
 The v0.1 helper dispatches one explicitly selected local task on the host. It previews by default; --execute starts a process. It cannot sandbox a process, enforce the semantic correctness of a model response, or schedule/claim tasks. Avoid concurrent dispatch to the same working tree; scheduling/locks are a later milestone.
 
+The read-only next command inspects one explicit issues directory and validates its complete graph. It returns ready/waiting/complete/empty and exclusion reasons without claiming work; complete reflects recorded done states, not freshly verified acceptance. Selection uses filename order and must be revalidated before execution.
+
 Automated sequential/parallel scheduling and Docker/Sandcastle integration remain planned in the authoring kit. Integrating a worker branch is separate from final acceptance and PR merge; follow project policy. Do not mark required human review complete merely to release dependent work.
 
 A process exit of zero means transport completion, not acceptance. The executor must produce the report in result-contract.md. A supervising human/agent checks evidence and updates task status.

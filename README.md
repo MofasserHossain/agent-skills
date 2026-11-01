@@ -81,6 +81,8 @@ Open Claude Code or Codex in the target project and invoke a selected installed 
 - Larger change: `write-spec` → `plan-tasks` → `implement` → `review` and `qa`.
 - Interface uncertainty: add `ui-design`; mobile projects keep build/device checks in their own configuration and work records.
 
+Start `claude` or `codex` from the target project. Inside Claude Code, invoke `/setup-project` or `/implement <task reference>`; inside Codex, use `$setup-project` or `$implement <task reference>`. These are agent messages, not shell commands. For Docker or another isolated workspace, provision the project-local skill folders inside that environment and start the agent there; see the [isolated execution guide](docs/installation.md#run-inside-docker-sandbox-or-another-isolated-environment). See the [installation and invocation walkthrough](docs/installation.md#start-claude-code-or-codex-and-use-an-installed-skill) for setup, shared symlinks and runner distinctions.
+
 Use only skills you selected; add another when needed. The optional `agent-workflow` router helps select a route. Decisions and results stay in the target project's work records so another session or agent can continue.
 
 ## Maintain the root kit
@@ -98,7 +100,7 @@ python3 tools/package_skills.py
 python3 tools/package_skills.py --check
 ```
 
-Python is a maintainer/build tool here, not an installed-skill runtime requirement. Local preview packages stay under the ignored `dist/skills/`; the reviewed GitHub distribution is tracked separately under `packages/skills/`. they contain no symlinks or references back to this checkout. Build before installing from a fresh clone. The same self-contained skill format can be used in a future Git/plugin/npm distribution; nothing is published by this build.
+Python is a maintainer/build tool here, not an installed-skill runtime requirement. Local preview packages stay under the ignored `dist/skills/`; the reviewed GitHub distribution is tracked separately under `packages/skills/`. They contain no symlinks or references back to this checkout. Build before installing from a fresh clone. The tracked packages support GitHub installation; plugin/npm distribution remains separate. Building updates local files without pushing or publishing them.
 
 ## Available capabilities
 
@@ -120,6 +122,16 @@ The root kit retains a Python helper for explicit one-task dispatch through Clau
 python3 tools/workflow.py prompt TASK.md --project /path/to/project
 python3 tools/workflow.py run TASK.md --project /path/to/project --agent codex
 ```
+
+The read-only selector validates a complete local dependency graph and reports eligible work or why it must wait:
+
+```sh
+python3 tools/workflow.py next /path/to/project/docs/work/feature/issues --project /path/to/project
+```
+
+It does not launch, claim or accept tasks. Filename order is the default; `complete` means all existing records say done, not that this command reverified them. Invalid graphs fail before dispatch. The [Matt runner assessment and adaptation specification](docs/work/runner-adaptation/assessment.md) separates inspected source behavior, implemented preflight and proposed once/loop/runtime work.
+
+Central multi-project workspace management, verified archival, disk-usage previews and policy-based cleanup are also [planned](docs/work/runner-adaptation/workspaces.md). Stopping a workspace does not reclaim its disk, and recovery archives need separate retention.
 
 Automated scheduling/loops, GitHub API integration, Docker provisioning, Sandcastle orchestration and provider-specific model-effort translation remain planned. The [execution plan](docs/execution-plan.md) describes those future capabilities. Legacy snapshot/pointer installers remain available for existing installations, but are not the default installation route.
 

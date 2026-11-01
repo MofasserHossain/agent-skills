@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import deque
 import json
 import math
 import os
@@ -140,21 +141,70 @@ def read_task(path):
     return metadata, text
 
 
-def selected_task(task, project, work):
-    path = beneath(Path(task), work)
-    metadata, text = read_task(path)
+def task_inventory(directory, work):
+    directory = beneath(Path(directory), work)
+    if not directory.is_dir():
+        raise WorkflowError(f"Issues directory does not exist: {directory}")
     peers = {}
-    for peer in sorted(path.parent.glob("*.md")):
+    records = {}
+    for peer in sorted(directory.glob("*.md")):
         # All issue files are tasks. A symlink cannot introduce external context.
         peer = beneath(peer, work)
-        item, _ = read_task(peer)
+        item, text = read_task(peer)
         if item["id"] in peers:
             raise WorkflowError(f"Duplicate task id: {item['id']}")
         peers[item["id"]] = item
-    for blocker in metadata["blocked_by"]:
-        if blocker not in peers:
-            raise WorkflowError(f"Unknown blocker: {blocker}")
+        records[item["id"]] = (peer, item, text)
+    dependents = {task_id: [] for task_id in peers}
+    remaining = {}
+    for task_id, item in peers.items():
+        remaining[task_id] = len(item["blocked_by"])
+        for blocker in item["blocked_by"]:
+            if blocker not in peers:
+                raise WorkflowError(f"Unknown blocker: {blocker} (required by {task_id})")
+            dependents[blocker].append(task_id)
+    frontier = deque(task_id for task_id, count in remaining.items() if count == 0)
+    while frontier:
+        for dependent in dependents[frontier.popleft()]:
+            remaining[dependent] -= 1
+            if remaining[dependent] == 0:
+                frontier.append(dependent)
+    unresolved = [task_id for task_id, count in remaining.items() if count]
+    if unresolved:
+        raise WorkflowError("Dependency cycle or dependent on a cycle: " + ", ".join(unresolved))
+    return records, peers
+
+
+def selected_task(task, project, work):
+    path = beneath(Path(task), work)
+    metadata, text = read_task(path)
+    _, peers = task_inventory(path.parent, work)
     return path, metadata, text, peers
+
+
+def next_task(directory, work):
+    records, peers = task_inventory(directory, work)
+    eligible, waiting = [], []
+    for task_id, (path, metadata, _) in records.items():
+        if metadata["status"] == "done":
+            continue
+        reasons = []
+        if metadata["execution"] != "afk":
+            reasons.append("requires-human-input")
+        if metadata["status"] != "ready":
+            reasons.append("status:" + metadata["status"])
+        reasons.extend("unfinished-blocker:" + blocker for blocker in metadata["blocked_by"]
+                       if peers[blocker]["status"] != "done")
+        item = {"id": task_id, "path": str(path)}
+        if reasons:
+            waiting.append({**item, "reasons": reasons})
+        else:
+            eligible.append(item)
+    state = "empty" if not records else "ready" if eligible else "waiting" if waiting else "complete"
+    return {"schema_version": 1, "state": state, "selected": eligible[0] if eligible else None,
+            "eligible": eligible, "waiting": waiting, "task_count": len(records),
+            "executed": False, "claimed": False,
+            "note": "Read-only snapshot in filename order; revalidate before dispatch. No claims or acceptance inferred."}
 
 
 def require_eligible(metadata, peers):
@@ -295,6 +345,9 @@ def main(argv=None):
     init.add_argument("project", type=Path)
     agents = sub.add_parser("agents")
     agents.add_argument("--registry", type=Path)
+    next_cmd = sub.add_parser("next", help="Inspect one local issues directory; do not launch or claim work.")
+    next_cmd.add_argument("issues", type=Path)
+    next_cmd.add_argument("--project", type=Path, required=True)
     for action in ("prompt", "run"):
         cmd = sub.add_parser(action)
         cmd.add_argument("task", type=Path)
@@ -325,6 +378,9 @@ def main(argv=None):
         config, work = load_config(project)
         if config["tracker"] != "local":
             raise WorkflowError("The local helper cannot dispatch GitHub-owned tasks.")
+        if args.action == "next":
+            print(json.dumps(next_task(args.issues, work), indent=2))
+            return 0
         task_path, metadata, text, peers = selected_task(args.task, project, work)
         prompt = make_prompt(project, config, task_path, text)
         if args.action == "prompt":
