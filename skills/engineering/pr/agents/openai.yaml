@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR"
+  short_description: "Prepare, inspect or deliver a project pull request"
+  default_prompt: "Use $pr for the requested PR operation using this project’s delivery rules."

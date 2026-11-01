@@ -1,0 +1,24 @@
+---
+name: review
+description: "Review a bounded change against its originating requirements and project standards, with actionable evidence."
+---
+
+## Review scope
+
+Pin a revision/diff boundary and identify the originating spec/task. Read applicable project standards. When preparing a review handoff, include the concise applicable coding standards, requirement references and verification evidence explicitly; retain links to their authoritative sources. Reviewers still inspect the actual code and may pull supporting context.
+
+## Evaluate
+
+Evaluate two separate questions:
+- Spec: missing/incorrect behavior, scope drift and unsupported acceptance claims.
+- Standards: correctness, maintainability and project conventions.
+
+Inspect changed code and relevant surrounding behavior. Use targeted checks to substantiate consequential concerns. Leave mechanical formatting to existing tools. Distinguish definite defects from judgment calls.
+
+For small changes, one focused pass is enough. Independent review agents are optional when authorized and valuable; do not multiply reviewers by default.
+
+## Findings and verdict
+
+Report findings with location, consequence and evidence. Report no-spec/no-runtime-evidence limitations explicitly. Code review is not a substitute for runtime QA. Apply fixes or post external reviews only within the task's authorization.
+
+Make the verdict usable: distinguish blocking findings from optional suggestions, account for known acceptance gaps, and identify the reviewed revision. A clean verdict means no actionable defects were found within that scope; it does not turn unperformed checks into passes.

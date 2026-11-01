@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Project"
+  short_description: "Discover project conventions, commands and work records"
+  default_prompt: "Use $setup-project to configure these skills around existing project conventions."

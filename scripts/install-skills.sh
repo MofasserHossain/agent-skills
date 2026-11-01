@@ -16,7 +16,7 @@ if [[ ! -d "$project" ]]; then
   echo "Project directory does not exist: $project" >&2
   exit 2
 fi
-if [[ ! -f "$skill_dir/agent-workflow/SKILL.md" ]]; then
+if [[ ! -f "$skill_dir/productivity/agent-workflow/SKILL.md" ]]; then
   echo 'Canonical skills are missing from this checkout.' >&2
   exit 2
 fi

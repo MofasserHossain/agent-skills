@@ -1,0 +1,4 @@
+interface:
+  display_name: "Writing for Agents"
+  short_description: "Improve instruction clarity, ownership and navigation"
+  default_prompt: "Use $writing-for-agents to improve these instructions based on their actual use."

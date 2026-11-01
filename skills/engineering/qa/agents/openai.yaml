@@ -1,0 +1,4 @@
+interface:
+  display_name: "QA"
+  short_description: "Check actual behavior and record acceptance gaps"
+  default_prompt: "Use $qa to verify the selected revision against its acceptance criteria."

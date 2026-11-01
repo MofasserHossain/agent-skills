@@ -10,6 +10,8 @@ import tempfile
 import unittest
 
 KIT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+
 SPEC = importlib.util.spec_from_file_location("skill_workflow", KIT / "tools/workflow.py")
 workflow = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(workflow)
@@ -25,12 +27,11 @@ class SkillInstallationTests(unittest.TestCase):
         shutil.copytree(KIT, self.source, ignore=shutil.ignore_patterns(".git", "__pycache__", "dist"))
 
     def test_canonical_skills_are_directly_installable_after_source_removal(self):
-        self.assertEqual(workflow.check_skills(self.source), 15)
+        self.assertEqual(workflow.check_skills(self.source), 17)
         project = self.root / "target project"
         installed = project / ".agents/skills"
-        for skill in (self.source / "skills").iterdir():
-            if not (skill / "SKILL.md").is_file():
-                continue
+        for entry in (self.source / "skills").rglob("SKILL.md"):
+            skill = entry.parent
             shutil.copytree(skill, installed / skill.name)
             host = project / ".claude/skills" / skill.name
             host.parent.mkdir(parents=True, exist_ok=True)
@@ -53,7 +54,7 @@ class SkillInstallationTests(unittest.TestCase):
 
     def test_one_selected_skill_has_only_its_own_resources(self):
         selected = self.root / "only-write-spec"
-        shutil.copytree(self.source / "skills/write-spec", selected)
+        shutil.copytree(self.source / "skills/engineering/write-spec", selected)
         self.source.rename(self.root / "source unavailable")
         self.assertTrue((selected / "templates/spec.md").is_file())
         self.assertFalse((selected / "references/execution-policy.md").exists())
@@ -64,7 +65,7 @@ class SkillInstallationTests(unittest.TestCase):
                     self.assertTrue((resource.parent / target.split("#")[0]).is_file())
 
     def test_validation_rejects_missing_escaping_absolute_and_symlinked_resources(self):
-        template = self.source / "skills/write-spec/templates/spec.md"
+        template = self.source / "skills/engineering/write-spec/templates/spec.md"
         template.unlink()
         with self.assertRaises(workflow.WorkflowError):
             workflow.check_skills(self.source)

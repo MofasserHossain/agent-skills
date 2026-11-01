@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implement"
+  short_description: "Build one scoped task with acceptance evidence"
+  default_prompt: "Use $implement to complete the selected task and report verification evidence."

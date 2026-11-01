@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan Tasks"
+  short_description: "Split agreed work into verifiable tasks and blockers"
+  default_prompt: "Use $plan-tasks to prepare vertical tasks from the agreed specification."

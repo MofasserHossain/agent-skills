@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grill"
+  short_description: "Resolve consequential scope and design decisions"
+  default_prompt: "Use $grill to resolve the open decisions in this request."

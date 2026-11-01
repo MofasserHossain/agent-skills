@@ -1,0 +1,4 @@
+interface:
+  display_name: "Handoff"
+  short_description: "Prepare portable context for the next session"
+  default_prompt: "Use $handoff to prepare a continuation record for this work."

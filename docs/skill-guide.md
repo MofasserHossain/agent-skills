@@ -18,9 +18,11 @@ Use the smallest procedure that resolves the current problem. These examples are
 | A clear fix or one ready task | `implement` | “Fix the reported preference loss. Reproduce it and return evidence against the ticket.” |
 | A bounded change needs inspection | `review` | “Review this diff against the task and project standards; report defects with evidence.” |
 | Delivered behavior needs runtime checks | `qa` | “Check this revision against the acceptance criteria; record failures and unperformed checks.” |
-| PR preparation, status or delivery | `pull-request` | “Check this PR's review and merge status using the project's delivery policy.” |
+| PR preparation, status or delivery | `pr` | “Check this PR's review and merge status using the project's delivery policy.” |
 | Module boundaries repeatedly slow changes | `improve-codebase-architecture` | “Assess this subsystem and recommend one bounded improvement with code evidence.” |
 | Observed workflow friction needs correction | `retro` | “Use these run records to identify the smallest correction and a way to evaluate it.” |
+| Continuing in another session, agent or workspace | `handoff` | “Record the current revision, decisions, evidence and next action.” |
+| Agent instructions are scattered or unclear | `writing-for-agents` | “Consolidate these instructions into concise rules and conditional references.” |
 
 If an installed collaborator is absent, use the current procedure where sufficient or add the needed skill deliberately. Installation does not require the full catalog.
 
@@ -43,8 +45,8 @@ Additional stage-specific signals matter too: setup separates discovered command
 
 A typo can go straight to implementation and proportionate verification. A bug with a known expected behavior needs reproduction and a fix, not a fresh product interview. A larger ambiguous feature may need discovery, a spec and tasks. Research and prototypes answer named questions; they are not default ceremonies.
 
-Keep a useful discovery conversation through spec and task synthesis. Start a fresh session when the next task has enough durable context to stand alone. See the [context policy](../skills/agent-workflow/references/context-policy.md) for transitions and handoffs, the [prompt map](prompt-map.md) for canonical procedures, and the [walkthrough](walkthrough.md) for connected artifacts.
+Keep a useful discovery conversation through spec and task synthesis. Start a fresh session when the next task has enough durable context to stand alone. See the [context policy](../skills/productivity/agent-workflow/references/context-policy.md) for transitions and handoffs, the [prompt map](prompt-map.md) for canonical procedures, and the [walkthrough](walkthrough.md) for connected artifacts.
 
 ## Evaluate improvements
 
-Structural validation establishes that skills are packaged and linked correctly. It does not establish that their prompts outperform another kit. Use the [pilot scenarios](../skills/retro/references/pilot-scenarios.md) on comparable tasks and record corrections, acceptance, review effort, elapsed time and available usage. Compare accepted outcomes rather than prompt length. Live agent runs require task authorization.
+Structural validation establishes that skills are packaged and linked correctly. It does not establish that their prompts outperform another kit. Use the [pilot scenarios](../skills/engineering/retro/references/pilot-scenarios.md) on comparable tasks and record corrections, acceptance, review effort, elapsed time and available usage. Compare accepted outcomes rather than prompt length. Live agent runs require task authorization.

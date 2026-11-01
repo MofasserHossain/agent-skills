@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Spec"
+  short_description: "Synthesize settled decisions into a buildable spec"
+  default_prompt: "Use $write-spec to record the settled requirements and verification criteria."

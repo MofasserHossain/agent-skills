@@ -59,32 +59,47 @@ Edit the skill you want to improve directly:
 
 ```text
 skills/
-  agent-workflow/SKILL.md
-  implement/
-    SKILL.md
-    references/
-  write-spec/
-    SKILL.md
-    templates/spec.md
+  engineering/
+    implement/
+      SKILL.md
+      agents/openai.yaml
+      references/
+    write-spec/
+    plan-tasks/
+    pr/
+    review/
+    qa/
+    ...
+  productivity/
+    agent-workflow/
+    grill/
+    intake/
+    research/
+    handoff/
+    writing-for-agents/
+tools/                        Workspace and execution helpers
+docs/                         Kit documentation and work records
 ```
+
+Categories organize the source; installed names stay flat (`pr`, `implement`, `handoff`). Each skill includes Codex display metadata in `agents/openai.yaml`; its behavior remains in `SKILL.md`.
 
 Each resource has one owning skill. Local links stay inside that skill's folder; other procedures are referred to by installed skill name, with a fallback when absent. The optional router is named `agent-workflow` in both source and installation. There is no generated installation copy or resource-link rewriting step.
 
-For changes to this kit, read the relevant `skills/<name>/SKILL.md` directly; no self-installation is needed. Keep actual kit work under `docs/work/<feature>/`, project rules/commands in the target project, and historical research in the source repo. See the [folder map](docs/folder-map.md).
+For changes to this kit, read the relevant `skills/<category>/<name>/SKILL.md` directly; no self-installation is needed. Keep actual kit work under `docs/work/<feature>/`, project rules/commands in the target project, and historical research in the source repo. See the [folder map](docs/folder-map.md).
 
 After editing, run the checks below and inspect the relocated-skill tests. Reinstall selected skills to update a target project after reviewing its local customizations. Python is needed only for source validation and optional helpers, not installed skill use.
 
 ## Available capabilities
 
-- Fifteen procedures: optional routing/setup, intake, grilling, research, prototypes, UI design, PRD/spec writing, vertical tasks, implementation, architecture assessment, review, QA, pull-request delivery/status/sync and retrospective.
+- Seventeen procedures: optional routing/setup, intake, grilling, research, prototypes, UI design, PRD/spec writing, vertical tasks, implementation, architecture assessment, review, QA, PR delivery/status/sync, retrospective, handoff and agent instruction writing.
 - Local-file/GitHub conventions with one authoritative tracker and portable requirement/task/result records.
 - Adaptive project context setup: reviewed move maps for existing instructions, essential root constraints, conditional phase/task reading routes, and preservation audits. Project-owned docs stay separate from skill installation and updates.
 - Project-specific verification commands and focused TDD guidance. Frontend, full-stack and backend projects use the same core flow with conditional checks.
-- The `pull-request` procedure uses project-specific checks and delivery rules, a concise title/body format, and a commits/diff review checkpoint before opening a new PR. It also handles status and post-merge sync; it does not automate merging.
+- The `pr` procedure uses project-specific checks and delivery rules, a concise title/body format with optional visuals, concrete verification evidence and material rollback notes, and a commits/diff review checkpoint before opening a new PR. It also handles status and post-merge sync; it does not automate merging.
 - QA sends reproducible defects back to the backlog; review checks requirements and project standards.
-- All fifteen procedures define scoped decisions and useful completion signals: routing/resumption, setup evidence, source-linked intake, bounded research, prototype verdicts, design readiness, architecture tradeoffs, planning coverage, implementation evidence, review, QA, PR recovery and evidence-based retrospective. Human usage examples live in the skill guide; behavioral superiority remains a pilot question.
+- All seventeen procedures define scoped decisions and useful completion signals: routing/resumption, setup evidence, source-linked intake, bounded research, prototype verdicts, design readiness, architecture tradeoffs, planning coverage, implementation evidence, review, QA, PR recovery and evidence-based retrospective. Human usage examples live in the skill guide; behavioral superiority remains a pilot question.
 
-Use only the stages the work needs. The [prompt map](docs/prompt-map.md) explains the procedures, [project routes](skills/ui-design/references/project-routes.md) covers UI/frontend/backend work, and the [worked example](docs/walkthrough.md) shows brief → spec → issues. Authoring research and the [kit specification](docs/workflow-spec.md) stay in this repo.
+Use only the stages the work needs. The [prompt map](docs/prompt-map.md) explains the procedures, [project routes](skills/engineering/ui-design/references/project-routes.md) covers UI/frontend/backend work, and the [worked example](docs/walkthrough.md) shows brief → spec → issues. Authoring research and the [kit specification](docs/workflow-spec.md) stay in this repo.
 
 ## Optional execution tooling
 

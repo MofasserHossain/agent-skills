@@ -1,0 +1,47 @@
+---
+name: pr
+description: "Prepare or update a pull request, check PR or merge status, or sync after a confirmed merge using the project's delivery rules."
+---
+
+Read the project's root instructions and its routed delivery rules first. Keep the target project as the working directory. Project policy owns branch/base names, commit shape, title/body conventions, verification commands, merge authority, and concurrency limits; do not import defaults from another project. If a consequential policy is unknown, resolve it before the affected action.
+
+Choose only the requested operation below. Read relevant delivery sections, not product, architecture, implementation skills or all workflow stages for a status-only task. If the task expands into edits or testing, follow those project reading routes before acting.
+
+## Status or merge check
+
+Identify the intended repository and PR from the request, current branch, or existing evidence. Query its actual state using an available connected repository tool or authenticated CLI. Distinguish open, closed without merge, and merged; report the URL and relevant check/review state. Do not treat closure or a successful CI run as proof of merge. Do not mutate branches, rerun app verification, or start new work for a status-only request.
+
+## Prepare, create, or update
+
+1. Inspect branch, worktree, staged/unstaged changes, target base and existing PRs. For creation, require a user request and stop on the target base branch (main by default when the project specifies no other base). Reuse an existing PR for this work instead of creating another; respect the project's concurrency limits. Preserve unrelated/staged changes and branch names; do not switch/reset a dirty checkout blindly.
+2. Read the task/spec and discover verification commands from this repository's applicable instructions, .agent-workflow.json, scripts and CI. Run required final and conditional checks in the project's order; there is no universal check/build command. Stop delivery on the first failed required check and show its command/output. Fix only within scope, rerun affected checks and report remaining human checks; never count stale evidence as current verification.
+3. Review the full diff against the refreshed remote base, including any intended uncommitted work. Prepare the commit(s) and a concrete title/body using the format below, subject to project policy. Keep secrets/private logs out of both code and description.
+4. Before a new PR, show the commits, diff statistics and proposed title/body, then wait for the user's go-ahead. Existing approval of that exact result satisfies this gate; initial permission to prepare a PR does not replace diff review. Material scope changes require an updated review. Prepare all reversible work before this checkpoint.
+5. After approval, push the intended branch with an upstream and create the PR against the verified base using available connected repository tools or the project's authenticated CLI. Use structured text or a body file for multiline descriptions. Rewrite history only if authorized by project policy; protect authorized force-pushes with a lease. Report the PR URL and verification outcome, following the project's post-opening wait rule. A PR request does not authorize merge or deployment.
+
+## Title and description
+
+Use the user's supplied title when present; otherwise follow project conventions. When the project has no title convention, use a Conventional Commit title under 70 characters: `<type>(<scope>): <summary>`, or `<type>: <summary>` when a scope adds no useful information. Describe the concrete outcome. Apply the same default to new branch commit subjects when the project has no other commit convention.
+
+When the project chooses squash merging, prepare the PR title as the intended single commit subject on the base branch. For example, `fix(auth): avoid repeated sign-in requests` becomes a history entry such as `fix(auth): avoid repeated sign-in requests (#190)`. Keep the PR number out of the PR title itself. Branches may have multiple development commits; squashing belongs to the separately authorized merge operation. Repository merge settings and historical commits remain unchanged unless that work is requested. Signature verification badges are separate from title formatting and passing checks; never claim a commit is signed without verifying it.
+
+Keep the body to about 25 lines unless a project template requires more. Describe the final change rather than repeating commit messages:
+
+- `## Summary`: one or two sentences explaining the concrete change and why. When it makes the change easier to assess, add the smallest useful visual: a diff sketch for changed behavior, a shallow tree for file responsibilities, or a Mermaid diagram for interactions. Omit visuals for simple changes; keep them next to the explanation they support.
+- `## Changes`: short bullets grouped by area, with user-visible fixes first.
+- `## Verification`: concrete evidence tied to the reviewed revision, with one line per check actually performed. Include observed before/after behavior where available: screenshots for visual changes, a reproduced failure and passing check for a fix, or relevant command output. Never invent a baseline or imply a check ran; identify missing evidence and checks not run, with reasons.
+- `## Notes`: only when needed for a material risk, follow-up or manual step, in one or two lines. State the affected users, consumers or data and whether rollback is straightforward. Identify irreversible effects or required recovery steps when applicable; avoid speculative risk lists and routine risk labels.
+
+Use no tables or long explanations in the default body. Preserve required repository templates instead of overriding them with this format.
+
+## Sync after merge
+
+Verify the PR really merged and read the project's post-merge rules. Fetch and update the intended local base safely, preserving dirty work and existing workspace branch names. Do not delete branches, reset unrelated changes, start another task or open a new PR unless authorized. If the request was only to check status, report it without syncing.
+
+## Result
+
+Return the operation performed, PR URL/state when available, checks actually run, local changes made, and remaining blockers or human checks. If remote access is unavailable, report that limit; do not infer remote state from local Git alone. This procedure runs through the current agent, not a separate automatic PR bot or worker.
+
+Before repeating a create/update operation after a failure, query the remote state to see whether it already succeeded. Reuse the intended existing PR rather than creating a duplicate. If its branch head changed since inspection, refresh the diff and verification assessment before an authorized write; do not overwrite concurrent edits using a stale description or revision assumption.
+
+Tie delivery evidence to the revision it covers. Distinguish local preparation, successful push and confirmed PR creation/update in the result so a partially completed operation can resume without repeating side effects. A failed remote request leaves its outcome unknown until checked.
