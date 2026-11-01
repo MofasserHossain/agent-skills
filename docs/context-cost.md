@@ -32,4 +32,8 @@ Filesystem byte/word counts are useful for finding large instructions, but are n
 
 Keep discovery descriptions concise and avoid duplicate linked/global/project registrations. Keep root project rules focused; put long architecture/reference material behind clear task-specific pointers when that can preserve the project's obligations. Do not delete essential constraints for a smaller number.
 
+Keep skill catalogs, bodies and references out of CLAUDE.md and AGENTS.md; native skill discovery already supplies the available entries. When AGENTS.md owns shared rules, a separate CLAUDE.md can point to it and contain only essential host-specific exceptions. Preserve existing symlinks and single-source arrangements. Reading a large AGENTS.md through a short pointer still consumes context; route conditional project detail selectively as well.
+
+Preserve automatic skill selection by default. In Claude, explicit-only invocation can omit a skill's description from automatic context while retaining slash-command use, but it also prevents automatic selection. Treat that as a deliberate host-local preference, not a portable frontmatter change applied to the entire catalog. Short, discriminating descriptions retain automatic selection at a discovery cost.
+
 Pass the selected task and relevant requirement references rather than every issue and all history. Keep useful reasoning during a planning session; hand off durable records when switching tasks or executors. Use [context policy](../skills/productivity/agent-workflow/references/context-policy.md) and [model policy](../skills/productivity/agent-workflow/references/model-policy.md).

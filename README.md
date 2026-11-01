@@ -87,6 +87,8 @@ Run without `--skill` in a normal terminal for interactive selection. Unattended
 
 The standard symlink method keeps selected skills under the project's `.agents/skills`, with host links sharing those files. Each skill owns its resources and can be relocated independently. Python helpers stay in this source repository.
 
+For Claude only, add `--agent claude-code`; Claude discovers the shared files through `.claude/skills` links. Installation does not paste skill instructions into `CLAUDE.md`. Setup guidance keeps root rules focused, avoids duplicating skill catalogs, and routes detailed instructions to the selected skill and relevant references. See [context cost](docs/context-cost.md) for discovery versus activation and measurement limits.
+
 See [installation and invocation](docs/installation.md) for direct CLI commands, other agent targets, copy mode, isolated environments, updates and legacy migration.
 
 ## How this repository is organized

@@ -77,6 +77,8 @@ Which default effort is cost-effective for each task class; provider CLI compati
 
 ## Direct skill installation
 
+Setup guidance keeps CLAUDE.md/AGENTS.md focused on essential project rules and conditional reading routes, without embedding installed skill catalogs, bodies or references. Existing single-source arrangements are preserved; a separate Claude entry can point to shared AGENTS.md rules without duplicating them. Native discovery exposes concise metadata, selected skill bodies load when used, and supporting files are read conditionally. Explicit-only invocation remains a deliberate host-local preference. This is implemented Markdown guidance, not automatic rewriting of project instructions or measured token savings.
+
 The canonical skills/ folders are also the installation input for GitHub shorthand and local Skills CLI use. The router has the uniform name agent-workflow. Each skill owns its supporting references/templates; local links never leave that folder. Cross-skill collaboration uses installed names and explicit missing-guidance fallbacks, without automatically installing the full catalog. Task/result conventions keep one owner instead of copied package resources.
 
 No generated package tree, distribution build or link rewriting is required. workflow.py check validates per-skill boundaries, metadata and source links; relocation tests exercise copied folders with the source unavailable. The project-local wrapper delegates agent paths to the pinned Skills CLI. Installed skills do not include Python runners. Legacy snapshot/registration tools remain deliberately supported; old workflow router selections map to agent-workflow during a supervised update. Existing project installations are not migrated automatically.
