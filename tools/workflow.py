@@ -16,6 +16,8 @@ import sys
 import time
 from datetime import datetime, timezone
 
+from skill_catalog import discover, validate_interface
+
 KIT = Path(__file__).resolve().parents[1]
 CONFIG = ".agent-workflow.json"
 SUPPORTED_AGENTS = {"claude", "codex"}
@@ -230,11 +232,11 @@ def absolute_links(text, source):
 
 
 def make_prompt(project, config, task_path, task_text):
-    instruction_path = KIT / "skills/implement/SKILL.md"
+    instruction_path = skill_sources(KIT)["implement"]
     instructions = instruction_path.read_text(encoding="utf-8")
     instructions = re.sub(r"\A---\n.*?\n---\n", "", instructions, count=1, flags=re.S)
     instructions = absolute_links(instructions, instruction_path)
-    result = (KIT / "skills/implement/references/result-contract.md").read_text(encoding="utf-8")
+    result = (instruction_path.parent / "references/result-contract.md").read_text(encoding="utf-8")
     return (
         "# Portable implementation request\n\n"
         f"Project: {project}\nTask source: {task_path}\n"
@@ -314,9 +316,16 @@ def dispatch(command, prompt, project, output, timeout):
     return returncode
 
 
+def skill_sources(kit):
+    try:
+        return discover(kit)
+    except ValueError as error:
+        raise WorkflowError(str(error)) from error
+
+
 def check_skills(kit):
     """Validate directly installable folders without generating or rewriting files."""
-    skills = sorted((Path(kit) / "skills").glob("*/SKILL.md"))
+    skills = list(skill_sources(kit).values())
     errors = []
     if not skills:
         errors.append("No canonical skills found.")
@@ -324,6 +333,10 @@ def check_skills(kit):
         if skill.parent.is_symlink():
             errors.append(f"Symlinked skill folder: {skill.parent}")
             continue
+        try:
+            validate_interface(skill)
+        except ValueError as error:
+            errors.append(str(error))
         content = skill.read_text(encoding="utf-8")
         if f"name: {skill.parent.name}\n" not in content or "description:" not in content:
             errors.append(f"Invalid skill metadata: {skill}")
@@ -358,7 +371,7 @@ def check_kit():
             if not local.exists():
                 errors.append(f"Broken link in {path.relative_to(KIT)}: {target}")
     load_registry()
-    read_task(KIT / "skills/plan-tasks/templates/task.md")
+    read_task(skill_sources(KIT)["plan-tasks"].parent / "templates/task.md")
     if errors:
         raise WorkflowError("\n".join(errors))
     print(f"Validated {count} directly installable skills, local Markdown links, registry and task template.")

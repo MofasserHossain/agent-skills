@@ -12,13 +12,13 @@ A SKILL.md is a reusable prompt/procedure file with discovery metadata. Its file
 
 | Work | Canonical procedure | Supporting artifact shape | Current invocation |
 |---|---|---|---|
-| Resolve requirements | [grill](../skills/grill/SKILL.md) | Brief and decisions | Current interactive agent |
-| Research and plan a UI | [ui-design](../skills/ui-design/SKILL.md) | [optional design record](../skills/ui-design/templates/design.md) | Current agent; relevant frontend/full-stack tasks only |
-| Create the feature PRD | [write-spec](../skills/write-spec/SKILL.md) | [spec template](../skills/write-spec/templates/spec.md) | Current agent reads the settled brief/decisions |
-| PRD to implementation issues | [plan-tasks](../skills/plan-tasks/SKILL.md) | [task template](../skills/plan-tasks/templates/task.md) and [contract](../skills/plan-tasks/references/task-contract.md) | Current agent reads the agreed PRD and existing work |
-| Implement one issue | [implement](../skills/implement/SKILL.md) | [result contract](../skills/implement/references/result-contract.md) | Current agent, or the optional one-task helper |
-| PR preparation, updates, status and post-merge sync | [pull-request](../skills/pull-request/SKILL.md) | Project-owned delivery rules and verification evidence | Current agent, using available repository tools/CLI |
-| Review and QA | [review](../skills/review/SKILL.md), [qa](../skills/qa/SKILL.md) | [QA template](../skills/qa/templates/qa.md) | Current agent; required human judgments remain pending |
+| Resolve requirements | [grill](../skills/productivity/grill/SKILL.md) | Brief and decisions | Current interactive agent |
+| Research and plan a UI | [ui-design](../skills/engineering/ui-design/SKILL.md) | [optional design record](../skills/engineering/ui-design/templates/design.md) | Current agent; relevant frontend/full-stack tasks only |
+| Create the feature PRD | [write-spec](../skills/engineering/write-spec/SKILL.md) | [spec template](../skills/engineering/write-spec/templates/spec.md) | Current agent reads the settled brief/decisions |
+| PRD to implementation issues | [plan-tasks](../skills/engineering/plan-tasks/SKILL.md) | [task template](../skills/engineering/plan-tasks/templates/task.md) and [contract](../skills/engineering/plan-tasks/references/task-contract.md) | Current agent reads the agreed PRD and existing work |
+| Implement one issue | [implement](../skills/engineering/implement/SKILL.md) | [result contract](../skills/engineering/implement/references/result-contract.md) | Current agent, or the optional one-task helper |
+| PR preparation, updates, status and post-merge sync | [pr](../skills/engineering/pr/SKILL.md) | Project-owned delivery rules and verification evidence | Current agent, using available repository tools/CLI |
+| Review and QA | [review](../skills/engineering/review/SKILL.md), [qa](../skills/engineering/qa/SKILL.md) | [QA template](../skills/engineering/qa/templates/qa.md) | Current agent; required human judgments remain pending |
 
 Templates specify the shape of an output. Procedures specify how to produce or evaluate it. Project briefs/specs/issues are the actual inputs and outputs, not copies of the procedures.
 
@@ -42,13 +42,13 @@ Open the agent in the target project's checkout or worktree. Keep that project a
 
 Without native registration, use a request such as:
 
-> Work in /absolute/path/to/project. Read /absolute/path/to/agent-workflow/skills/write-spec/SKILL.md and the project's instructions. Turn docs/work/feature/brief.md and its settled decisions into docs/work/feature/spec.md. Report any missing decisions.
+> Work in /absolute/path/to/project. Read /absolute/path/to/agent-workflow/skills/engineering/write-spec/SKILL.md and the project's instructions. Turn docs/work/feature/brief.md and its settled decisions into docs/work/feature/spec.md. Report any missing decisions.
 
 For the next stage:
 
-> In the same project, read /absolute/path/to/agent-workflow/skills/plan-tasks/SKILL.md and docs/work/feature/spec.md. Prepare vertical issues with requirement coverage, blockers and verification under docs/work/feature/issues/.
+> In the same project, read /absolute/path/to/agent-workflow/skills/engineering/plan-tasks/SKILL.md and docs/work/feature/spec.md. Prepare vertical issues with requirement coverage, blockers and verification under docs/work/feature/issues/.
 
-These are usage examples, not another set of stage instructions. Replace the paths; creating issues follows the existing authorization and agreed decisions. In this kit's own checkout, use relative canonical paths such as `skills/implement/SKILL.md` and keep actual work records under `docs/work/<feature>/`. Templates provide artifact shapes, examples are fictional, and conversation summaries provide historical background.
+These are usage examples, not another set of stage instructions. Replace the paths; creating issues follows the existing authorization and agreed decisions. In this kit's own checkout, use relative canonical paths such as `skills/engineering/implement/SKILL.md` and keep actual work records under `docs/work/<feature>/`. Templates provide artifact shapes, examples are fictional, and conversation summaries provide historical background.
 
 Standard installed skills are individually discoverable through the host's supported invocation mechanism. Merely having the source files in `skills/` does not register them with a host. Legacy/source-linked registration exposes one thin router entry; invoke that entry with the stage and source reference, or read the procedure directly.
 

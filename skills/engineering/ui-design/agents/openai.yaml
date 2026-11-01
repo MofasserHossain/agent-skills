@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Design"
+  short_description: "Resolve interface flows, states and visual choices"
+  default_prompt: "Use $ui-design to resolve the named interface uncertainty before implementation."

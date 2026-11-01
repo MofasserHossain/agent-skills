@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Workflow"
+  short_description: "Choose a route or resume existing project work"
+  default_prompt: "Use $agent-workflow to choose the next step for this work."

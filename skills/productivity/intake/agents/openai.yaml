@@ -1,0 +1,4 @@
+interface:
+  display_name: "Intake"
+  short_description: "Turn source material into a traceable work brief"
+  default_prompt: "Use $intake to turn this material into a source-linked brief."

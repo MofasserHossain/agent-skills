@@ -8,6 +8,8 @@ from pathlib import Path
 import tempfile
 import sys
 
+from skill_catalog import discover
+
 KIT = Path(__file__).resolve().parents[1]
 NAME = "agent-workflow"
 MARKER = ".agent-workflow-registration.json"
@@ -18,7 +20,10 @@ class RegistrationError(Exception):
 
 
 def entrypoint(kit):
-    source = (kit / "skills/agent-workflow/SKILL.md").resolve()
+    try:
+        source = discover(kit)["agent-workflow"]
+    except (ValueError, KeyError) as error:
+        raise RegistrationError(f"Cannot find shared workflow: {error}") from error
     if not source.is_file():
         raise RegistrationError(f"Missing shared entry point: {source}")
     # A local registration uses an absolute file pointer so references are read

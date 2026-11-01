@@ -1,6 +1,6 @@
 # Install and use canonical skills
 
-The same `skills/<name>/` folders are edited, reviewed and installed. Every filesystem resource is inside its owning skill; other procedures are referred to by installed name. No generated package tree or build step is required.
+The same `skills/<category>/<name>/` folders are edited, reviewed and installed. Every filesystem resource is inside its owning skill; other procedures are referred to by installed name. No generated package tree or build step is required.
 
 ## GitHub installation
 
@@ -142,7 +142,7 @@ Research about Matt, tests, examples, source-only tools and the optional executi
 
 ## Project configuration and updates
 
-Invoke a selected skill through the host's supported discovery/invocation mechanism. A session may need a refresh. Run setup-project if installed to inspect real project scripts, tracker and documentation conventions; preserve existing instructions and AGENTS/CLAUDE symlinks. It can write project configuration directly without the Python helper. See [project checks](../skills/implement/references/verification-policy.md).
+Invoke a selected skill through the host's supported discovery/invocation mechanism. A session may need a refresh. Run setup-project if installed to inspect real project scripts, tracker and documentation conventions; preserve existing instructions and AGENTS/CLAUDE symlinks. It can write project configuration directly without the Python helper. See [project checks](../skills/engineering/implement/references/verification-policy.md).
 
 After source edits, run the source checks and rerun skills add for the intended --skill names. Local source paths in skills-lock.json support maintenance; they are not needed to execute already-copied skills. Review project-local skill edits before reinstalling: standard installation can overwrite them and does not provide our legacy local-edit guard. Do not assume local sources have the same update behavior as Git-hosted sources; rerunning add is the verified local refresh route.
 
@@ -150,7 +150,7 @@ There is one editable/installable tree under skills. Supporting files stay with 
 
 ## Earlier generated-package installations
 
-If skills-lock.json points to the old generated-distribution path, the installed files continue to work. To update, preserve local edits and deliberately rerun skills add from this repo or its skills directory for the same chosen names and agents. Check the installation summary and refreshed lock; do not assume the old source entry will update itself. There is no second package tree to rebuild. The source router now lives at skills/agent-workflow with the same installed name as before.
+If skills-lock.json points to the old generated-distribution path, the installed files continue to work. To update, preserve local edits and deliberately rerun skills add from this repo or its skills directory for the same chosen names and agents. Check the installation summary and refreshed lock; do not assume the old source entry will update itself. There is no second package tree to rebuild. The source router now lives at skills/productivity/agent-workflow with the same installed name as before.
 
 Local validation of the direct layout used the cached Skills CLI 1.7.4: all 15 canonical skills were listed and installed into a disposable project for Claude Code/Codex. After hiding the source and moving the project, all 15 relative Claude links and 17 supporting-resource links resolved. No agent invocation or account setup was performed.
 
@@ -172,4 +172,10 @@ Pass a target supported by the pinned Skills CLI, for example `--agent cursor` o
 
 For a host without Skills CLI integration, supply the canonical skill folder and ask it to read `SKILL.md`, following its local resource links. Keep the whole folder together. This provides the procedure without promising automatic discovery, slash commands or process dispatch. Existing project rules and task authorization still apply.
 
-Source-linked development registrations that still point to the old skills/workflow path must be reviewed and refreshed to skills/agent-workflow. Preserve edited entries; the registration tool refuses replacements rather than silently overwriting them. Existing copied standard skill installations do not depend on the moved source path.
+Source-linked development registrations that still point to the old skills/workflow path must be reviewed and refreshed to skills/productivity/agent-workflow. Preserve edited entries; the registration tool refuses replacements rather than silently overwriting them. Existing copied standard skill installations do not depend on the moved source path.
+
+## Categorized source and PR rename
+
+Source folders are grouped under `skills/engineering/` and `skills/productivity/`. Skills CLI discovers the nested catalog and installs selected names directly under the agent's skill directory. Each folder carries its own resources and `agents/openai.yaml` display metadata. The YAML provides Codex labels and a suggested prompt; it does not launch a command or change invocation permissions.
+
+The installed `pull-request` skill is now named `pr`: use `/pr` in Claude Code or `$pr` in Codex after selecting it during installation. Existing `pull-request` copies remain until deliberately removed; preserve customizations and avoid keeping conflicting copies. The legacy snapshot helper accepts `pull-request` as an alias for `pr`.
