@@ -42,11 +42,11 @@ Open the agent in the target project's checkout or worktree. Keep that project a
 
 Without native registration, use a request such as:
 
-> Work in /absolute/path/to/project. Read /absolute/path/to/agent-workflow/skills/engineering/write-spec/SKILL.md and the project's instructions. Turn docs/work/feature/brief.md and its settled decisions into docs/work/feature/spec.md. Report any missing decisions.
+> Work in /absolute/path/to/project. Read /absolute/path/to/agent-skills/skills/engineering/write-spec/SKILL.md and the project's instructions. Turn docs/work/feature/brief.md and its settled decisions into docs/work/feature/spec.md. Report any missing decisions.
 
 For the next stage:
 
-> In the same project, read /absolute/path/to/agent-workflow/skills/engineering/plan-tasks/SKILL.md and docs/work/feature/spec.md. Prepare vertical issues with requirement coverage, blockers and verification under docs/work/feature/issues/.
+> In the same project, read /absolute/path/to/agent-skills/skills/engineering/plan-tasks/SKILL.md and docs/work/feature/spec.md. Prepare vertical issues with requirement coverage, blockers and verification under docs/work/feature/issues/.
 
 These are usage examples, not another set of stage instructions. Replace the paths; creating issues follows the existing authorization and agreed decisions. In this kit's own checkout, use relative canonical paths such as `skills/engineering/implement/SKILL.md` and keep actual work records under `docs/work/<feature>/`. Templates provide artifact shapes, examples are fictional, and conversation summaries provide historical background.
 
@@ -55,8 +55,8 @@ Standard installed skills are individually discoverable through the host's suppo
 The helper can be invoked by absolute path from elsewhere because --project selects the target:
 
 ```sh
-python3 /absolute/path/to/agent-workflow/tools/workflow.py prompt /absolute/path/to/project/docs/work/feature/issues/01-task.md --project /absolute/path/to/project
-python3 /absolute/path/to/agent-workflow/tools/workflow.py run /absolute/path/to/project/docs/work/feature/issues/01-task.md --project /absolute/path/to/project --agent codex
+python3 /absolute/path/to/agent-skills/tools/workflow.py prompt /absolute/path/to/project/docs/work/feature/issues/01-task.md --project /absolute/path/to/project
+python3 /absolute/path/to/agent-skills/tools/workflow.py run /absolute/path/to/project/docs/work/feature/issues/01-task.md --project /absolute/path/to/project --agent codex
 ```
 
 The run command previews unless --execute is added. Actual dispatch sets the subprocess working directory to the project; supplying a project path does not itself grant filesystem permission or provision a remote workspace. A native interactive agent needs its own workspace/access configuration.

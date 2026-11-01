@@ -7,13 +7,13 @@ The same `skills/<category>/<name>/` folders are edited, reviewed and installed.
 Run from your target codebase:
 
 ```sh
-npx skills@latest add MofasserHossain/agent-workflow
+npx skills@latest add MofasserHossain/agent-skills
 ```
 
 Choose the required skills, agents and project scope. The private repository requires existing Git access. For the pinned CLI and an explicit selection:
 
 ```sh
-DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add MofasserHossain/agent-workflow --skill grill implement research --agent claude-code codex
+DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add MofasserHossain/agent-skills --skill grill implement research --agent claude-code codex
 ```
 
 The CLI discovers canonical `skills/` folders directly. This layout takes effect on GitHub when the migration is merged; local testing can use this checkout's skills directory beforehand. Do not use the removed generated-distribution path.
@@ -49,7 +49,7 @@ The standard CLI shows its installation summary and confirmation. `--yes` skips 
 Alternatively, run directly from the target project:
 
 ```sh
-DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/skills --agent claude-code codex
+DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-skills/skills --agent claude-code codex
 ```
 
 These are real installation commands, not the legacy helper's preview/--apply protocol. Use --list to inspect first and the normal interactive confirmation when installing.
@@ -117,7 +117,7 @@ The existing helper starts a process in the environment where the helper itself 
 The normal installed-skill route above runs in your existing interactive agent. It does not install the Python runner. If you deliberately use the helper from this authoring checkout, configure the target's .agent-workflow.json and local task records first, then preview:
 
 ```sh
-python3 /path/to/agent-workflow/tools/workflow.py run /path/to/project/docs/work/feature/issues/01-task.md --project /path/to/project --agent codex
+python3 /path/to/agent-skills/tools/workflow.py run /path/to/project/docs/work/feature/issues/01-task.md --project /path/to/project --agent codex
 ```
 
 `--agent claude` selects the helper's Claude adapter (the Skills CLI target name is `claude-code`). Add `--execute` only when launching that worker is authorized; preview does not run it. Docker and managed once/loop are not activated by installing skills or invoking a slash/dollar command. See the [execution plan](execution-plan.md).

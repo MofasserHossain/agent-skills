@@ -1,128 +1,130 @@
-# Agent Workflow
+# Agent Skills
 
-Reusable engineering skills for turning ideas, documents, messages and tickets into verified changes. Maintain one source kit, then install only the skills each project needs. Portable skills can be installed for any agent supported by the Skills CLI, or read directly by an agent with file access. The optional execution helper supports Claude Code and Codex.
+Reusable skills for taking software work from an idea to a verified change. Install the skills your project needs, use them in your coding agent, and keep decisions and results in project files so another session or agent can continue.
 
-## Install from GitHub
+Use a single skill for a clear fix, or connect discovery, planning, implementation and review for a larger feature. Each skill includes its own instructions, references and templates.
 
-The editable `skills/` folders are also the installable skills. No package tree, build or Python runtime is needed for installation. From the target codebase:
+## Quick start
 
-```sh
-npx skills@latest add MofasserHossain/agent-workflow
-```
+You need Git access to this private repository, Node.js for the Skills CLI, and a compatible coding agent. The pinned CLI used by this repo requires Node.js 22.20+.
 
-Choose the skills and agents you want. For a pinned CLI and explicit project-local selection:
+From the project where you want to use the skills:
 
 ```sh
-DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add MofasserHossain/agent-workflow --skill grill implement research --agent claude-code codex
+npx skills@latest add MofasserHossain/agent-skills
 ```
 
-The repository is private, so Git access is required. Skills CLI 1.7.4 is the pinned wrapper version; using `@latest` selects whatever version is current when you install. Do not also install old generated package paths into the same project.
+Choose the skills, agent targets and project scope in the installer. To select skills explicitly for Claude Code and Codex with the pinned CLI:
+
+```sh
+DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add MofasserHossain/agent-skills \
+  --skill setup-project implement review \
+  --agent claude-code codex
+```
+
+Open your agent in that project and send a request through its skill interface:
+
+| Agent | Example message |
+|---|---|
+| Claude Code | `/setup-project Inspect this project's instructions and verification commands.` |
+| Codex | `$setup-project Inspect this project's instructions and verification commands.` |
+
+Then give `implement` a concrete task, for example:
+
+```text
+$implement Fix the reported preference loss after restart. Reproduce the bug,
+follow the project's conventions, and verify the expected behavior.
+```
+
+Use `/implement` in Claude Code. These examples are messages inside the agent; installation does not start an agent or configure provider authentication.
+
+Skills support any agent target recognized by the standard Skills CLI. A file-capable agent can also read a skill's `SKILL.md` directly. The optional Python execution helper supports Claude Code and Codex only.
+
+## Choose a skill
+
+Install only what you need. The optional `agent-workflow` router helps choose a route; it does not install its collaborators.
+
+| Skill | Use it to |
+|---|---|
+| [`setup-project`](skills/engineering/setup-project/SKILL.md) | Discover project commands and organize project guidance. |
+| [`agent-workflow`](skills/productivity/agent-workflow/SKILL.md) | Choose the next step or resume existing work. |
+| [`intake`](skills/productivity/intake/SKILL.md) | Turn notes, documents or messages into a source-linked brief. |
+| [`grill`](skills/productivity/grill/SKILL.md) | Resolve product and design decisions before implementation. |
+| [`research`](skills/productivity/research/SKILL.md) | Answer a decision-changing question with source evidence. |
+| [`prototype`](skills/engineering/prototype/SKILL.md) | Test an uncertain approach with a bounded experiment. |
+| [`ui-design`](skills/engineering/ui-design/SKILL.md) | Design interface flows, states and appearance. |
+| [`write-spec`](skills/engineering/write-spec/SKILL.md) | Turn settled decisions into a specification. |
+| [`plan-tasks`](skills/engineering/plan-tasks/SKILL.md) | Split a specification into verifiable tasks with dependencies. |
+| [`implement`](skills/engineering/implement/SKILL.md) | Deliver a clear fix or ready task with verification evidence. |
+| [`review`](skills/engineering/review/SKILL.md) | Inspect changes against requirements and project standards. |
+| [`qa`](skills/engineering/qa/SKILL.md) | Check delivered behavior and record reproducible defects. |
+| [`pr`](skills/engineering/pr/SKILL.md) | Prepare a PR, check delivery status or sync after merging. |
+| [`improve-codebase-architecture`](skills/engineering/improve-codebase-architecture/SKILL.md) | Assess code boundaries and propose a bounded improvement. |
+| [`retro`](skills/engineering/retro/SKILL.md) | Use work evidence to identify a workflow improvement. |
+| [`handoff`](skills/productivity/handoff/SKILL.md) | Preserve the current state, decisions and next action. |
+| [`writing-for-agents`](skills/productivity/writing-for-agents/SKILL.md) | Write concise agent instructions with conditional references. |
+
+### Common routes
+
+- **Clear fix:** `implement` → verification → `review`.
+- **Unclear request:** `intake` or `grill` → `implement` once scope is settled.
+- **Larger feature:** `write-spec` → `plan-tasks` → `implement` → `review` and `qa`.
+- **Uncertain approach:** use `research`, `prototype` or `ui-design` to resolve the specific question.
+- **Session change:** use `handoff` to preserve the evidence and next step.
+
+Follow the project's own commands and delivery rules. Add a missing collaborator deliberately when its guidance is needed. See the [skill guide](docs/skill-guide.md) for example requests and completion signals, or the [worked example](docs/walkthrough.md) for connected brief, spec and task records.
 
 ## Install from a local checkout
 
-You need Node 22.20+ for the pinned CLI and a Skills-compatible agent in the target project. From this kit checkout:
+From this repository, list available skills or install a selection into another project:
 
 ```sh
 bash scripts/install-skills.sh /path/to/project --list
-bash scripts/install-skills.sh /path/to/project
-bash scripts/install-skills.sh /path/to/project --skill grill research write-spec
+bash scripts/install-skills.sh /path/to/project --skill setup-project implement review
 ```
 
-In a normal terminal the selector lets you choose skills; unattended/agent calls must provide explicit `--skill` names. The wrapper defaults to project-local Claude Code and Codex. Use `--agent claude-code`, `--agent codex`, or other Skills CLI targets. It disables telemetry and uses `skills@1.7.4`.
+Run without `--skill` in a normal terminal for interactive selection. Unattended calls require explicit skill names. The wrapper uses `skills@1.7.4`, disables telemetry and defaults to project-local Claude Code and Codex targets; override them with `--agent`.
 
-Or run the standard CLI directly from the target project:
+The standard symlink method keeps selected skills under the project's `.agents/skills`, with host links sharing those files. Each skill owns its resources and can be relocated independently. Python helpers stay in this source repository.
 
-```sh
-DISABLE_TELEMETRY=1 npx skills@1.7.4 add /path/to/agent-workflow/skills --agent claude-code codex
-```
+See [installation and invocation](docs/installation.md) for direct CLI commands, other agent targets, copy mode, isolated environments, updates and legacy migration.
 
-The standard symlink installation creates one project-local copy of each selected skill under `.agents/skills`, with Claude Code links pointing there. Both agents read the same files. Each skill keeps its own supporting files; collaborator skills are named and are not automatically installed. A missing collaborator is reported where its guidance is needed.
-
-See [installation, invocation and migration](docs/installation.md) for copy mode, isolated environments and existing installations. Standard installation does not include Python helpers, authenticate providers or run an agent.
-
-## Start work in a project
-
-Open Claude Code or Codex in the target project and invoke a selected installed skill through its supported skill interface. Start with `setup-project` if selected to record the project's commands and conventions. Use the [skill guide](docs/skill-guide.md) for entry points, example requests and signs of a useful result. Then choose the shortest route:
-
-- Clear fix: `implement` → verification → `review`.
-- Unclear request: `intake` or `grill`, then implementation when scope is settled.
-- Larger change: `write-spec` → `plan-tasks` → `implement` → `review` and `qa`.
-- Interface uncertainty: add `ui-design`; mobile projects keep build/device checks in their own configuration and work records.
-
-Start `claude` or `codex` from the target project. Inside Claude Code, invoke `/setup-project` or `/implement <task reference>`; inside Codex, use `$setup-project` or `$implement <task reference>`. These are agent messages, not shell commands. For Docker or another isolated workspace, provision the project-local skill folders inside that environment and start the agent there; see the [isolated execution guide](docs/installation.md#run-inside-docker-sandbox-or-another-isolated-environment). See the [installation and invocation walkthrough](docs/installation.md#start-claude-code-or-codex-and-use-an-installed-skill) for setup, shared symlinks and runner distinctions.
-
-Use only skills you selected; add another when needed. The optional `agent-workflow` router helps select a route. Decisions and results stay in the target project's work records so another session or agent can continue.
-
-## Maintain the skills
-
-Edit the skill you want to improve directly:
+## How this repository is organized
 
 ```text
 skills/
-  engineering/
-    implement/
-      SKILL.md
-      agents/openai.yaml
-      references/
-    write-spec/
-    plan-tasks/
-    pr/
-    review/
-    qa/
-    ...
-  productivity/
-    agent-workflow/
-    grill/
-    intake/
-    research/
-    handoff/
-    writing-for-agents/
-tools/                        Workspace and execution helpers
-docs/                         Kit documentation and work records
+  engineering/       Setup, design, planning, implementation and delivery
+  productivity/      Routing, discovery, research and session continuity
+docs/                Guides, specifications, research and work records
+scripts/             Project-local installation wrapper
+tools/               Optional Python helpers and source validation
+tests/               Packaging, relocation and helper tests
 ```
 
-Categories organize the source; installed names stay flat (`pr`, `implement`, `handoff`). Each skill includes Codex display metadata in `agents/openai.yaml`; its behavior remains in `SKILL.md`.
+Edit canonical `skills/<category>/<name>/SKILL.md` files directly. Each skill owns its supporting resources and Codex display metadata in `agents/openai.yaml`. Categories organize the source; installed names stay flat. No generated skill copies or package build step are needed.
 
-Each resource has one owning skill. Local links stay inside that skill's folder; other procedures are referred to by installed skill name, with a fallback when absent. The optional router is named `agent-workflow` in both source and installation. There is no generated installation copy or resource-link rewriting step.
+For work on this kit, follow [AGENTS.md](AGENTS.md) and read the relevant skill directly without self-installing. After reviewing local customizations, reinstall selected skills to update a target project. See the [folder map](docs/folder-map.md) and [workflow specification](docs/workflow-spec.md) for the source layout and contracts.
 
-For changes to this kit, read the relevant `skills/<category>/<name>/SKILL.md` directly; no self-installation is needed. Keep actual kit work under `docs/work/<feature>/`, project rules/commands in the target project, and historical research in the source repo. See the [folder map](docs/folder-map.md).
+## Optional tooling and roadmap
 
-After editing, run the checks below and inspect the relocated-skill tests. Reinstall selected skills to update a target project after reviewing its local customizations. Python is needed only for source validation and optional helpers, not installed skill use.
+The source repository includes standard-library Python helpers for:
 
-## Available capabilities
-
-- Seventeen procedures: optional routing/setup, intake, grilling, research, prototypes, UI design, PRD/spec writing, vertical tasks, implementation, architecture assessment, review, QA, PR delivery/status/sync, retrospective, handoff and agent instruction writing.
-- Local-file/GitHub conventions with one authoritative tracker and portable requirement/task/result records.
-- Adaptive project context setup: reviewed move maps for existing instructions, essential root constraints, conditional phase/task reading routes, and preservation audits. Project-owned docs stay separate from skill installation and updates.
-- Project-specific verification commands and focused TDD guidance. Frontend, full-stack and backend projects use the same core flow with conditional checks.
-- The `pr` procedure uses project-specific checks and delivery rules, a concise title/body format with optional visuals, concrete verification evidence and material rollback notes, and a commits/diff review checkpoint before opening a new PR. It also handles status and post-merge sync; it does not automate merging.
-- QA sends reproducible defects back to the backlog; review checks requirements and project standards.
-- All seventeen procedures define scoped decisions and useful completion signals: routing/resumption, setup evidence, source-linked intake, bounded research, prototype verdicts, design readiness, architecture tradeoffs, planning coverage, implementation evidence, review, QA, PR recovery and evidence-based retrospective. Human usage examples live in the skill guide; behavioral superiority remains a pilot question.
-
-Use only the stages the work needs. The [prompt map](docs/prompt-map.md) explains the procedures, [project routes](skills/engineering/ui-design/references/project-routes.md) covers UI/frontend/backend work, and the [worked example](docs/walkthrough.md) shows brief → spec → issues. Authoring research and the [kit specification](docs/workflow-spec.md) stay in this repo.
-
-## Optional execution tooling
-
-The root kit retains a Python helper for explicit one-task dispatch through Claude Code or Codex. It is separate from standard skill installation. It previews until `--execute` is supplied, uses native authentication/settings, and does not accept a task merely because a process exits successfully.
+- Preparing task context and previewing or explicitly dispatching one task through Claude Code or Codex.
+- Validating a local dependency graph and reporting eligible work with `workflow.py next`.
+- Managing independent local clones and verified archives with the [workspace helper](docs/workspaces.md).
 
 ```sh
 python3 tools/workflow.py prompt TASK.md --project /path/to/project
 python3 tools/workflow.py run TASK.md --project /path/to/project --agent codex
 ```
 
-The read-only selector validates a complete local dependency graph and reports eligible work or why it must wait:
+The run command previews until `--execute` is supplied. Process success alone does not establish task acceptance. The dependency selector does not launch, claim or accept tasks.
 
-```sh
-python3 tools/workflow.py next /path/to/project/docs/work/feature/issues --project /path/to/project
-```
+Automated scheduling and loops, GitHub API integration, Docker provisioning, Sandcastle orchestration and provider-specific model-effort translation remain planned. Legacy snapshot and pointer installers remain supported for existing installations. See the [execution plan](docs/execution-plan.md) and [runner assessment](docs/work/runner-adaptation/assessment.md) for implemented behavior and proposed work.
 
-It does not launch, claim or accept tasks. Filename order is the default; `complete` means all existing records say done, not that this command reverified them. Invalid graphs fail before dispatch. The [Matt runner assessment and adaptation specification](docs/work/runner-adaptation/assessment.md) separates inspected source behavior, implemented preflight and proposed once/loop/runtime work.
+## Validate changes
 
-The separate [workspace helper](docs/workspaces.md) creates independent local clones, lists logical disk usage, verifies clean committed archives and supports explicit purge/restore under ~/mofasser-workspace (configurable). It does not launch Docker or agents. Worker supervision, project hooks and automatic retention remain planned.
-
-Automated scheduling/loops, GitHub API integration, Docker provisioning, Sandcastle orchestration and provider-specific model-effort translation remain planned. The [execution plan](docs/execution-plan.md) describes those future capabilities. Legacy snapshot/pointer installers remain available for existing installations, but are not the default installation route.
-
-## Verify this repository
+From this checkout:
 
 ```sh
 python3 -m unittest discover -s tests -v
@@ -130,4 +132,4 @@ python3 tools/workflow.py check
 bash -n scripts/install-skills.sh
 ```
 
-Tests use local fake executors. Real provider authentication, model output quality and Docker behavior require a separate pilot. No publishing, global installation or paid model call is needed for these checks.
+Tests use fake executors and cover packaging, relocation and helper behavior. They do not establish model output quality; live-agent evaluation requires a separate authorized pilot.
