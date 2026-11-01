@@ -21,7 +21,9 @@ Identify the intended repository and PR from the request, current branch, or exi
 
 ## Title and description
 
-Use the user's supplied title when present; otherwise follow project conventions. When the project has no title convention, use a Conventional Commit title, `<type>(<scope>): <summary>`, under 70 characters, suitable as the squash-merge entry.
+Use the user's supplied title when present; otherwise follow project conventions. When the project has no title convention, use a Conventional Commit title under 70 characters: `<type>(<scope>): <summary>`, or `<type>: <summary>` when a scope adds no useful information. Describe the concrete outcome. Apply the same default to new branch commit subjects when the project has no other commit convention.
+
+When the project chooses squash merging, prepare the PR title as the intended single commit subject on the base branch. For example, `fix(auth): avoid repeated sign-in requests` becomes a history entry such as `fix(auth): avoid repeated sign-in requests (#190)`. Keep the PR number out of the PR title itself. Branches may have multiple development commits; squashing belongs to the separately authorized merge operation. Repository merge settings and historical commits remain unchanged unless that work is requested. Signature verification badges are separate from title formatting and passing checks; never claim a commit is signed without verifying it.
 
 Keep the body to about 25 lines unless a project template requires more. Describe the final change rather than repeating commit messages:
 
