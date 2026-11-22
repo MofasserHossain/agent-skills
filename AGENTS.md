@@ -15,3 +15,5 @@ Do not install globally, push, merge, create remote repositories, or call extern
 When adding a capability, update README's implemented/roadmap distinction and docs/workflow-spec.md.
 
 New projects install canonical skills/ folders directly with the standard Skills CLI. Each skill owns its needed resources; all local links must stay within that skill folder. Refer to collaborators by installed skill name and handle absence explicitly. Do not add generated skill copies or a package build step. Validate with python3 tools/workflow.py check and relocation tests. Keep optional runner tools in this source repo. The Bash wrapper supports project-local Skills CLI agent targets, defaulting to Claude Code/Codex; the CLI owns target validation and discovery paths. Legacy installations are migrated deliberately after user selection.
+
+Name and write skills by the writing-for-agents skill and its skill-mechanics reference, using GLOSSARY.md terms. When renaming a skill, add the old name to ALIASES in tools/skill_catalog.py and update the next-step catalog; tests check both.

@@ -13,7 +13,7 @@ npx skills@latest add MofasserHossain/agent-skills
 Choose the required skills, agents and project scope. The private repository requires existing Git access. For the pinned CLI and an explicit selection:
 
 ```sh
-DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add MofasserHossain/agent-skills --skill grill implement research --agent claude-code codex
+DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add MofasserHossain/agent-skills --skill grill-me implement research --agent claude-code codex
 ```
 
 The CLI discovers canonical `skills/` folders directly. This layout takes effect on GitHub when the migration is merged; local testing can use this checkout's skills directory beforehand. Do not use the removed generated-distribution path.
@@ -32,14 +32,14 @@ The first lists the catalog without installing. The second opens the standard se
 For explicit selection:
 
 ```sh
-bash scripts/install-skills.sh /path/to/project --skill grill research write-spec
+bash scripts/install-skills.sh /path/to/project --skill grill-me research to-spec
 ```
 
 Choose the intended host explicitly when a project uses only one:
 
 ```sh
-bash scripts/install-skills.sh /path/to/project --agent claude-code --skill grill research
-bash scripts/install-skills.sh /path/to/project --agent codex --skill grill research
+bash scripts/install-skills.sh /path/to/project --agent claude-code --skill grill-me research
+bash scripts/install-skills.sh /path/to/project --agent codex --skill grill-me research
 ```
 
 Omitting `--agent` retains the default of both Claude Code and Codex. `--agent claude-code codex` selects both explicitly; `-a` and `--agent=codex` are also supported. Other agent names are forwarded to the Skills CLI, which validates supported targets and owns their installation paths. Missing agent values are rejected before the CLI runs. Skill selection and agent selection are independent.
@@ -59,10 +59,10 @@ These are real installation commands, not the legacy helper's preview/--apply pr
 From this source checkout, install a chosen starter set into the target codebase using the canonical skill folders:
 
 ```sh
-bash scripts/install-skills.sh /path/to/project --agent claude-code codex --skill setup-project agent-workflow
+bash scripts/install-skills.sh /path/to/project --agent claude-code codex --skill setup-agent-workflow next-step
 ```
 
-The router is named `agent-workflow` in source and installation. Select the standard symlink method to share each installed copy between the two hosts. Add `implement`, `review` or planning skills when needed; the router does not install its collaborators. To select every skill deliberately, use `--skill '*'` instead. Do not use `--copy` when shared references are wanted.
+The router is named `next-step` in source and installation. Select the standard symlink method to share each installed copy between the two hosts. Add `implement`, `code-review` or planning skills when needed; the router does not install its collaborators. To select every skill deliberately, use `--skill '*'` instead. Do not use `--copy` when shared references are wanted.
 
 Start the chosen agent from the target codebase, not the kit checkout:
 
@@ -82,13 +82,13 @@ The following are messages typed **inside the agent**, not shell commands. Run s
 
 | Purpose | Claude Code | Codex |
 |---|---|---|
-| Record project conventions | `/setup-project` | `$setup-project` |
-| Choose or resume a route | `/agent-workflow Resume docs/work/feature/` | `$agent-workflow Resume docs/work/feature/` |
-| Resolve uncertain requirements | `/grill Resolve offline behavior from docs/work/feature/brief.md` | `$grill Resolve offline behavior from docs/work/feature/brief.md` |
+| Record project conventions | `/setup-agent-workflow` | `$setup-agent-workflow` |
+| Choose or resume a route | `/next-step Resume docs/work/feature/` | `$next-step Resume docs/work/feature/` |
+| Resolve uncertain requirements | `/grill-me Resolve offline behavior from docs/work/feature/brief.md` | `$grill-me Resolve offline behavior from docs/work/feature/brief.md` |
 | Implement a settled task | `/implement Work on docs/work/feature/issues/01-task.md` | `$implement Work on docs/work/feature/issues/01-task.md` |
-| Review the change | `/review Review the current diff against that task` | `$review Review the current diff against that task` |
+| Review the change | `/code-review Review the current diff against that task` | `$code-review Review the current diff against that task` |
 
-Only installed skills are available. Select the skill from the host's picker when names collide with built-ins or another installation. In particular, Codex's built-in `/review` is distinct from this kit's `$review` skill. If a new skill does not appear, refresh/restart the session and inspect the project skill files and link targets. A direct fallback is: “Read .agents/skills/implement/SKILL.md and implement docs/work/feature/issues/01-task.md.” Preserve the skill folder's bundled resources.
+Only installed skills are available. Select the skill from the host's picker when names collide with built-ins or another installation. In particular, Codex's built-in `/review` is distinct from this kit's `$code-review` skill, and Claude Code also ships a built-in `/code-review`; when both appear, choose this kit's entry from the picker. If a new skill does not appear, refresh/restart the session and inspect the project skill files and link targets. A direct fallback is: “Read .agents/skills/implement/SKILL.md and implement docs/work/feature/issues/01-task.md.” Preserve the skill folder's bundled resources.
 
 Invocation references: [Claude Code skills](https://code.claude.com/docs/en/skills), [Codex skill examples](https://developers.openai.com/blog/eval-skills), [Codex CLI](https://developers.openai.com/codex/cli/). Commands were documented on 2026-11-01; no live model session was launched to validate them.
 
@@ -104,7 +104,7 @@ sbx run claude /path/to/project
 sbx run codex /path/to/project
 ```
 
-Use the same `/setup-project`, `/implement` or `$setup-project`, `$implement` messages inside the chosen agent. These are alternative sessions; two agents must not edit the same working tree concurrently. Keep `.agents/skills` and `.claude/skills` together so their project-internal symlinks resolve inside the sandbox.
+Use the same `/setup-agent-workflow`, `/implement` or `$setup-agent-workflow`, `$implement` messages inside the chosen agent. These are alternative sessions; two agents must not edit the same working tree concurrently. Keep `.agents/skills` and `.claude/skills` together so their project-internal symlinks resolve inside the sandbox.
 
 A mounted project workspace can expose source edits to the host; it is not the same as keeping changes in a separate clone. For stronger separation, prepare a checkout inside the isolated environment or use the installed sandbox's documented clone mode, then install/copy the selected self-contained skill folders into that checkout. Ensure uncommitted/untracked installed skills actually arrive there before starting work. A symlink to a host-only path does not provision its target. For any other container, VM or remote workspace, apply the same resource rule and start the agent from its internal project path.
 
@@ -136,13 +136,13 @@ skills-lock.json                            Installer maintenance metadata
 
 Use --copy for separate host copies when preferred. Do not choose source-link development mode when the project must remain independent. Verify the installer version's resulting paths; symlink fallback can produce copies.
 
-Each skill keeps its own resources: local supporting links stay inside its folder. Cross-skill references name optional skills, with no paths to uninstalled siblings or the author's checkout. The agent-workflow router describes the catalog and checks availability; installing it does not install the entire workflow.
+Each skill keeps its own resources: local supporting links stay inside its folder. Cross-skill references name optional skills, with no paths to uninstalled siblings or the author's checkout. The next-step router describes the catalog and checks availability; installing it does not install the entire workflow.
 
 Research about Matt, tests, examples, source-only tools and the optional execution runner stay in the root repo. Each project keeps its actual requirements/research/specs/issues, product rules and commands. The source kit's visibility does not protect copied content if that content is committed publicly.
 
 ## Project configuration and updates
 
-Invoke a selected skill through the host's supported discovery/invocation mechanism. A session may need a refresh. Run setup-project if installed to inspect real project scripts, tracker and documentation conventions; preserve existing instructions and AGENTS/CLAUDE symlinks. It can write project configuration directly without the Python helper. See [project checks](../skills/engineering/implement/references/verification-policy.md).
+Invoke a selected skill through the host's supported discovery/invocation mechanism. A session may need a refresh. Run setup-agent-workflow if installed to inspect real project scripts, tracker and documentation conventions; preserve existing instructions and AGENTS/CLAUDE symlinks. It can write project configuration directly without the Python helper. See [project checks](../skills/engineering/implement/references/verification-policy.md).
 
 After source edits, run the source checks and rerun skills add for the intended --skill names. Local source paths in skills-lock.json support maintenance; they are not needed to execute already-copied skills. Review project-local skill edits before reinstalling: standard installation can overwrite them and does not provide our legacy local-edit guard. Do not assume local sources have the same update behavior as Git-hosted sources; rerunning add is the verified local refresh route.
 
@@ -150,15 +150,15 @@ There is one editable/installable tree under skills. Supporting files stay with 
 
 ## Earlier generated-package installations
 
-If skills-lock.json points to the old generated-distribution path, the installed files continue to work. To update, preserve local edits and deliberately rerun skills add from this repo or its skills directory for the same chosen names and agents. Check the installation summary and refreshed lock; do not assume the old source entry will update itself. There is no second package tree to rebuild. The source router now lives at skills/productivity/agent-workflow with the same installed name as before.
+If skills-lock.json points to the old generated-distribution path, the installed files continue to work. To update, preserve local edits and deliberately rerun skills add from this repo or its skills directory for the same chosen names and agents. Check the installation summary and refreshed lock; do not assume the old source entry will update itself. There is no second package tree to rebuild. The source router now lives at skills/productivity/next-step; it was installed as `agent-workflow` before the [skill renames](#skill-renames-2026-11).
 
 Local validation of the direct layout used the cached Skills CLI 1.7.4: all 15 canonical skills were listed and installed into a disposable project for Claude Code/Codex. After hiding the source and moving the project, all 15 relative Claude links and 17 supporting-resource links resolved. No agent invocation or account setup was performed.
 
 ## Existing legacy installations
 
-Earlier projects may contain .agent-workflow plus a thin agent-workflow entry. Those remain supported by tools/install_project.py and tools/register_skills.py; their ownership markers protect local edits. Their --select/--skills, --update and --apply behavior is separate from the standard CLI.
+Earlier projects may contain .agent-workflow plus a thin router entry: `agent-workflow` before the skill renames, `next-step` after a supervised update. Those remain supported by tools/install_project.py and tools/register_skills.py; their ownership markers protect local edits. Their --select/--skills, --update and --apply behavior is separate from the standard CLI. An update maps retired names in the saved selection to current ones and creates `next-step` entries; review and delete the old owned `agent-workflow` entries afterwards, since they point at a router path that no longer exists.
 
-Migrate after choosing the intended skill set. Preserve the project's AGENTS/CLAUDE instructions, .agent-workflow.json and work records. Review/back up local changes to the managed bundle and its native entries. Remove only the owned legacy installation and update project pointers before installing the chosen standard skills; the agent-workflow name can otherwise conflict with the old entry. Do not remove unrelated skills. An existing project is not migrated merely by changing the source layout.
+Migrate after choosing the intended skill set. Preserve the project's AGENTS/CLAUDE instructions, .agent-workflow.json and work records. Review/back up local changes to the managed bundle and its native entries. Remove only the owned legacy installation (the snapshot and its thin router entries) and update project pointers before installing the chosen standard skills; a leftover router entry can otherwise conflict with the standard `next-step` skill. Do not remove unrelated skills. An existing project is not migrated merely by changing the source layout.
 
 Existing project selections remain unchanged until deliberately migrated. Use the source wrapper with --list to inspect available skills without changing an installation.
 
@@ -172,10 +172,41 @@ Pass a target supported by the pinned Skills CLI, for example `--agent cursor` o
 
 For a host without Skills CLI integration, supply the canonical skill folder and ask it to read `SKILL.md`, following its local resource links. Keep the whole folder together. This provides the procedure without promising automatic discovery, slash commands or process dispatch. Existing project rules and task authorization still apply.
 
-Source-linked development registrations that still point to the old skills/workflow path must be reviewed and refreshed to skills/productivity/agent-workflow. Preserve edited entries; the registration tool refuses replacements rather than silently overwriting them. Existing copied standard skill installations do not depend on the moved source path.
+Source-linked development registrations named `agent-workflow`, or pointing at the older skills/workflow path, no longer resolve. Register again with tools/register_skills.py, which now creates a `next-step` entry, then review and delete the old registration folder (it holds a .agent-workflow-registration.json marker). Preserve edited entries; the registration tool refuses replacements rather than silently overwriting them. Existing copied standard skill installations do not depend on the moved source path.
 
 ## Categorized source and PR rename
 
 Source folders are grouped under `skills/engineering/` and `skills/productivity/`. Skills CLI discovers the nested catalog and installs selected names directly under the agent's skill directory. Each folder carries its own resources and `agents/openai.yaml` display metadata. The YAML provides Codex labels and a suggested prompt; it does not launch a command or change invocation permissions.
 
 The installed `pull-request` skill is now named `pr`: use `/pr` in Claude Code or `$pr` in Codex after selecting it during installation. Existing `pull-request` copies remain until deliberately removed; preserve customizations and avoid keeping conflicting copies. The legacy snapshot helper accepts `pull-request` as an alias for `pr`.
+
+## Skill renames (2026-11)
+
+Seven skills were renamed so each name says what the skill does, using one word per concept (see [GLOSSARY.md](../GLOSSARY.md)): converters start with `to-`, the interview is `grill-me`, the review names what it reviews, and the router names what it gives you.
+
+| Old installed name | New name | Claude Code | Codex |
+|---|---|---|---|
+| `agent-workflow` | `next-step` | `/next-step` | `$next-step` |
+| `setup-project` | `setup-agent-workflow` | `/setup-agent-workflow` | `$setup-agent-workflow` |
+| `intake` | `to-brief` | `/to-brief` | `$to-brief` |
+| `grill` | `grill-me` | `/grill-me` | `$grill-me` |
+| `write-spec` | `to-spec` | `/to-spec` | `$to-spec` |
+| `plan-tasks` | `to-tasks` | `/to-tasks` | `$to-tasks` |
+| `review` | `code-review` | `/code-review` | `$code-review` |
+
+The other ten names are unchanged. The `.agent-workflow.json` configuration file and the legacy `.agent-workflow` snapshot folder keep their names.
+
+Reinstalling never renames or removes the old folders: `skills add` puts `grill-me` beside `grill`, and both stay discoverable, giving the agent two procedures for one job. To update a project that used the standard CLI (checked with `skills@1.7.4` on 2026-11-22):
+
+1. Back up local edits to installed skills. Reinstalling a skill whose name didn't change (for example `implement`) overwrites its folder without warning.
+2. Install the new names you use, from this checkout: `bash scripts/install-skills.sh /path/to/project --skill grill-me to-spec to-tasks code-review` (adjust the list).
+3. Remove the old names from the project:
+
+   ```sh
+   cd /path/to/project
+   DISABLE_TELEMETRY=1 npx skills@1.7.4 remove agent-workflow setup-project intake grill write-spec plan-tasks review -y
+   ```
+
+   This removes each old folder, its `.claude/skills` link and its `skills-lock.json` entry, and skips names that aren't installed.
+
+The legacy snapshot helper accepts every old name as an alias for its new name.

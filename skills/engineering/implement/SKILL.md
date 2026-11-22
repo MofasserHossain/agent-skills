@@ -1,24 +1,44 @@
 ---
 name: implement
-description: "Build or fix one scoped task whose intended behavior is settled, and return acceptance evidence and remaining checks."
+description: "Build one task or clear fix test-first and return evidence for every acceptance criterion. Use when behavior is settled: a ready task, a reproducible bug or a small clear change."
 ---
 
-## Scope and prerequisites
+Build one scoped piece of work whose intended behavior is settled, one **red → green** slice at a time, and return evidence for each acceptance criterion. A commit, a process exit or a model's claim is not acceptance.
 
-Read the selected task, applicable project instructions, relevant spec/decisions and dependency evidence. Confirm that required prior changes are available. Work only within its scope. Pull additional library documentation and architecture detail when the task needs them; keep always-required project rules explicit rather than treating them as optional lookup material.
+## Process
 
-## Implement and verify
+### 1. Load the task
 
-For behavior changes, use a narrow feedback loop: one meaningful failing test, implementation, verification, then the next behavior. Tests observe public behavior and independently known expected outcomes. For bugs, reproduce the reported symptom before fixing it. Follow the project's existing test boundaries; no implementation-mirroring tests. Read the project's named checks and issue Verification section for the actual runner command and focused target syntax. An environment/command failure is not the intended RED. See [project checks and TDD](references/verification-policy.md).
+Read the selected task, the project's instructions, the relevant spec and decisions, and evidence that the task's blockers are done and integrated. Pull library documentation and architecture detail when the task needs them; rules the project always requires are never optional reading. Then check whether the requested behavior is already satisfied. If it is, return that evidence instead of manufacturing a change.
 
-Use proportionate checks for copy/configuration changes and prototypes. Refactor only where it helps the task and remains covered; keep unrelated cleanup separate.
+**Done when:** you can state the acceptance criteria and the scope boundary, and you have confirmed the prerequisites are available.
 
-Run targeted checks while iterating and the project's required final checks before reporting success. For UI or hardware-dependent behavior, distinguish runtime checks performed from manual checks remaining.
+### 2. Reproduce a bug first
 
-## Evidence and handoff
+For a bug, get a feedback loop that goes **red** on the reported symptom before you read code to build a theory. When the cause isn't obvious after a first look, read [diagnosing bugs](references/diagnosing-bugs.md).
 
-Read [execution policy](references/execution-policy.md). Stop dependent work on a missing product decision; record a precise blocker. Do not infer merge/publish permission from AFK mode.
+**Done when:** you have run one command that shows the user's symptom, or you have reported why no such loop can be built.
 
-Return [the portable result](references/result-contract.md) with acceptance evidence. A commit, process exit or model claim is not acceptance. Follow project rules for commits and external actions.
+### 3. Build in vertical slices
 
-Before editing, check whether the requested behavior is already satisfied. If it is, return the supporting evidence without manufacturing a change. Before reporting completion, account for every acceptance criterion as demonstrated, failed or unverified; name blockers and manual checks explicitly.
+For each behavior, at a **seam** agreed in the spec or task:
+
+1. **Red:** write one test that fails because the behavior is missing or wrong. A missing dependency, an invalid flag or a broken fixture is not the intended red.
+2. **Green:** write only enough code to make it pass.
+3. Move to the next behavior. One test, one implementation, repeat; never write all the tests first.
+
+Tests observe public behavior. Expected values come from an independent source (a known literal, a worked example, the spec), never recomputed the way the code computes them. Read the project's named checks and the task's Verification section for the runner and its focused-target syntax; see [project checks and TDD](references/verification-policy.md). Copy, configuration and prototypes get proportionate checks. Refactor only where it helps the task and stays covered; keep unrelated cleanup out.
+
+**Done when:** every acceptance criterion has a passing test or a named runtime or manual check.
+
+### 4. Verify
+
+Run focused checks while iterating, and the project's required final checks before reporting success. For UI or hardware-dependent behavior, keep the runtime checks you performed apart from the manual checks that remain.
+
+**Done when:** the final checks ran on the current revision, or each check that couldn't run is named with its reason.
+
+### 5. Report
+
+Read the [execution policy](references/execution-policy.md) and return the [portable result](references/result-contract.md). Account for each acceptance criterion as demonstrated, failed or unverified, and name blockers and manual checks. A missing product decision stops dependent work; record it as a precise blocker. Follow the project's rules for commits and external actions; AFK mode never implies permission to merge or publish. Name what comes next: `code-review` for the diff, `qa` for behavior that must be seen running.
+
+**Done when:** the report accounts for every acceptance criterion.

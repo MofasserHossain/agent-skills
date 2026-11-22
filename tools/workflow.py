@@ -371,7 +371,7 @@ def check_kit():
             if not local.exists():
                 errors.append(f"Broken link in {path.relative_to(KIT)}: {target}")
     load_registry()
-    read_task(skill_sources(KIT)["plan-tasks"].parent / "templates/task.md")
+    read_task(skill_sources(KIT)["to-tasks"].parent / "templates/task.md")
     if errors:
         raise WorkflowError("\n".join(errors))
     print(f"Validated {count} directly installable skills, local Markdown links, registry and task template.")

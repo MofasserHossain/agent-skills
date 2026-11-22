@@ -1,4 +1,4 @@
 interface:
   display_name: "Prototype"
-  short_description: "Test a specific design question with a small experiment"
-  default_prompt: "Use $prototype to test this uncertainty and record a supported verdict."
+  short_description: "Answer a design question with a throwaway build"
+  default_prompt: "Use $prototype to answer this design question and record the verdict."

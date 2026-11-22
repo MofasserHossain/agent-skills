@@ -52,12 +52,12 @@ def payload(kit, skills=None, with_runner=False):
         raise InstallError(str(error)) from error
     available = set(catalog)
     requested = sorted({ALIASES.get(name, name)
-                        for name in (skills if skills is not None else available - {"agent-workflow"})})
+                        for name in (skills if skills is not None else available - {"next-step"})})
     if not requested or any(name not in available for name in requested):
         raise InstallError("Select existing skill names from the source kit.")
-    selected = set(requested) | {"agent-workflow"}
+    selected = set(requested) | {"next-step"}
     if with_runner:
-        selected.update({"implement", "plan-tasks"})
+        selected.update({"implement", "to-tasks"})
     files = {}
 
     def read(relative):
@@ -80,7 +80,7 @@ def payload(kit, skills=None, with_runner=False):
             result.append(Path(os.path.normpath(Path(relative).parent / target.split("#")[0])).as_posix())
         return result
 
-    router_path = catalog["agent-workflow"].relative_to(kit).as_posix()
+    router_path = catalog["next-step"].relative_to(kit).as_posix()
     pending = []
     for name in sorted(selected):
         for resource in sorted(catalog[name].parent.rglob("*")):
@@ -112,7 +112,7 @@ def payload(kit, skills=None, with_runner=False):
                                   "included_skills": sorted(selected), "with_runner": with_runner}, indent=2) + "\n").encode()
     files["README.md"] = (
         "# Installed agent workflow\n\n"
-        "Use the agent-workflow entry in Claude Code or Codex, or read skills/productivity/agent-workflow/SKILL.md. "
+        "Use the next-step entry in Claude Code or Codex, or read skills/productivity/next-step/SKILL.md. "
         "Project rules, .agent-workflow.json and work records belong to the project. "
         "Load only the selected stage and relevant references.\n\n"
         "Installed procedures: " + ", ".join(sorted(selected)) + ".\n\n"
@@ -133,9 +133,9 @@ def metadata(files, kind):
 
 
 def entry_files(destination, bundle):
-    target = os.path.relpath(bundle / "skills/productivity/agent-workflow/SKILL.md", destination)
+    target = os.path.relpath(bundle / "skills/productivity/next-step/SKILL.md", destination)
     body = (
-        "---\nname: agent-workflow\n"
+        "---\nname: next-step\n"
         'description: "Plan, implement, review and verify work using this project’s workflow."\n'
         "---\n\n"
         f"Read [the workflow]({Path(target).as_posix()}). "
@@ -243,7 +243,7 @@ def apply(items):
 def choose_skills(kit):
     if not sys.stdin.isatty():
         raise InstallError("The chooser requires an interactive terminal; use --skills NAME ... or --all-skills.")
-    paths = sorted(path for name, path in discover(kit).items() if name != "agent-workflow")
+    paths = sorted(path for name, path in discover(kit).items() if name != "next-step")
     print("Choose this project's skills. Nothing is preselected; required dependencies are added automatically.")
     for number, path in enumerate(paths, 1):
         description = re.search(r'^description: (.+)$', path.read_text(), re.M)
@@ -287,7 +287,7 @@ def main(argv=None):
             raise InstallError(f"Project directory does not exist: {project}")
         skills = args.skills
         if args.all_skills:
-            skills = sorted(set(discover(KIT)) - {"agent-workflow"})
+            skills = sorted(set(discover(KIT)) - {"next-step"})
         elif args.select or (skills is None and not (project / BUNDLE).exists()):
             skills = choose_skills(KIT)
         items = plan(project, args.agent, KIT, args.update, skills, args.with_runner)

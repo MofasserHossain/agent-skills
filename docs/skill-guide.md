@@ -6,17 +6,17 @@ Use the smallest procedure that resolves the current problem. These examples are
 
 | Situation | Start with | Example request |
 |---|---|---|
-| New project or scattered project guidance | `setup-project` | “Inspect existing instructions and commands. Prepare the project context for these selected skills.” |
-| Unsure which route fits | `agent-workflow` | “Resume this feature from its latest work record and evidence.” |
-| Notes, messages or conflicting requests | `intake` | “Turn these notes into a source-linked brief; surface contradictions with the existing ticket.” |
-| Product or design choices remain open | `grill` | “Resolve the offline behavior for this feature using the brief and existing decisions.” |
+| New project or scattered project guidance | `setup-agent-workflow` | “Inspect existing instructions and commands. Prepare the project context for these selected skills.” |
+| Unsure which route fits | `next-step` | “Resume this feature from its latest work record and evidence.” |
+| Notes, messages or conflicting requests | `to-brief` | “Turn these notes into a source-linked brief; surface contradictions with the existing issue.” |
+| Product or design choices remain open | `grill-me` | “Resolve the offline behavior for this feature using the brief and existing decisions.” |
 | A factual answer would change a decision | `research` | “Verify whether the platform supports this background operation; cite primary evidence and limitations.” |
 | A runnable experiment would settle a choice | `prototype` | “Test whether this state transition can lose pending edits; preserve the experiment and verdict.” |
 | Interface flows or appearance need design | `ui-design` | “Design the empty, loading, error and success states for this flow using our platform conventions.” |
-| Decisions are settled and work spans sessions | `write-spec` | “Synthesize these decisions into a spec; flag any implementation-changing gaps.” |
-| Agreed work needs several tasks | `plan-tasks` | “Break this spec into verifiable outcomes with coverage, blockers and checks.” |
-| A clear fix or one ready task | `implement` | “Fix the reported preference loss. Reproduce it and return evidence against the ticket.” |
-| A bounded change needs inspection | `review` | “Review this diff against the task and project standards; report defects with evidence.” |
+| Decisions are settled and work spans sessions | `to-spec` | “Synthesize these decisions into a spec; flag any implementation-changing gaps.” |
+| Agreed work needs several tasks | `to-tasks` | “Break this spec into verifiable outcomes with coverage, blockers and checks.” |
+| A clear fix or one ready task | `implement` | “Fix the reported preference loss. Reproduce it and return evidence against the task.” |
+| A bounded change needs inspection | `code-review` | “Review this diff against the task and project standards; report defects with evidence.” |
 | Delivered behavior needs runtime checks | `qa` | “Check this revision against the acceptance criteria; record failures and unperformed checks.” |
 | PR preparation, status or delivery | `pr` | “Check this PR's review and merge status using the project's delivery policy.” |
 | Module boundaries repeatedly slow changes | `improve-codebase-architecture` | “Assess this subsystem and recommend one bounded improvement with code evidence.” |
@@ -45,7 +45,7 @@ Additional stage-specific signals matter too: setup separates discovered command
 
 A typo can go straight to implementation and proportionate verification. A bug with a known expected behavior needs reproduction and a fix, not a fresh product interview. A larger ambiguous feature may need discovery, a spec and tasks. Research and prototypes answer named questions; they are not default ceremonies.
 
-Keep a useful discovery conversation through spec and task synthesis. Start a fresh session when the next task has enough durable context to stand alone. See the [context policy](../skills/productivity/agent-workflow/references/context-policy.md) for transitions and handoffs, the [prompt map](prompt-map.md) for canonical procedures, and the [walkthrough](walkthrough.md) for connected artifacts.
+Keep a useful discovery conversation through spec and task synthesis. Start a fresh session when the next task has enough durable context to stand alone. See the [context policy](../skills/productivity/next-step/references/context-policy.md) for transitions and handoffs, the [prompt map](prompt-map.md) for canonical procedures, and the [walkthrough](walkthrough.md) for connected artifacts.
 
 ## Evaluate improvements
 

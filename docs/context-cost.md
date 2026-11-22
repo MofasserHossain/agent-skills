@@ -8,11 +8,11 @@ The source screenshot supplied by the user reports 12.5k total context tokens, i
 
 ## Standard installed shape
 
-Each user-selected skill has its own native discovery entry and bundled references/templates. Only metadata participates in discovery; selected bodies and supporting files load when needed. The optional agent-workflow router does not preload other skills. Standard installation does not copy research, tests, examples or Python tooling. More selected entries can increase discovery metadata; no exact savings are claimed.
+Each user-selected skill has its own native discovery entry and bundled references/templates. Only metadata participates in discovery; selected bodies and supporting files load when needed. The optional next-step router does not preload other skills. Standard installation does not copy research, tests, examples or Python tooling. More selected entries can increase discovery metadata; no exact savings are claimed.
 
 ## Legacy snapshot shape
 
-- One small agent-workflow entry per selected host, pointing within the project snapshot.
+- One small next-step entry per selected host, pointing within the project snapshot.
 - The router chooses the needed stage; it does not request all stage bodies.
 - Only selected skills and linked supporting resources are installed; the helper is optional. Kit research, tests and examples remain in the authoring checkout. Installed supporting files stay on disk until needed.
 - Project instructions/configuration, selected issue/spec and relevant evidence still contribute when read.
@@ -36,4 +36,4 @@ Keep skill catalogs, bodies and references out of CLAUDE.md and AGENTS.md; nativ
 
 Preserve automatic skill selection by default. In Claude, explicit-only invocation can omit a skill's description from automatic context while retaining slash-command use, but it also prevents automatic selection. Treat that as a deliberate host-local preference, not a portable frontmatter change applied to the entire catalog. Short, discriminating descriptions retain automatic selection at a discovery cost.
 
-Pass the selected task and relevant requirement references rather than every issue and all history. Keep useful reasoning during a planning session; hand off durable records when switching tasks or executors. Use [context policy](../skills/productivity/agent-workflow/references/context-policy.md) and [model policy](../skills/productivity/agent-workflow/references/model-policy.md).
+Pass the selected task and relevant requirement references rather than every issue and all history. Keep useful reasoning during a planning session; hand off durable records when switching tasks or executors. Use [context policy](../skills/productivity/next-step/references/context-policy.md) and [model policy](../skills/productivity/next-step/references/model-policy.md).

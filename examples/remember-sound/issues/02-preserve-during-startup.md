@@ -14,11 +14,11 @@ Illustrative issue for a fictional app; not an active implementation request.
 
 ## Context
 
-[Feature PRD](../spec.md). Requires the first issue's integrated settings behavior.
+[Feature spec](../spec.md). Requires the first task's integrated settings behavior.
 
 ## Requirements covered
 
-R2 in the parent PRD.
+R2 in the parent spec.
 
 ## Expected behavior
 

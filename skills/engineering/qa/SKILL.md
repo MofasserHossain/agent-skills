@@ -1,26 +1,44 @@
 ---
 name: qa
-description: "Check delivered behavior against acceptance criteria and record runtime and manual verification evidence."
+description: "Check a revision's running behavior against its acceptance criteria and record evidence. Use when built work needs runtime or manual verification, or a fix needs rechecking."
 ---
 
-## Acceptance criteria
+Exercise the real behavior of a pinned revision against each acceptance criterion, and record what passed, what failed and what was not performed. QA is a feedback loop: it can run on an integrated, verifiable increment while other work continues. A clean automated suite is not acceptance.
 
-Read the task/spec and revision under review. Map acceptance criteria to meaningful checks using [QA template](templates/qa.md).
+## Process
 
-## Exercise and record
+### 1. Pin what you test
 
-Exercise actual user flows where the environment permits. Include relevant failure/empty states and platform-specific constraints. Respect shared device/browser courtesy rules and use disposable data when mutation is part of the check.
+Read the task or spec, then fix the revision and environment under test. Never test a working tree another worker is changing, and respect shared device and browser ownership.
 
-Record expected versus actual behavior, environment, commands/screenshots/log references and failures. Do not substitute screenshots for behavior that requires interaction or sound. Distinguish passed checks, failed checks and checks not performed.
+**Done when:** the revision, the environment and the criteria in scope are recorded.
 
-QA is a feedback loop and may run on an integrated, verifiable increment while other implementation continues. Pin the tested revision/environment; do not test a working tree another worker is changing. Respect shared device ownership.
+### 2. Plan each check
 
-## Defects and acceptance
+For every criterion, set the preconditions (representative data, user role, configuration) and the expected outcome. Derive the expectation from the agreed requirement, never from what the implementation happens to do. Include the relevant failure, empty and platform-specific states.
 
-Search the authoritative backlog before filing a defect. Update an existing matching issue or create one bounded task with reproduction steps, expected/actual behavior, impact, evidence, source requirement and relevant blockers. Use the project's existing task convention, or consult installed `plan-tasks` for the local contract. If neither is available, return a defect report instead of inventing tracker metadata. Local task creation follows the current authorization; remote publication requires authorization. Separate defects from new product requests; scope changes return to grilling/spec decisions before becoming AFK-ready work.
+**Done when:** each criterion maps to a check with an expected outcome.
 
-Return ready fixes to planning/implementation and recheck the affected behavior after integration. A failing agreed criterion keeps acceptance open even when a follow-up task exists. Keep human-only judgments pending until a human actually completes them. Acceptance requires the agreed checks and review, not merely a clean automated suite.
+### 3. Exercise and record
 
-Establish preconditions and expected outcomes before exercising each criterion: representative starting data, user role, environment and relevant configuration. Derive expectations from the agreed requirement rather than the observed implementation. When an environment failure prevents a check, record it as not performed with its cause, separate from a product defect.
+Run the real user flows wherever the environment allows; use disposable data when a check changes state. Record each result in the [QA template](templates/qa.md):
 
-Finish with every in-scope criterion accounted for and a verdict of accepted, changes needed or pending evidence. Link defects to the failing criterion and retain the original failure when recording a successful recheck. Recheck affected neighboring behavior where the fix can plausibly regress it; avoid repeating unrelated checks without a reason.
+| Criterion | Check | Expected | Actual | Status |
+|---|---|---|---|---|
+| R1: <criterion> | <steps or command> | <expected outcome> | <observed, with an evidence link> | passed / failed / not performed |
+
+A screenshot can't stand in for behavior that needs interaction or sound. When an environment failure stops a check, mark it "not performed" with its cause; that is not a product defect.
+
+**Done when:** every in-scope criterion has a row.
+
+### 4. File defects
+
+Search the authoritative backlog first, and update a matching issue instead of duplicating it. Otherwise create one bounded task with reproduction steps, expected and actual behavior, impact, evidence, the failing criterion and its blockers. Use the project's task convention, or the contract of the `to-tasks` skill; if neither is available, return a defect report instead of inventing tracker metadata. Local task creation follows current authorization; remote publication needs explicit authorization. A new product request isn't a defect: send it back to `grill-me` or the spec before it becomes AFK work.
+
+**Done when:** every failed row links to its defect.
+
+### 5. Verdict and recheck
+
+Report **accepted**, **changes needed** or **pending evidence**. A failing criterion keeps acceptance open even when a follow-up task exists, and a human-only judgement stays pending until a human completes it. After a fix is integrated, recheck the affected criterion and the neighboring behavior it could regress, keeping the original failure on record.
+
+**Done when:** every in-scope criterion is accounted for and the verdict follows from the table.

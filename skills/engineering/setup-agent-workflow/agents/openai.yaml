@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Agent Workflow"
+  short_description: "Set up a project's commands, tracker and docs"
+  default_prompt: "Use $setup-agent-workflow to configure these skills around this project's existing conventions."

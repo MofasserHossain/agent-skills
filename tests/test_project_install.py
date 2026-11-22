@@ -43,7 +43,7 @@ class ProjectInstallTests(unittest.TestCase):
         relocated = relocated.resolve()
         bundle = relocated / install.BUNDLE
         for host in (".agents", ".claude"):
-            entry = relocated / host / "skills/agent-workflow/SKILL.md"
+            entry = relocated / host / "skills/next-step/SKILL.md"
             body = entry.read_text()
             self.assertNotIn(str(self.source), body)
             self.assertNotIn(str(self.project), body)
@@ -57,7 +57,7 @@ class ProjectInstallTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         task = relocated / "work/task.md"
         task.parent.mkdir()
-        task.write_bytes((bundle / "skills/engineering/plan-tasks/templates/task.md").read_bytes())
+        task.write_bytes((bundle / "skills/engineering/to-tasks/templates/task.md").read_bytes())
         result = subprocess.run([sys.executable, "-B", str(bundle / "tools/workflow.py"), "prompt",
                                  str(task), "--project", str(relocated)],
                                 cwd=relocated, capture_output=True, text=True)
@@ -71,11 +71,11 @@ class ProjectInstallTests(unittest.TestCase):
         install.apply(install.plan(self.project, "all", self.source))
         second = install.plan(self.project, "all", self.source)
         self.assertTrue(all(item["action"] == "unchanged" for item in second))
-        path = self.project / install.BUNDLE / "skills/productivity/agent-workflow/references/context-policy.md"
+        path = self.project / install.BUNDLE / "skills/productivity/next-step/references/context-policy.md"
         before = path.stat().st_mtime_ns
         install.apply(second)
         self.assertEqual(path.stat().st_mtime_ns, before)
-        changed = self.source / "skills/productivity/agent-workflow/references/context-policy.md"
+        changed = self.source / "skills/productivity/next-step/references/context-policy.md"
         changed.write_text(changed.read_text() + "\nA reviewed update.\n")
         with self.assertRaises(install.InstallError):
             install.plan(self.project, "all", self.source)
@@ -91,7 +91,7 @@ class ProjectInstallTests(unittest.TestCase):
         self.assertEqual(path.read_text(), "Project-specific customization")
 
     def test_conflicting_discovery_entry_prevents_all_writes(self):
-        conflict = self.project / ".claude/skills/agent-workflow"
+        conflict = self.project / ".claude/skills/next-step"
         conflict.mkdir(parents=True)
         (conflict / "SKILL.md").write_text("Existing skill")
         with self.assertRaises(install.InstallError):
@@ -106,8 +106,8 @@ class ProjectInstallTests(unittest.TestCase):
         with self.assertRaises(install.RegistrationError):
             install.plan(self.project, "all", self.source)
         self.assertEqual(list(outside.iterdir()), [])
-        (self.source / "skills/engineering/write-spec/templates/spec.md").unlink()
-        (self.source / "skills/engineering/write-spec/templates/spec.md").symlink_to(outside / "missing")
+        (self.source / "skills/engineering/to-spec/templates/spec.md").unlink()
+        (self.source / "skills/engineering/to-spec/templates/spec.md").symlink_to(outside / "missing")
         with self.assertRaises(install.InstallError):
             install.payload(self.source)
 
@@ -121,16 +121,24 @@ class ProjectInstallTests(unittest.TestCase):
                              for name in files))
 
     def test_selected_skill_installs_only_its_runtime_dependencies(self):
-        files = install.payload(self.source, skills=["write-spec"])
-        self.assertIn("skills/engineering/write-spec/SKILL.md", files)
-        self.assertIn("skills/engineering/write-spec/templates/spec.md", files)
-        self.assertIn("skills/productivity/agent-workflow/SKILL.md", files)
+        files = install.payload(self.source, skills=["to-spec"])
+        self.assertIn("skills/engineering/to-spec/SKILL.md", files)
+        self.assertIn("skills/engineering/to-spec/templates/spec.md", files)
+        self.assertIn("skills/productivity/next-step/SKILL.md", files)
         self.assertNotIn("skills/engineering/implement/SKILL.md", files)
         self.assertFalse(any(name.startswith(("tools/", "adapters/", "docs/", "tests/", "examples/")) for name in files))
-        router = files["skills/productivity/agent-workflow/SKILL.md"].decode()
+        router = files["skills/productivity/next-step/SKILL.md"].decode()
         self.assertNotIn("](../implement/SKILL.md)", router)
         self.assertNotIn("AGENTS.md", files)
         self.assertNotIn("tools/install_project.py", files)
+
+    def test_router_catalog_names_every_skill_and_is_filtered_to_the_selection(self):
+        row = re.compile(r"^\|[^|]+\| `([^`]+)` \|$", re.M)
+        router = (self.source / "skills/productivity/next-step/SKILL.md").read_text()
+        names = {path.parent.name for path in (self.source / "skills").rglob("SKILL.md")}
+        self.assertEqual(set(row.findall(router)), names - {"next-step"})
+        installed = install.payload(self.source, skills=["to-spec"])["skills/productivity/next-step/SKILL.md"]
+        self.assertEqual(set(row.findall(installed.decode())), {"to-spec"})
 
     def test_selected_resources_and_all_links_survive_without_source(self):
         items = install.plan(self.project, "codex", self.source, skills=["ui-design"])
@@ -138,7 +146,7 @@ class ProjectInstallTests(unittest.TestCase):
         self.source.rename(self.root / "hidden source")
         bundle = (self.project / install.BUNDLE).resolve()
         selection = json.loads((bundle / install.SELECTION).read_text())
-        self.assertEqual(set(selection["included_skills"]), {"agent-workflow", "ui-design"})
+        self.assertEqual(set(selection["included_skills"]), {"next-step", "ui-design"})
         self.assertFalse(selection["with_runner"])
         for path in bundle.rglob("*.md"):
             for _, target in install.LINK.findall(path.read_text()):
@@ -150,12 +158,12 @@ class ProjectInstallTests(unittest.TestCase):
         self.assertFalse((bundle / "docs/research").exists())
 
     def test_deliberate_update_migrates_old_router_selection_and_paths(self):
-        items = install.plan(self.project, "all", self.source, skills=["agent-workflow"])
+        items = install.plan(self.project, "all", self.source, skills=["next-step"])
         old_files = {}
         for name, body in items[0]["files"].items():
-            name = name.replace("skills/productivity/agent-workflow/", "skills/workflow/")
+            name = name.replace("skills/productivity/next-step/", "skills/workflow/")
             if name == "skills/workflow/SKILL.md":
-                body = body.replace(b"name: agent-workflow\n", b"name: workflow\n", 1)
+                body = body.replace(b"name: next-step\n", b"name: workflow\n", 1)
             old_files[name] = body
         old_files[install.SELECTION] = json.dumps({
             "schema_version": 1, "requested_skills": ["workflow"],
@@ -164,18 +172,18 @@ class ProjectInstallTests(unittest.TestCase):
         items[0]["files"] = old_files
         for item in items[1:]:
             item["files"]["SKILL.md"] = item["files"]["SKILL.md"].replace(
-                b"skills/productivity/agent-workflow/SKILL.md", b"skills/workflow/SKILL.md")
+                b"skills/productivity/next-step/SKILL.md", b"skills/workflow/SKILL.md")
         install.apply(items)
         with self.assertRaises(install.InstallError):
             install.plan(self.project, "all", self.source)
         install.apply(install.plan(self.project, "all", self.source, update=True))
         bundle = self.project / install.BUNDLE
         self.assertFalse((bundle / "skills/workflow").exists())
-        self.assertTrue((bundle / "skills/productivity/agent-workflow/references/context-policy.md").is_file())
+        self.assertTrue((bundle / "skills/productivity/next-step/references/context-policy.md").is_file())
         selection = json.loads((bundle / install.SELECTION).read_text())
-        self.assertEqual(selection["requested_skills"], ["agent-workflow"])
+        self.assertEqual(selection["requested_skills"], ["next-step"])
         for item in items[1:]:
-            self.assertIn("skills/productivity/agent-workflow/SKILL.md", (item["path"] / "SKILL.md").read_text())
+            self.assertIn("skills/productivity/next-step/SKILL.md", (item["path"] / "SKILL.md").read_text())
 
     def test_full_runtime_excludes_authoring_material_and_preserves_legal_files(self):
         (self.source / "LICENSE").write_text("Required license")
@@ -187,16 +195,16 @@ class ProjectInstallTests(unittest.TestCase):
         self.assertNotIn("docs/execution-plan.md", files)
 
     def test_update_preserves_choices_and_explicit_selection_replaces_them(self):
-        install.apply(install.plan(self.project, "all", self.source, skills=["write-spec"], with_runner=True))
+        install.apply(install.plan(self.project, "all", self.source, skills=["to-spec"], with_runner=True))
         second = install.plan(self.project, "all", self.source)
         self.assertTrue(all(item["action"] == "unchanged" for item in second))
-        install.apply(install.plan(self.project, "all", self.source, update=True, skills=["grill"], with_runner=False))
+        install.apply(install.plan(self.project, "all", self.source, update=True, skills=["grill-me"], with_runner=False))
         bundle = self.project / install.BUNDLE
-        self.assertTrue((bundle / "skills/productivity/grill/SKILL.md").is_file())
-        self.assertFalse((bundle / "skills/engineering/write-spec").exists())
+        self.assertTrue((bundle / "skills/productivity/grill-me/SKILL.md").is_file())
+        self.assertFalse((bundle / "skills/engineering/to-spec").exists())
         self.assertFalse((bundle / "tools").exists())
         selection = json.loads((bundle / install.SELECTION).read_text())
-        self.assertEqual(selection["requested_skills"], ["grill"])
+        self.assertEqual(selection["requested_skills"], ["grill-me"])
         self.assertFalse(selection["with_runner"])
 
     def test_legacy_full_copy_migrates_and_only_owned_files_are_removed(self):
@@ -211,30 +219,30 @@ class ProjectInstallTests(unittest.TestCase):
         self.assertTrue((bundle / "tools/workflow.py").is_file())
         (bundle / "keep.md").write_text("Unmanaged project addition")
         with self.assertRaises(install.InstallError):
-            install.plan(self.project, "all", self.source, update=True, skills=["grill"])
+            install.plan(self.project, "all", self.source, update=True, skills=["grill-me"])
         self.assertEqual((bundle / "keep.md").read_text(), "Unmanaged project addition")
 
     def test_unknown_skill_missing_dependency_and_escaping_dependency_fail_before_writes(self):
         with self.assertRaises(install.InstallError):
             install.plan(self.project, "all", self.source, skills=["missing"])
-        spec = self.source / "skills/engineering/write-spec/templates/spec.md"
+        spec = self.source / "skills/engineering/to-spec/templates/spec.md"
         spec.unlink()
         with self.assertRaises(install.InstallError):
-            install.plan(self.project, "all", self.source, skills=["write-spec"])
+            install.plan(self.project, "all", self.source, skills=["to-spec"])
         spec.write_text("[outside](../../../../../outside.md)")
         with self.assertRaises(install.InstallError):
-            install.plan(self.project, "all", self.source, skills=["write-spec"])
+            install.plan(self.project, "all", self.source, skills=["to-spec"])
         self.assertEqual(list(self.project.iterdir()), [])
 
     def test_cli_selection_preview_is_nonmutating_and_reports_dependencies(self):
         result = subprocess.run([sys.executable, "-B", str(install.KIT / "tools/install_project.py"),
-                                 str(self.project), "--agent", "codex", "--skills", "write-spec"],
+                                 str(self.project), "--agent", "codex", "--skills", "to-spec"],
                                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         output = json.loads(result.stdout)
         self.assertFalse(output["applied"])
-        self.assertEqual(output["selection"]["requested_skills"], ["write-spec"])
-        self.assertEqual(output["selection"]["included_skills"], ["agent-workflow", "write-spec"])
+        self.assertEqual(output["selection"]["requested_skills"], ["to-spec"])
+        self.assertEqual(output["selection"]["included_skills"], ["next-step", "to-spec"])
         self.assertFalse(output["selection"]["with_runner"])
         self.assertEqual(list(self.project.iterdir()), [])
 
@@ -257,7 +265,7 @@ class ProjectInstallTests(unittest.TestCase):
         self.assertEqual(list(self.project.iterdir()), [])
 
     def test_chooser_uses_only_selected_numbers(self):
-        paths = sorted(path for path in (install.KIT / "skills").rglob("SKILL.md") if path.parent.name != "agent-workflow")
+        paths = sorted(path for path in (install.KIT / "skills").rglob("SKILL.md") if path.parent.name != "next-step")
         with patch.object(sys.stdin, "isatty", return_value=True), patch("builtins.input", return_value="1, 3, 1"), contextlib.redirect_stdout(io.StringIO()):
             selected = install.choose_skills(install.KIT)
         self.assertEqual(selected, sorted([paths[0].parent.name, paths[2].parent.name]))
@@ -269,12 +277,12 @@ class ProjectInstallTests(unittest.TestCase):
                 self.assertEqual(list(self.project.iterdir()), [])
 
     def test_cli_updates_preserve_choices_without_opening_chooser(self):
-        install.apply(install.plan(self.project, "all", install.KIT, skills=["grill"]))
+        install.apply(install.plan(self.project, "all", install.KIT, skills=["grill-me"]))
         output = io.StringIO()
         with patch("builtins.input", side_effect=AssertionError("No chooser needed")), contextlib.redirect_stdout(output):
             self.assertEqual(install.main([str(self.project), "--update"]), 0)
         result = json.loads(output.getvalue())
-        self.assertEqual(result["selection"]["requested_skills"], ["grill"])
+        self.assertEqual(result["selection"]["requested_skills"], ["grill-me"])
         self.assertTrue(all(item["action"] == "unchanged" for item in result["entries"]))
 
     def test_cli_can_explicitly_select_all_without_a_terminal(self):
@@ -282,7 +290,7 @@ class ProjectInstallTests(unittest.TestCase):
         with patch("builtins.input", side_effect=AssertionError("No chooser needed")), contextlib.redirect_stdout(output):
             self.assertEqual(install.main([str(self.project), "--all-skills"]), 0)
         result = json.loads(output.getvalue())
-        expected = sorted(path.parent.name for path in (install.KIT / "skills").rglob("SKILL.md") if path.parent.name != "agent-workflow")
+        expected = sorted(path.parent.name for path in (install.KIT / "skills").rglob("SKILL.md") if path.parent.name != "next-step")
         self.assertEqual(result["selection"]["requested_skills"], expected)
         self.assertFalse(result["applied"])
         self.assertEqual(list(self.project.iterdir()), [])

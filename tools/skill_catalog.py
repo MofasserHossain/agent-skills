@@ -3,7 +3,13 @@ from pathlib import Path
 import json
 import re
 
-ALIASES = {"workflow": "agent-workflow", "pull-request": "pr"}
+# Retired installed names -> current names. The legacy installer maps old selections through this.
+ALIASES = {
+    "workflow": "next-step", "agent-workflow": "next-step",
+    "setup-project": "setup-agent-workflow", "intake": "to-brief", "grill": "grill-me",
+    "write-spec": "to-spec", "plan-tasks": "to-tasks", "review": "code-review",
+    "pull-request": "pr",
+}
 
 
 def discover(kit):

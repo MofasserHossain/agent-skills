@@ -1,22 +1,40 @@
 ---
 name: prototype
-description: "Build a small experiment to resolve a specific uncertainty about behavior, state or appearance."
+description: "Answer one design question with a throwaway experiment: a state model to click through, or UI variants to compare. Use when something runnable or visible would settle a choice."
 ---
 
-## Question
+A prototype is **throwaway code that answers one question**. The question decides its shape, and the answer, not the code, is what moves into the real work.
 
-Name the question, the smallest experiment that can answer it, and the decision the result will enable.
+## Process
 
-## Experiment
+### 1. State the question
 
-For logic/state, expose transitions and edge cases. For UI, provide a small number of materially different alternatives when choice is needed. Match the project's platform where that is necessary to answer the question.
+Name the question, the decision it unblocks, and the observation that would support or reject the proposed approach. Choose fidelity around that observation: a clickable mock can answer a navigation question, but restart recovery needs real state transitions.
 
-Use a clearly marked scratch location or separate branch/worktree. Keep persistence disposable unless persistence is the question. Skip production hardening and broad test coverage that would not improve the experiment.
+**Done when:** the question and the deciding observation are written at the top of the prototype.
 
-## Verdict
+### 2. Pick the branch
 
-Let the human judge appearance/intent when needed. Record the question, observed outcome, verdict and a pointer to the artifact. Carry the validated decision into the spec. Prototype code needs deliberate production implementation and verification before it ships.
+- **"Does this logic or state model feel right?"** → read [logic prototype](references/logic.md): one shareable HTML file driving a pure module.
+- **"What should this look like?"** → read [UI prototype](references/ui.md): several radically different variants on one route, switched with `?variant=`.
 
-Before building, state the observation that would support or reject the proposed approach. Choose fidelity around that observation: a clickable mock can answer navigation questions, while restart recovery requires real state transitions. Make substitutes for real services or data visible so they do not accidentally become evidence about integration.
+If the question is ambiguous and the user isn't reachable, follow the surrounding code (a backend module → logic; a page or component → UI) and state that assumption at the top.
 
-Conclude with supported, rejected or inconclusive, tied to the observations and environment. Preserve a reproducible way to inspect or rerun the experiment and identify which assumptions it did not test. An inconclusive experiment needs a smaller follow-up or a named blocker, not silent promotion into implementation.
+**Done when:** one branch is chosen.
+
+### 3. Build it, throwaway from day one
+
+- Place it beside what it prototypes, named so nobody mistakes it for production, in a marked scratch location or on a `prototype/<name>` branch or worktree.
+- Make it run with one command or one double-click.
+- Keep state in memory unless persistence is the question; then use a scratch store whose name says it can be wiped.
+- Skip tests, hardening and abstractions that wouldn't improve the answer.
+- Show the full relevant state after every action or variant switch.
+- Make every substitute for a real service or data source visible, so it can't pass as evidence about integration.
+
+**Done when:** the user can run it and watch the state change.
+
+### 4. Capture the verdict
+
+Let the human judge appearance and intent. Record the question, the observations and environment, and the verdict: **supported**, **rejected** or **inconclusive**, with the assumptions the prototype did not test. Carry the validated decision into the spec or task. Keep the prototype itself as a **primary source**: commit it to a throwaway branch, out of main, and link that branch from the work record. An inconclusive result needs a smaller follow-up or a named blocker, never silent promotion into implementation. Prototype code is rewritten and verified before it ships.
+
+**Done when:** the verdict and a link to the kept prototype are in the work record.

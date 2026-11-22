@@ -1,6 +1,6 @@
 # One workflow, different work
 
-The core stays the same: intake and clarification, optional research/prototype, specification and bounded tasks when needed, implementation, review and QA. Choose extra procedures by the current task's uncertainty, not just the repository's label. A full-stack repository may contain a backend-only bug or a UI-only adjustment.
+The core stays the same: a brief and clarification, optional research/prototype, specification and bounded tasks when needed, implementation, review and QA. Choose extra procedures by the current task's uncertainty, not just the repository's label. A full-stack repository may contain a backend-only bug or a UI-only adjustment.
 
 ## Routes
 
@@ -10,7 +10,7 @@ The core stays the same: intake and clarification, optional research/prototype, 
 | Frontend | Optional [ui-design](../SKILL.md), existing components/tokens, real or explicitly mocked data contract | User interactions, relevant states, layout, accessibility and actual data behavior |
 | Full stack | UI flow plus service/data contract, failure behavior and migration/rollout where relevant | Thin end-to-end slices, contract/integration checks and runtime UI QA |
 | Backend/API/service | Consumer-visible contract, invariants, failures, authorization and data/concurrency behavior as relevant | Public-boundary tests, integration/contract checks and applicable operational evidence; skip UI design |
-| Small clear fix | Existing issue and focused diagnosis | Reproduction and proportionate regression/review checks; no mandatory PRD or design record |
+| Small clear fix | Existing issue and focused diagnosis | Reproduction and proportionate regression/review checks; no mandatory spec or design record |
 
 These are planning prompts, not a requirement to perform every listed activity on every task.
 
@@ -21,7 +21,7 @@ flowchart TD
     C -->|Yes| D[Research / flow / optional prototype / design decision]
     C -->|No| E[Resolve contract and behavior]
     D --> E
-    E --> F[Spec and vertical issues when useful]
+    E --> F[Spec and vertical tasks when useful]
     F --> G[Implement and verify]
     G --> H[Review and relevant runtime QA]
     H -->|Defects or changed requirements| B
@@ -29,9 +29,9 @@ flowchart TD
 
 ## UI and frontend
 
-Use the UI procedure when interaction, hierarchy, visual direction or usability is uncertain. It composes `research`, `grill`, `prototype` and existing delivery procedures. It is not a second independent pipeline or an instruction to redesign every screen.
+Use the UI procedure when interaction, hierarchy, visual direction or usability is uncertain. It composes `research`, `grill-me`, `prototype` and existing delivery procedures. It is not a second independent pipeline or an instruction to redesign every screen.
 
-A design record may live at docs/work/<feature>/design.md beside existing work records; use the project's location instead when different. Keep product/audience rules, branding and framework-specific details in the project. Research notes, screenshots and prototypes are optional evidence, not folders to create up front. Product decisions go into the PRD/task so the implementation does not depend on chat history.
+A design record may live at docs/work/<feature>/design.md beside existing work records; use the project's location instead when different. Keep product/audience rules, branding and framework-specific details in the project. Research notes, screenshots and prototypes are optional evidence, not folders to create up front. Product decisions go into the spec/task so the implementation does not depend on chat history.
 
 For frontend-only work, verify states with the agreed data contract. Label fixtures/mocks so a successful mock does not imply a real backend integration. For full-stack work, connect the same user outcome through the necessary layers. Temporary fixtures must not silently become the production behavior.
 

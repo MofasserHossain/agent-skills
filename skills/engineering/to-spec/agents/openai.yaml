@@ -1,0 +1,4 @@
+interface:
+  display_name: "To Spec"
+  short_description: "Turn settled decisions into a written spec"
+  default_prompt: "Use $to-spec to write the spec from the decisions we settled."
