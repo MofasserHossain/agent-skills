@@ -26,7 +26,7 @@ Architecture assessment is an optional entry route, not a gate before every task
 
 ```mermaid
 flowchart TD
-    A[Brief and decisions] --> B[PRD and vertical issues]
+    A[Brief and decisions] --> B[Spec and vertical tasks]
     B --> C[Select and claim eligible work]
     C --> D[Worker A: isolated branch]
     C --> E[Worker B: isolated branch]
@@ -52,7 +52,7 @@ A worker report, completion marker, exit code or commit count is not a sufficien
 
 ## Who does what
 
-- Planner: resolve scope and decisions, produce the PRD and task graph. HITL where judgment is required.
+- Planner: resolve scope and decisions, produce the spec and task graph. HITL where judgment is required.
 - Batch planner: propose independent issues/phases when choosing work needs code or interface judgment. Review true blockers and likely shared-file conflicts; nondependent issue ids alone do not prove safe parallelism.
 - Scheduler: validate proposals against authoritative status, dependencies, claims and concurrency limits before dispatch. Prefer deterministic checks over another LLM call for routine selection. Re-read eligibility before each batch; a new QA blocker can invalidate an earlier plan.
 - Implementer: one selected task, focused context, meaningful tests and a portable result.
@@ -64,7 +64,7 @@ A worker report, completion marker, exit code or commit count is not a sufficien
 
 QA can inspect a stable integrated increment while workers build other increments. It records the tested revision/environment and returns reproducible findings to the authoritative backlog using the [QA procedure](../skills/engineering/qa/SKILL.md). Triage new work before scheduling it; preserve active claims and completed evidence, and stop only affected dependent work when a blocker is found. Final acceptance still checks the combined feature. Shared devices remain sequential.
 
-Prepare implementation context around the selected issue and required project rules, with additional docs pulled as needed. Prepare review context with explicit applicable coding standards, requirement references, the bounded diff and verification evidence. Neither stage needs the whole instruction library. See [review](../skills/engineering/review/SKILL.md) and [model policy](../skills/productivity/agent-workflow/references/model-policy.md) for role-specific context and capacity choices.
+Prepare implementation context around the selected issue and required project rules, with additional docs pulled as needed. Prepare review context with explicit applicable coding standards, requirement references, the bounded diff and verification evidence. Neither stage needs the whole instruction library. See [review](../skills/engineering/code-review/SKILL.md) and [model policy](../skills/productivity/next-step/references/model-policy.md) for role-specific context and capacity choices.
 
 These procedures can be followed by a supervised agent now. Automatic QA issue ingestion, batch revalidation and role-specific prompt assembly remain runner work.
 

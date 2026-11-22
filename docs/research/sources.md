@@ -7,6 +7,7 @@ The later [workshop comparison](workshop-comparison.md) identifies the exact sou
 The [execution plan](../execution-plan.md) adds a source-checked Sandcastle comparison and the proposed architecture/parallel-work lifecycle. The workshop comparison also records the user-supplied final-segment transcript and its limits; continuous QA and role-context guidance adapt that recap.
 
 - [Matt's skills snapshot](https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d): routing, grilling, domain modeling, vertical tasks, TDD, review, context boundaries and retrospective.
+- [Matt's later skills snapshot](https://github.com/mattpocock/skills/tree/abeeaf95660ba9e8b7c753eb38f441ca707a8823) (2026-11-19, MIT): source for the 2026-11 naming families, glossary format and procedure structure. Specific mechanics were adapted, not copied whole; each adapted reference file carries an attribution line. See the workflow specification's "Skill names and vocabulary" section.
 - [Course Video Manager snapshot](https://github.com/mattpocock/course-video-manager/tree/b47b1ec54cc7742326ca2682e49f09803cdac303): backlog Docker runner, Sandcastle orchestration and GitHub AFK platform. See matt-pocock-audit.md for source findings and conflicts.
 - [Cucumber example mapping](https://cucumber.io/docs/bdd/example-mapping/): rules, concrete examples and unanswered questions.
 - [HumanLayer context engineering](https://www.humanlayer.dev/blog/advanced-context-engineering): focused research/planning and useful review points.

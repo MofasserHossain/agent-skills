@@ -1,0 +1,4 @@
+interface:
+  display_name: "Next Step"
+  short_description: "Pick a route or resume where you left off"
+  default_prompt: "Use $next-step to choose the next step for this work."

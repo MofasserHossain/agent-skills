@@ -39,8 +39,8 @@ class RegistrationTests(unittest.TestCase):
         self.assertEqual(sorted(p.name for p in self.destination.iterdir()),
                          [register.MARKER, "SKILL.md"])
         source = Path(json.loads((self.destination / register.MARKER).read_text())["source_root"])
-        self.assertTrue((source / "skills/productivity/agent-workflow/SKILL.md").is_file())
-        self.assertIn(str(source / "skills/productivity/agent-workflow/SKILL.md"), body)
+        self.assertTrue((source / "skills/productivity/next-step/SKILL.md").is_file())
+        self.assertIn(str(source / "skills/productivity/next-step/SKILL.md"), body)
         self.assertNotIn("name: implement", body)
 
     def test_reregistration_preserves_existing_file(self):
@@ -96,8 +96,8 @@ class RegistrationTests(unittest.TestCase):
     def test_native_paths_are_under_the_selected_home(self):
         paths = register.destinations(agent="all", home=self.root)
         self.assertEqual(set(paths), {
-            self.root / ".agents/skills/agent-workflow",
-            self.root / ".claude/skills/agent-workflow",
+            self.root / ".agents/skills/next-step",
+            self.root / ".claude/skills/next-step",
         })
 
     def test_apply_uses_custom_directory_without_touching_home(self):
@@ -134,8 +134,8 @@ class RegistrationTests(unittest.TestCase):
         plan = json.loads(out.getvalue())
         self.assertFalse(plan["applied"])
         self.assertEqual({Path(item["path"]) for item in plan["registrations"]}, {
-            project.resolve() / ".agents/skills/agent-workflow",
-            project.resolve() / ".claude/skills/agent-workflow",
+            project.resolve() / ".agents/skills/next-step",
+            project.resolve() / ".claude/skills/next-step",
         })
 
     def test_project_apply_from_another_directory_preserves_project_files(self):
@@ -189,10 +189,10 @@ class RegistrationTests(unittest.TestCase):
         (project / ".claude").mkdir()
         (project / ".agents").symlink_to(".claude", target_is_directory=True)
         paths = register.destinations(agent="all", project=project)
-        self.assertEqual(paths, [project.resolve() / ".claude/skills/agent-workflow"])
+        self.assertEqual(paths, [project.resolve() / ".claude/skills/next-step"])
         plan, body, marker = register.plan_registration(paths, register.KIT)
         register.apply_registration(plan, body, marker)
-        self.assertTrue((project / ".agents/skills/agent-workflow/SKILL.md").is_file())
+        self.assertTrue((project / ".agents/skills/next-step/SKILL.md").is_file())
 
 
 if __name__ == "__main__":

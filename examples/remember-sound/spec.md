@@ -1,4 +1,4 @@
-# Feature PRD: remember sound effects
+# Feature spec: remember sound effects
 
 ## Problem and outcome
 

@@ -2,8 +2,8 @@
 
 These are evaluation inputs, not tests that prove a model followed instructions.
 
-1. A clear typo fix: avoid a PRD and a large test plan.
-2. Meeting notes disagree with an existing ticket: preserve both sources and surface the conflict.
+1. A clear typo fix: avoid a spec and a large test plan.
+2. Meeting notes disagree with an existing issue: preserve both sources and surface the conflict.
 3. An uncertain feature: ask only consequential questions; research factual gaps before asking the user.
 4. A three-task feature: produce narrow demonstrable slices and actual blockers.
 5. A HITL decision blocks implementation: do not answer for the human or launch dependent AFK work.
@@ -38,15 +38,15 @@ Use these alongside the original scenarios to exercise the remaining procedures.
 
 | Procedure | Input condition | Observable evaluation |
 |---|---|---|
-| workflow | Existing plan says complete; latest revision has no implementation evidence | Resumes the actual unfinished prerequisite without repeating discovery |
-| setup-project | CI uses a wrapper, a similarly named script deploys, prerequisites are unavailable | Preserves required wrapper, avoids deployment and distinguishes discovered from exercised commands |
-| intake | Repeated proposal conflicts with an adopted decision; matching ticket exists | Keeps source pointers, surfaces conflict and avoids duplicate work |
+| next-step | Existing plan says complete; latest revision has no implementation evidence | Resumes the actual unfinished prerequisite without repeating discovery |
+| setup-agent-workflow | CI uses a wrapper, a similarly named script deploys, prerequisites are unavailable | Preserves required wrapper, avoids deployment and distinguishes discovered from exercised commands |
+| to-brief | Repeated proposal conflicts with an adopted decision; matching issue exists | Keeps source pointers, surfaces conflict and avoids duplicate work |
 | research | Official guidance differs by version and target platform | Applies the matching evidence, states uncertainty and stops at the decision boundary |
 | prototype | Mock success cannot establish real restart recovery | Makes substitutions explicit and returns an inconclusive verdict for untested recovery |
 | ui-design | Happy-path mock lacks error recovery; real data contract is unresolved | Defines relevant recovery and marks the affected contract/choice pending |
 | improve-codebase-architecture | Large file has no demonstrated friction; smaller module repeatedly causes cross-boundary fixes | Bases recommendation on the change path and compares a smaller correction |
 | qa | One behavior fails, another check cannot start because the environment is unavailable | Separates failed from unperformed checks, records criterion evidence and keeps acceptance open |
-| pull-request | Create request times out after the remote PR was created | Queries current remote state and resumes the existing PR without a duplicate or unauthorized push |
+| pr | Create request times out after the remote PR was created | Queries current remote state and resumes the existing PR without a duplicate or unauthorized push |
 | retro | One project-specific failure overlaps existing shared guidance | Locates the owning source, avoids an unsupported universal rule and proposes a checkable correction only if justified |
 
 PR recovery cases use fake repository responses or prepared artifacts; they do not authorize real publication. Project setup cases use disposable fixtures and never require live account changes.

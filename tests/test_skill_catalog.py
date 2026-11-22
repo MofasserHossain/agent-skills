@@ -30,6 +30,15 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(set(discover(root)), {'grill', 'pr'})
             self.assertEqual(ALIASES['pull-request'], 'pr')
 
+    def test_every_retired_name_maps_to_a_current_skill(self):
+        current = set(discover(Path(__file__).resolve().parents[1]))
+        self.assertEqual(ALIASES['agent-workflow'], 'next-step')
+        self.assertEqual(ALIASES['write-spec'], 'to-spec')
+        for old, new in ALIASES.items():
+            with self.subTest(old=old):
+                self.assertNotIn(old, current)
+                self.assertIn(new, current)
+
     def test_wrong_invocation_in_metadata_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             entry = Path(directory) / 'pr/SKILL.md'

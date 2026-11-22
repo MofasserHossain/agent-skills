@@ -2,13 +2,13 @@
 
 ## Outcome
 
-Use one version-controlled kit across projects and agent tools. A user supplies an idea, document, ticket, message or meeting record. The workflow identifies the right amount of planning, resolves necessary decisions, produces bounded tasks, and connects changes to verification evidence.
+Use one version-controlled kit across projects and agent tools. A user supplies an idea, document, tracker issue, message or meeting record. The workflow identifies the right amount of planning, resolves necessary decisions, produces bounded tasks, and connects changes to verification evidence.
 
 ## Requirements
 
 1. Work in any folder with an agent capable of reading the kit and project files.
 2. Preserve source references and distinguish requirements, suggestions, assumptions and decisions.
-3. Route small work directly; do not require a PRD for every change.
+3. Route small work directly; do not require a spec for every change.
 4. Support research/prototypes when they resolve named uncertainties.
 5. For multi-session work, produce a spec and vertical implementation tasks with dependencies.
 6. Classify execution as HITL or AFK independently of human review.
@@ -21,13 +21,13 @@ Use one version-controlled kit across projects and agent tools. A user supplies 
 
 ## Initial implementation
 
-The repository is named `agent-skills` (`MofasserHossain/agent-skills`). The optional router remains `agent-workflow`; existing `.agent-workflow.json` configuration and legacy `.agent-workflow` installations retain their names.
+The repository is named `agent-skills` (`MofasserHossain/agent-skills`). The optional router is `next-step` (installed as `agent-workflow` before the 2026-11 renames); existing `.agent-workflow.json` configuration and legacy `.agent-workflow` installations retain their names.
 
 The optional execution helper supports Claude Code and Codex only; portable skill installation accepts any supported Skills CLI target. Discovery adapters and CLI selection cover those two; manual is a context-only mode with no process launch. Additional agents are deferred. Registry overrides may customize supported CLI profiles but cannot introduce another executor name.
 
 Portable Markdown skills, shared references, templates, executor registry and an optional Python helper. The helper supports local initialization, task parsing/validation, narrow context generation, dependency checks, launch previews and explicit one-task CLI dispatch. Dispatch does not schedule work or mutate task status.
 
-An optional registration tool previews or installs one thin native entry point for supported local agents. Choose personal scope across projects, or --project for one existing project. It points at this checkout rather than duplicating stage instructions; existing registrations and project rules are preserved. Project scope validates discovery paths within the target and deduplicates local directory aliases. A worked brief/PRD/issues example documents how artifacts connect. Multi-issue PRDs use stable requirement labels and task coverage references.
+An optional registration tool previews or installs one thin native entry point for supported local agents. Choose personal scope across projects, or --project for one existing project. It points at this checkout rather than duplicating stage instructions; existing registrations and project rules are preserved. Project scope validates discovery paths within the target and deduplicates local directory aliases. A worked brief/spec/tasks example documents how artifacts connect. Multi-task specs use stable requirement labels and task coverage references.
 
 A focused architecture-assessment route identifies evidence-backed improvements before they become scoped tasks. The execution plan separates worker integration, final human acceptance and issue closure; Docker/Sandcastle scheduling remains a future backend, not an active dependency.
 
@@ -79,13 +79,13 @@ Which default effort is cost-effective for each task class; provider CLI compati
 
 Setup guidance keeps CLAUDE.md/AGENTS.md focused on essential project rules and conditional reading routes, without embedding installed skill catalogs, bodies or references. Existing single-source arrangements are preserved; a separate Claude entry can point to shared AGENTS.md rules without duplicating them. Native discovery exposes concise metadata, selected skill bodies load when used, and supporting files are read conditionally. Explicit-only invocation remains a deliberate host-local preference. This is implemented Markdown guidance, not automatic rewriting of project instructions or measured token savings.
 
-The canonical skills/ folders are also the installation input for GitHub shorthand and local Skills CLI use. The router has the uniform name agent-workflow. Each skill owns its supporting references/templates; local links never leave that folder. Cross-skill collaboration uses installed names and explicit missing-guidance fallbacks, without automatically installing the full catalog. Task/result conventions keep one owner instead of copied package resources.
+The canonical skills/ folders are also the installation input for GitHub shorthand and local Skills CLI use. The router has the uniform name next-step. Each skill owns its supporting references/templates; local links never leave that folder. Cross-skill collaboration uses installed names and explicit missing-guidance fallbacks, without automatically installing the full catalog. Task/result conventions keep one owner instead of copied package resources.
 
-No generated package tree, distribution build or link rewriting is required. workflow.py check validates per-skill boundaries, metadata and source links; relocation tests exercise copied folders with the source unavailable. The project-local wrapper delegates agent paths to the pinned Skills CLI. Installed skills do not include Python runners. Legacy snapshot/registration tools remain deliberately supported; old workflow router selections map to agent-workflow during a supervised update. Existing project installations are not migrated automatically.
+No generated package tree, distribution build or link rewriting is required. workflow.py check validates per-skill boundaries, metadata and source links; relocation tests exercise copied folders with the source unavailable. The project-local wrapper delegates agent paths to the pinned Skills CLI. Installed skills do not include Python runners. Legacy snapshot/registration tools remain deliberately supported; old `workflow` and `agent-workflow` router selections map to `next-step` during a supervised update. Existing project installations are not migrated automatically.
 
 ## Procedure quality across the catalog
 
-All seventeen skills include stage-specific safeguards and completion signals. Routing checks current evidence before resumption and propagates scope changes. Setup separates inspected commands from exercised checks. Intake preserves recoverable source pointers and searches for duplicates. Research bounds investigation by a decision and checks source applicability. Prototypes define observations and return supported, rejected or inconclusive verdicts. UI design checks relevant content/state boundaries and outstanding contract assumptions. Architecture recommendations compare demonstrated change burden against smaller alternatives. QA derives expectations from requirements, separates environment failures and retains recheck history. PR delivery checks remote state before retrying mutations and ties evidence to revisions. Retrospectives put corrections in the owning source and define a falsifiable evaluation case. These complement the discovery, specification, task, implementation and review readiness checks above.
+All seventeen skills include stage-specific safeguards and completion signals. Routing checks current evidence before resumption and propagates scope changes. Setup separates inspected commands from exercised checks. Briefs preserve recoverable source pointers and search for duplicates. Research bounds investigation by a decision and checks source applicability. Prototypes define observations and return supported, rejected or inconclusive verdicts. UI design checks relevant content/state boundaries and outstanding contract assumptions. Architecture recommendations compare demonstrated change burden against smaller alternatives. QA derives expectations from requirements, separates environment failures and retains recheck history. PR delivery checks remote state before retrying mutations and ties evidence to revisions. Retrospectives put corrections in the owning source and define a falsifiable evaluation case. These complement the discovery, specification, task, implementation and review readiness checks above.
 
 These are portable procedural improvements, not new helper automation or evidence that live agents obey them. The catalog evaluation cases remain authoring inputs; execution quality needs authorized pilots.
 
@@ -106,14 +106,44 @@ The workspace helper lives in tools/workspaces.py and is not shipped with skills
 
 The source-only migration removes generated skill copies and moves shared authoring resources to their owning skills. It changes installation layout, not the executor/runtime scope or task acceptance rules. The same relocation and helper tests remain required.
 
-PR creation now discovers required commands from the target repository rather than prescribing a package manager. It stops delivery on a failed required check, presents commits/diff statistics plus the proposed title/body, and waits for approval of that result. Project title/templates take precedence; defaults are a Conventional Commit title under 70 characters and a short Summary/Changes/Verification body with Notes only when needed. Read-only PR status checks remain separate.
+PR creation now discovers required commands from the target repository rather than prescribing a package manager. It stops delivery on a failed required check, presents commits/diff statistics plus the proposed title/body, and waits for approval of that result. Project title/templates take precedence; defaults are a Conventional Commit title under 70 characters and a short Summary/Changes/Evidence/Merge danger body. Read-only PR status checks remain separate.
 
 Conventional Commit defaults now allow a useful optional scope, apply to new branch subjects when no project convention exists, and prepare the PR title for a project-selected squash merge. PR numbers belong to the resulting history entry, not the PR title. Merge method/settings and signature verification remain separate from title formatting; this guidance does not merge PRs or configure signing.
 
-PR descriptions use small visuals only where they clarify the change, revision-specific execution evidence and observed before/after results where available. Missing baselines and unperformed checks stay explicit. Material risk notes identify affected consumers or data, reversibility and recovery steps when relevant; routine changes need no risk section. Project templates still take precedence.
+PR descriptions use small visuals only where they clarify the change, revision-specific execution evidence and observed before/after results where available. Missing baselines and unperformed checks stay explicit. A one-line merge-danger call states a one-way or two-way door and the blast radius; a one-way door also names the irreversible effect and its recovery step. Project templates still take precedence.
 
 ## Skill catalog organization
 
-Canonical skills live in `skills/engineering/<name>/` and `skills/productivity/<name>/`; installed names are globally unique and independent of category. The catalog contains seventeen skills, including portable handoff and instruction writing. The PR skill is named `pr`; the legacy installer accepts `pull-request` as an alias. Source discovery rejects duplicate names and symlinked skill roots or categories. Each skill owns its relocatable resources and Codex `agents/openai.yaml` interface metadata. Metadata supplies display labels and a suggested invocation, while `SKILL.md` owns behavior. No generated distribution or mandatory invocation policy is introduced.
+Canonical skills live in `skills/engineering/<name>/` and `skills/productivity/<name>/`; installed names are globally unique and independent of category. The catalog contains seventeen skills, including portable handoff and instruction writing. Retired names (`pull-request`, `workflow`, `agent-workflow`, `setup-project`, `intake`, `grill`, `write-spec`, `plan-tasks`, `review`) are legacy-installer aliases for their current names. Source discovery rejects duplicate names and symlinked skill roots or categories. Each skill owns its relocatable resources and Codex `agents/openai.yaml` interface metadata. Metadata supplies display labels and a suggested invocation, while `SKILL.md` owns behavior. No generated distribution or mandatory invocation policy is introduced.
 
 Workspace lifecycle and execution remain in `tools/`. Categorization does not add Docker provisioning, scheduling or an unattended task loop; those remain separate roadmap capabilities.
+
+## Skill names and vocabulary (2026-11)
+
+Skill names follow role families, so a name says what the skill does and reads the same in prompts, docs and code:
+
+- Converters turn one artifact into the next and start with `to-`: `to-brief`, `to-spec`, `to-tasks`.
+- Actions are verbs: `implement`, `research`, `prototype`, `handoff`, `retro`.
+- The interview is `grill-me`; the review names what it reviews: `code-review`.
+- Kit-level entries name what they give you: `next-step` (choose a route or resume) and `setup-agent-workflow` (configure `.agent-workflow.json`).
+- Established terms keep their short forms: `qa`, `pr`, `ui-design`, `improve-codebase-architecture`, `writing-for-agents`.
+
+[GLOSSARY.md](../GLOSSARY.md) is the single source of truth for workflow terms: **spec** (not PRD), **task** for one buildable slice, and **issue** only for a tracker's record. The `issues/` folder convention for local task files and the task metadata status `review` keep their names. The README groups skills by when you reach for them, each group with a starting skill. All skills remain model-invocable. Renaming does not change helper, runner or installation behavior; [installation](installation.md#skill-renames-2026-11) lists the old names.
+
+Every `SKILL.md` now follows one shape, owned by `writing-for-agents` and its skill-mechanics reference:
+- a trigger-led description;
+- a purpose line;
+- numbered `## Process` steps, each ending in a checkable "Done when";
+- reference material, kept below the steps or in branch files.
+
+Rules that previously sat after the step they govern were moved into that step. Specific mechanics adapted from the [mattpocock/skills snapshot](https://github.com/mattpocock/skills/tree/abeeaf95660ba9e8b7c753eb38f441ca707a8823) (MIT):
+- grilling rounds with numbered questions and recommended answers;
+- the task-breakdown quiz and expand–contract for wide refactors;
+- two-axis review reporting with a Fowler smell baseline (`code-review/references/smell-baseline.md`);
+- a bug-diagnosis branch with a tight red feedback loop (`implement/references/diagnosing-bugs.md`);
+- logic and UI prototype branches (`prototype/references/logic.md`, `ui.md`);
+- a PR body with a one-way/two-way door and blast radius (`pr/references/pr-body.md`, with status, prepare and sync split into their own references);
+- retro candidate categories;
+- the ordered phase-boundary tree in the router's context policy.
+
+The router's catalog keeps one `| Stage | `skill` |` row per skill; the legacy installer filters those rows, and a test enforces that every skill is listed. These are Markdown procedure changes: they add no helper automation, and their effect on live agent behavior is unmeasured until an authorized pilot.

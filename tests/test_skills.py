@@ -50,11 +50,11 @@ class SkillInstallationTests(unittest.TestCase):
                         self.assertTrue(resolved.is_relative_to(skill.resolve()))
                         self.assertTrue(resolved.is_file(), f"Broken reference: {resource}: {target}")
                 self.assertFalse(any(p.suffix == ".py" for p in skill.rglob("*")))
-        self.assertTrue((project / ".agents/skills/write-spec/templates/spec.md").is_file())
+        self.assertTrue((project / ".agents/skills/to-spec/templates/spec.md").is_file())
 
     def test_one_selected_skill_has_only_its_own_resources(self):
-        selected = self.root / "only-write-spec"
-        shutil.copytree(self.source / "skills/engineering/write-spec", selected)
+        selected = self.root / "only-to-spec"
+        shutil.copytree(self.source / "skills/engineering/to-spec", selected)
         self.source.rename(self.root / "source unavailable")
         self.assertTrue((selected / "templates/spec.md").is_file())
         self.assertFalse((selected / "references/execution-policy.md").exists())
@@ -65,7 +65,7 @@ class SkillInstallationTests(unittest.TestCase):
                     self.assertTrue((resource.parent / target.split("#")[0]).is_file())
 
     def test_validation_rejects_missing_escaping_absolute_and_symlinked_resources(self):
-        template = self.source / "skills/engineering/write-spec/templates/spec.md"
+        template = self.source / "skills/engineering/to-spec/templates/spec.md"
         template.unlink()
         with self.assertRaises(workflow.WorkflowError):
             workflow.check_skills(self.source)
@@ -92,13 +92,13 @@ class SkillInstallationTests(unittest.TestCase):
         project = self.root / "project with spaces"
         project.mkdir()
         result = subprocess.run(["bash", str(self.source / "scripts/install-skills.sh"),
-                                 str(project), "--skill", "write-spec", "--yes"],
+                                 str(project), "--skill", "to-spec", "--yes"],
                                 env=self.fake_npx(), capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         execution = json.loads(result.stdout)
         self.assertEqual(Path(execution["cwd"]).resolve(), project)
         self.assertEqual(execution["args"], ["--yes", "skills@1.7.4", "add", str(self.source / "skills"),
-                                             "--agent", "claude-code", "codex", "--skill", "write-spec", "--yes"])
+                                             "--agent", "claude-code", "codex", "--skill", "to-spec", "--yes"])
         self.assertEqual(execution["telemetry"], "1")
         self.assertEqual(list(project.iterdir()), [])
 
@@ -114,14 +114,14 @@ class SkillInstallationTests(unittest.TestCase):
                                 (["-a", "codex", "claude-code"], ["codex", "claude-code"]),
                                 (["-a", "codex", "-a", "claude-code"], ["codex", "claude-code"])):
             with self.subTest(flags=flags):
-                result = subprocess.run([*wrapper, *flags, "--skill", "grill", "--yes"],
+                result = subprocess.run([*wrapper, *flags, "--skill", "grill-me", "--yes"],
                                         env=environment, capture_output=True, text=True)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 arguments = json.loads(result.stdout)["args"]
                 start = arguments.index("--agent") + 1
                 end = arguments.index("--skill")
                 self.assertEqual(arguments[start:end], expected)
-                self.assertEqual(arguments[end:], ["--skill", "grill", "--yes"])
+                self.assertEqual(arguments[end:], ["--skill", "grill-me", "--yes"])
         for flags in (["--agent"], ["--agent="], ["--agent=-g"],
                       ["--agent", "--list"]):
             with self.subTest(invalid=flags):

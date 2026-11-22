@@ -4,7 +4,7 @@ For entry-point selection and example requests, see the [skill guide](skill-guid
 
 ## Standard local installation
 
-Use the Skills CLI against canonical skills/ folders for new projects. Each stage is directly discoverable and keeps filesystem resources inside its own folder. Collaborators are named skills, not relative paths to uninstalled siblings. The agent-workflow router is optional. Read the installed copy; no package build or Python helper is needed for ordinary use. The helper/direct-path examples below remain optional source/legacy workflows. See [installation](installation.md).
+Use the Skills CLI against canonical skills/ folders for new projects. Each stage is directly discoverable and keeps filesystem resources inside its own folder. Collaborators are named skills, not relative paths to uninstalled siblings. The next-step router is optional. Read the installed copy; no package build or Python helper is needed for ordinary use. The helper/direct-path examples below remain optional source/legacy workflows. See [installation](installation.md).
 
 ## Separate instructions already available
 
@@ -12,13 +12,13 @@ A SKILL.md is a reusable prompt/procedure file with discovery metadata. Its file
 
 | Work | Canonical procedure | Supporting artifact shape | Current invocation |
 |---|---|---|---|
-| Resolve requirements | [grill](../skills/productivity/grill/SKILL.md) | Brief and decisions | Current interactive agent |
+| Resolve requirements | [grill](../skills/productivity/grill-me/SKILL.md) | Brief and decisions | Current interactive agent |
 | Research and plan a UI | [ui-design](../skills/engineering/ui-design/SKILL.md) | [optional design record](../skills/engineering/ui-design/templates/design.md) | Current agent; relevant frontend/full-stack tasks only |
-| Create the feature PRD | [write-spec](../skills/engineering/write-spec/SKILL.md) | [spec template](../skills/engineering/write-spec/templates/spec.md) | Current agent reads the settled brief/decisions |
-| PRD to implementation issues | [plan-tasks](../skills/engineering/plan-tasks/SKILL.md) | [task template](../skills/engineering/plan-tasks/templates/task.md) and [contract](../skills/engineering/plan-tasks/references/task-contract.md) | Current agent reads the agreed PRD and existing work |
+| Write the feature spec | [to-spec](../skills/engineering/to-spec/SKILL.md) | [spec template](../skills/engineering/to-spec/templates/spec.md) | Current agent reads the settled brief/decisions |
+| Split the spec into tasks | [to-tasks](../skills/engineering/to-tasks/SKILL.md) | [task template](../skills/engineering/to-tasks/templates/task.md) and [contract](../skills/engineering/to-tasks/references/task-contract.md) | Current agent reads the agreed spec and existing work |
 | Implement one issue | [implement](../skills/engineering/implement/SKILL.md) | [result contract](../skills/engineering/implement/references/result-contract.md) | Current agent, or the optional one-task helper |
 | PR preparation, updates, status and post-merge sync | [pr](../skills/engineering/pr/SKILL.md) | Project-owned delivery rules and verification evidence | Current agent, using available repository tools/CLI |
-| Review and QA | [review](../skills/engineering/review/SKILL.md), [qa](../skills/engineering/qa/SKILL.md) | [QA template](../skills/engineering/qa/templates/qa.md) | Current agent; required human judgments remain pending |
+| Review and QA | [review](../skills/engineering/code-review/SKILL.md), [qa](../skills/engineering/qa/SKILL.md) | [QA template](../skills/engineering/qa/templates/qa.md) | Current agent; required human judgments remain pending |
 
 Templates specify the shape of an output. Procedures specify how to produce or evaluate it. Project briefs/specs/issues are the actual inputs and outputs, not copies of the procedures.
 
@@ -29,12 +29,12 @@ Templates specify the shape of an output. Procedures specify how to produce or e
 1. Project and selected issue paths, instruction precedence and action boundaries.
 2. Project configuration, including required verification commands.
 3. The active implementation procedure, with supporting links resolved against the shared kit.
-4. The selected task body, including its source/PRD references.
+4. The selected task body, including its source/spec references.
 5. The portable result contract and the instruction to leave status for supervised evaluation.
 
-The small transport wrapper is Python text; the engineering instructions remain in the separate implementation skill. Referenced project instructions and PRD material are read by the executor as needed, not all embedded by the helper. In linked mode, the source checkout must remain readable. With a project snapshot, the same helper runs from .agent-workflow/tools and resolves supporting resources within that installed snapshot. The runtime dependencies and agent still need provisioning.
+The small transport wrapper is Python text; the engineering instructions remain in the separate implementation skill. Referenced project instructions and spec material are read by the executor as needed, not all embedded by the helper. In linked mode, the source checkout must remain readable. With a project snapshot, the same helper runs from .agent-workflow/tools and resolves supporting resources within that installed snapshot. The runtime dependencies and agent still need provisioning.
 
-The helper's prompt/run commands are implementation-only. There is no stage flag for automatic PRD generation, ticket generation, batch planning, review or merging. Those procedures work through the current file-capable agent; their automatic context assembly/dispatch is future runner work. See the [execution plan](execution-plan.md). External prompt wrappers may be useful when that runner has concrete input/output contracts; they should reference canonical stage behavior instead of duplicating it.
+The helper's prompt/run commands are implementation-only. There is no stage flag for automatic spec generation, task generation, batch planning, review or merging. Those procedures work through the current file-capable agent; their automatic context assembly/dispatch is future runner work. See the [execution plan](execution-plan.md). External prompt wrappers may be useful when that runner has concrete input/output contracts; they should reference canonical stage behavior instead of duplicating it.
 
 ## Work from a project, reuse the kit
 
@@ -42,11 +42,11 @@ Open the agent in the target project's checkout or worktree. Keep that project a
 
 Without native registration, use a request such as:
 
-> Work in /absolute/path/to/project. Read /absolute/path/to/agent-skills/skills/engineering/write-spec/SKILL.md and the project's instructions. Turn docs/work/feature/brief.md and its settled decisions into docs/work/feature/spec.md. Report any missing decisions.
+> Work in /absolute/path/to/project. Read /absolute/path/to/agent-skills/skills/engineering/to-spec/SKILL.md and the project's instructions. Turn docs/work/feature/brief.md and its settled decisions into docs/work/feature/spec.md. Report any missing decisions.
 
 For the next stage:
 
-> In the same project, read /absolute/path/to/agent-skills/skills/engineering/plan-tasks/SKILL.md and docs/work/feature/spec.md. Prepare vertical issues with requirement coverage, blockers and verification under docs/work/feature/issues/.
+> In the same project, read /absolute/path/to/agent-skills/skills/engineering/to-tasks/SKILL.md and docs/work/feature/spec.md. Prepare vertical issues with requirement coverage, blockers and verification under docs/work/feature/issues/.
 
 These are usage examples, not another set of stage instructions. Replace the paths; creating issues follows the existing authorization and agreed decisions. In this kit's own checkout, use relative canonical paths such as `skills/engineering/implement/SKILL.md` and keep actual work records under `docs/work/<feature>/`. Templates provide artifact shapes, examples are fictional, and conversation summaries provide historical background.
 

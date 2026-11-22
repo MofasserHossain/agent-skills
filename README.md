@@ -18,7 +18,7 @@ Choose the skills, agent targets and project scope in the installer. To select s
 
 ```sh
 DISABLE_TELEMETRY=1 npx --yes skills@1.7.4 add MofasserHossain/agent-skills \
-  --skill setup-project implement review \
+  --skill setup-agent-workflow implement code-review \
   --agent claude-code codex
 ```
 
@@ -26,8 +26,8 @@ Open your agent in that project and send a request through its skill interface:
 
 | Agent | Example message |
 |---|---|
-| Claude Code | `/setup-project Inspect this project's instructions and verification commands.` |
-| Codex | `$setup-project Inspect this project's instructions and verification commands.` |
+| Claude Code | `/setup-agent-workflow Inspect this project's instructions and verification commands.` |
+| Codex | `$setup-agent-workflow Inspect this project's instructions and verification commands.` |
 
 Then give `implement` a concrete task, for example:
 
@@ -42,35 +42,67 @@ Skills support any agent target recognized by the standard Skills CLI. A file-ca
 
 ## Choose a skill
 
-Install only what you need. The optional `agent-workflow` router helps choose a route; it does not install its collaborators.
+Grouped by when you reach for them. Install only what you need; the optional `next-step` router names the others but does not install them. The words used here (brief, spec, task, issue) are defined in [GLOSSARY.md](GLOSSARY.md).
 
-| Skill | Use it to |
+### 1. Getting started
+
+Set up once, then find your way around. **Start with `setup-agent-workflow`.**
+
+| Skill | What it does |
 |---|---|
-| [`setup-project`](skills/engineering/setup-project/SKILL.md) | Discover project commands and organize project guidance. |
-| [`agent-workflow`](skills/productivity/agent-workflow/SKILL.md) | Choose the next step or resume existing work. |
-| [`intake`](skills/productivity/intake/SKILL.md) | Turn notes, documents or messages into a source-linked brief. |
-| [`grill`](skills/productivity/grill/SKILL.md) | Resolve product and design decisions before implementation. |
-| [`research`](skills/productivity/research/SKILL.md) | Answer a decision-changing question with source evidence. |
-| [`prototype`](skills/engineering/prototype/SKILL.md) | Test an uncertain approach with a bounded experiment. |
-| [`ui-design`](skills/engineering/ui-design/SKILL.md) | Design interface flows, states and appearance. |
-| [`write-spec`](skills/engineering/write-spec/SKILL.md) | Turn settled decisions into a specification. |
-| [`plan-tasks`](skills/engineering/plan-tasks/SKILL.md) | Split a specification into verifiable tasks with dependencies. |
-| [`implement`](skills/engineering/implement/SKILL.md) | Deliver a clear fix or ready task with verification evidence. |
-| [`review`](skills/engineering/review/SKILL.md) | Inspect changes against requirements and project standards. |
-| [`qa`](skills/engineering/qa/SKILL.md) | Check delivered behavior and record reproducible defects. |
-| [`pr`](skills/engineering/pr/SKILL.md) | Prepare a PR, check delivery status or sync after merging. |
-| [`improve-codebase-architecture`](skills/engineering/improve-codebase-architecture/SKILL.md) | Assess code boundaries and propose a bounded improvement. |
-| [`retro`](skills/engineering/retro/SKILL.md) | Use work evidence to identify a workflow improvement. |
-| [`handoff`](skills/productivity/handoff/SKILL.md) | Preserve the current state, decisions and next action. |
-| [`writing-for-agents`](skills/productivity/writing-for-agents/SKILL.md) | Write concise agent instructions with conditional references. |
+| [`setup-agent-workflow`](skills/engineering/setup-agent-workflow/SKILL.md) | Set up one project so the other skills know its commands, tracker and docs. |
+| [`next-step`](skills/productivity/next-step/SKILL.md) | Find the next step for your work: pick a route, or resume where you left off. |
+
+### 2. Main flow
+
+From idea to merged change, in order. **Start with `grill-me`**, or with `to-brief` when the work arrives as notes or messages.
+
+| Skill | What it does |
+|---|---|
+| [`to-brief`](skills/productivity/to-brief/SKILL.md) | Turn notes, messages or documents into a source-linked brief. |
+| [`grill-me`](skills/productivity/grill-me/SKILL.md) | Get interviewed about a plan until every decision is settled and recorded. |
+| [`to-spec`](skills/engineering/to-spec/SKILL.md) | Turn settled decisions into a written spec. |
+| [`to-tasks`](skills/engineering/to-tasks/SKILL.md) | Split a spec into small tasks an agent can build, each with its blockers. |
+| [`implement`](skills/engineering/implement/SKILL.md) | Build one task test-first and return evidence for each acceptance criterion. |
+| [`code-review`](skills/engineering/code-review/SKILL.md) | Review a diff against the spec and against the project's standards. |
+| [`qa`](skills/engineering/qa/SKILL.md) | Check the running behavior against the acceptance criteria. |
+| [`pr`](skills/engineering/pr/SKILL.md) | Prepare a pull request, check its status, or sync after it merges. |
+| [`retro`](skills/engineering/retro/SKILL.md) | Look back on real work and fix the environment that caused friction. |
+
+### 3. Shaping
+
+Answer one open question; the answer feeds the main flow. **Start with `research`.**
+
+| Skill | What it does |
+|---|---|
+| [`research`](skills/productivity/research/SKILL.md) | Get a cited answer from primary sources. |
+| [`prototype`](skills/engineering/prototype/SKILL.md) | Answer a design question with a small throwaway experiment. |
+| [`ui-design`](skills/engineering/ui-design/SKILL.md) | Settle interface flows, states and visual direction before building. |
+
+### 4. Upkeep
+
+Keep the codebase healthy; generates work for the main flow. **Start with `improve-codebase-architecture`.**
+
+| Skill | What it does |
+|---|---|
+| [`improve-codebase-architecture`](skills/engineering/improve-codebase-architecture/SKILL.md) | Find the modules worth deepening, with evidence, and take one into the main flow. |
+
+### 5. Sessions and instructions
+
+Keep work portable and agent instructions sharp.
+
+| Skill | What it does |
+|---|---|
+| [`handoff`](skills/productivity/handoff/SKILL.md) | Write up the current work so another session or agent can continue it. |
+| [`writing-for-agents`](skills/productivity/writing-for-agents/SKILL.md) | Write and fix skills and other documents agents read. |
 
 ### Common routes
 
-- **Clear fix:** `implement` → verification → `review`.
-- **Unclear request:** `intake` or `grill` → `implement` once scope is settled.
-- **Larger feature:** `write-spec` → `plan-tasks` → `implement` → `review` and `qa`.
-- **Uncertain approach:** use `research`, `prototype` or `ui-design` to resolve the specific question.
-- **Session change:** use `handoff` to preserve the evidence and next step.
+- **Clear fix:** `implement` → `code-review`.
+- **Notes or messages to act on:** `to-brief` → `grill-me` for open decisions → `implement` once scope is settled.
+- **Larger feature:** `grill-me` → `to-spec` → `to-tasks` → `implement` per task → `code-review` and `qa` → `pr` → `retro`.
+- **Open question:** `research`, `prototype` or `ui-design` answers it, then the main flow resumes.
+- **Changing session, agent or workspace:** `handoff`.
 
 Follow the project's own commands and delivery rules. Add a missing collaborator deliberately when its guidance is needed. See the [skill guide](docs/skill-guide.md) for example requests and completion signals, or the [worked example](docs/walkthrough.md) for connected brief, spec and task records.
 
@@ -80,7 +112,7 @@ From this repository, list available skills or install a selection into another 
 
 ```sh
 bash scripts/install-skills.sh /path/to/project --list
-bash scripts/install-skills.sh /path/to/project --skill setup-project implement review
+bash scripts/install-skills.sh /path/to/project --skill setup-agent-workflow implement code-review
 ```
 
 Run without `--skill` in a normal terminal for interactive selection. Unattended calls require explicit skill names. The wrapper uses `skills@1.7.4`, disables telemetry and defaults to project-local Claude Code and Codex targets; override them with `--agent`.

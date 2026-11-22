@@ -22,4 +22,4 @@ A parent can mute game effects once and retain the choice on the same device. Na
 
 ## Next route
 
-Write the [PRD](spec.md), then create implementation issues. The original source was brief; the decisions above are explicit example answers, not facts inferred from the meeting note alone.
+Write the [spec](spec.md), then break it into tasks. The original source was brief; the decisions above are explicit example answers, not facts inferred from the meeting note alone.

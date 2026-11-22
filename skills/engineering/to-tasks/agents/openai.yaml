@@ -1,0 +1,4 @@
+interface:
+  display_name: "To Tasks"
+  short_description: "Split a spec into buildable tasks with blockers"
+  default_prompt: "Use $to-tasks to split the agreed spec into tracer-bullet tasks."

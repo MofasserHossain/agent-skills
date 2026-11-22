@@ -11,7 +11,7 @@ import sys
 from skill_catalog import discover
 
 KIT = Path(__file__).resolve().parents[1]
-NAME = "agent-workflow"
+NAME = "next-step"
 MARKER = ".agent-workflow-registration.json"
 
 
@@ -21,7 +21,7 @@ class RegistrationError(Exception):
 
 def entrypoint(kit):
     try:
-        source = discover(kit)["agent-workflow"]
+        source = discover(kit)["next-step"]
     except (ValueError, KeyError) as error:
         raise RegistrationError(f"Cannot find shared workflow: {error}") from error
     if not source.is_file():
@@ -29,14 +29,14 @@ def entrypoint(kit):
     # A local registration uses an absolute file pointer so references are read
     # from the canonical checkout, regardless of the active project or tool.
     return (
-        "---\nname: agent-workflow\n"
-        'description: "Use a brief, document or ticket to plan and deliver work, '
+        "---\nname: next-step\n"
+        'description: "Choose the next step for a brief, document or tracker issue, '
         'or resume a feature through the shared agent workflow."\n---\n\n'
         f"Read the shared procedure at [{source.name}](<{source}>). "
         "Keep the current project as your working directory. "
         "Its instructions govern project-specific behavior.\n\n"
         "Read only the stage procedures and references needed for the request. "
-        "Use supplied paths or ticket references as inputs. If no project was "
+        "Use supplied paths or issue references as inputs. If no project was "
         "selected and the target is ambiguous, ask which project to use.\n"
     )
 

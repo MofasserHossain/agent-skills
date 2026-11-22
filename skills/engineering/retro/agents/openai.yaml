@@ -1,4 +1,4 @@
 interface:
   display_name: "Retro"
-  short_description: "Correct workflow friction using observed evidence"
-  default_prompt: "Use $retro to identify the smallest supported workflow improvement from this work."
+  short_description: "Fix the environment behind observed friction"
+  default_prompt: "Use $retro to find the smallest environment fix supported by this work."

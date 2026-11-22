@@ -1,4 +1,4 @@
 interface:
   display_name: "Improve Architecture"
-  short_description: "Assess demonstrated architecture friction and tradeoffs"
-  default_prompt: "Use $improve-codebase-architecture to assess this area and propose a bounded improvement."
+  short_description: "Find modules worth deepening, with evidence"
+  default_prompt: "Use $improve-codebase-architecture to survey this area for deepening opportunities."

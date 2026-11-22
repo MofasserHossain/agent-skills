@@ -14,11 +14,11 @@ Illustrative issue for a fictional app; not an active implementation request.
 
 ## Context
 
-[Feature PRD](../spec.md).
+[Feature spec](../spec.md).
 
 ## Requirements covered
 
-R1 and R3 in the parent PRD.
+R1 and R3 in the parent spec.
 
 ## Expected behavior
 

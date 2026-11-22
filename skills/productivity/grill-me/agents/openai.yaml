@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grill Me"
+  short_description: "Get interviewed until every decision is settled"
+  default_prompt: "Use $grill-me to settle the open decisions in this request."
